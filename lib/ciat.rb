@@ -3,6 +3,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 require 'ciat/base'
 require 'ciat/test'
+require 'ciat/filenames'
 
 module CIAT
   

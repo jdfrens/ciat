@@ -4,7 +4,8 @@ describe CIAT::Test do
   before(:each) do
     @filenames = mock("filenames")
     @compiler = mock("compiler")
-    @test = CIAT::Test.new(@filenames, @compiler)
+    @executor = mock("executor")
+    @test = CIAT::Test.new(@filenames, @compiler, @executor)
   end
 
   describe "running a test" do
@@ -78,7 +79,7 @@ describe CIAT::Test do
     it "should run program" do
       generated_pir_filename, generated_output_filename =
         mock_and_expect_filenames(:generated_pir, :generated_output)
-      @compiler.should_receive(:run).with(generated_pir_filename, generated_output_filename)
+      @executor.should_receive(:run).with(generated_pir_filename, generated_output_filename)
       
       @test.run_program
     end

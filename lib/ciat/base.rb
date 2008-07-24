@@ -2,16 +2,16 @@ require 'erb'
 
 module CIAT
   class Base
-    def self.run_tests(compiler)
-      write_file("acceptance.html", generate_html(run_tests_on_files(Dir.glob("*.txt"), compiler)))
+    def self.run_tests(compiler, executor)
+      write_file("acceptance.html", generate_html(run_tests_on_files(Dir.glob("*.txt"), compiler, executor)))
     end
     
-    def self.run_tests_on_files(filenames, compiler)
-      filenames.map { |filename| run_test(filename, compiler) }      
+    def self.run_tests_on_files(filenames, compiler, executor)
+      filenames.map { |filename| run_test(filename, compiler, executor) }      
     end
     
-    def self.run_test(filename, compiler)
-      CIAT::Test.new(Filenames.new(filename.gsub(/\.txt$/, '')), compiler).run_test
+    def self.run_test(filename, compiler, executor)
+      CIAT::Test.new(Filenames.new(filename.gsub(/\.txt$/, '')), compiler, executor).run_test
     end
     
     def self.write_file(filename, content)

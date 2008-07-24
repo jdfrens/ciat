@@ -7,9 +7,10 @@ module CIAT
     attr_reader :expected_pir
     attr_reader :expected_output
     
-    def initialize(filenames, compiler)
+    def initialize(filenames, compiler, executor)
       @filenames = filenames
       @compiler = compiler
+      @executor = executor
       @traffic_lights = Hash.new
     end
     
@@ -41,7 +42,6 @@ module CIAT
       write_file(filenames.expected_pir, expected_pir)
       write_file(filenames.expected_output, expected_output)
     end
-    
 
     def write_file(filename, content)
       File.open(filename, "w") do |file|
@@ -54,7 +54,7 @@ module CIAT
     end
     
     def run_program
-      @compiler.run(filenames.generated_pir, filenames.generated_output)
+      @executor.run(filenames.generated_pir, filenames.generated_output)
     end
     
     def check_output

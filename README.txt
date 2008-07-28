@@ -1,26 +1,62 @@
-= ciat
-
-* FIX (url)
+= CIAT (Compiler and Interpreter Acceptance Tester)
 
 == DESCRIPTION:
 
-FIX (describe your package)
+CIAT (pronounced "dog") provides a system for writing high-level acceptance tests for compilers and
+interpreters. Each acceptance test is entered into a single file, including the test's description, source
+code, expected target code, and even expected result when executed.
 
 == FEATURES/PROBLEMS:
 
-* FIX (list of features or problems)
+* Description, source code, expected target code, and expected output stored in one file.
+* Tests are executed from a single directory.
+* Project is _very_ immature, so many things are hard coded (have to compile, have to execute, have to
+  compare with diff), and other things are _very_ fluid (like the file format).
 
 == SYNOPSIS:
 
-  FIX (code sample of usage)
+A sample +Rakefile+:
+
+  require 'ciat'
+  require 'ciat/compiler_in_java'
+  require 'ciat/executor_of_parrot'
+
+  task :default do
+    CIAT::Base.run_tests(make_compiler, CIAT::ExecutorOfParrot.new)
+  end
+
+  def make_compiler
+    CIAT::CompilerInJava.new(classpath, 'org.norecess.hobbes.drivers.PIRCompiler')
+  end
+
+  def classpath
+    Dir.glob('../lib/*.jar').join(':') + ":../bin"
+  end
+
+A sample input file (+simpleinteger5.txt+):
+
+  Compiles a simple integer.
+  ====
+  5
+  ====
+  .sub main
+    print 5
+    print "\n"
+  .end
+  ====
+  5
+
+Test files must be named with a +.txt+.  Contents must be ordered: description, source input, expected target code, expected execution output.
 
 == REQUIREMENTS:
 
-* FIX (list of requirements)
+* Pronounce "CIAT" as "dog".
+* Must have +diff+ executable.
 
 == INSTALL:
 
-* FIX (sudo gem install, anything else)
+* Install +diff+.
+* sudo gem install jdfrens-ciat
 
 == LICENSE:
 

@@ -11,7 +11,7 @@ code, expected target code, and even expected result when executed.
 * Description, source code, expected target code, and expected output stored in one file.
 * Tests are executed from a single directory.
 * Project is _very_ immature, so many things are hard coded (have to compile, have to execute, have to
-  compare with diff), and other things are _very_ fluid (like the file format).
+  compare with +diff+), and other things are _very_ fluid (like the file format).
 
 == SYNOPSIS:
 
@@ -33,7 +33,7 @@ A sample +Rakefile+:
     Dir.glob('../lib/*.jar').join(':') + ":../bin"
   end
 
-A sample input file (+simpleinteger5.txt+):
+A sample input file (<code>simpleinteger5.txt</code>):
 
   Compiles a simple integer.
   ====
@@ -46,12 +46,14 @@ A sample input file (+simpleinteger5.txt+):
   ====
   5
 
-Test files must be named with a +.txt+.  Contents must be ordered: description, source input, expected target code, expected execution output.
+Test files must be named with a <code>.txt</code> (for now).  Contents must be ordered: description, source input, expected target code, expected execution output (again, for now).
 
 == REQUIREMENTS:
 
 * Pronounce "CIAT" as "dog".
 * Must have +diff+ executable.
+* You have to provide your own target-code executors (e.g., +parrot+ for the Parrot Virtual Machine, +spim+
+  for MIPS emulation, etc.)
 
 == INSTALL:
 

@@ -1,7 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "ciat"
-  s.version  = "0.0.1"
-  s.date     = "2008-07-27"
+  s.version  = "0.0.2"
   s.summary  = "Acceptance tester for compilers and interpreters"
   s.email    = "jdfrens@gmail.com"
   s.homepage = "http://github.com/jdfrens/ciat"
@@ -20,6 +19,8 @@ Gem::Specification.new do |s|
 		"lib/ciat/test.rb", 
 		"lib/ciat/version.rb", 
 		"lib/ciat.rb"]
-  s.rdoc_options = ["README.txt"]
-  s.extra_rdoc_files = ["History.txt", "README.txt"]
+  s.extra_rdoc_files = ["README.txt", "History.txt"]
+  s.rdoc_options << '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<
+                    '--main' << 'README.txt' <<
+                    '--line-numbers'
 end

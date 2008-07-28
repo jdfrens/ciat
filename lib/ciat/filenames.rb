@@ -1,4 +1,4 @@
-module CIAT
+module CIAT #:nodoc: all
   class Filenames
     def initialize(filename)
       @filename = filename

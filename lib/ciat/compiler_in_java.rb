@@ -10,8 +10,10 @@ module CIAT
       @compiler_class = compiler_class
     end
     
-    def compile(hobbes_source, generated_pir)
-      system "java -cp '#{@classpath}' #{@compiler_class} '#{hobbes_source}' '#{generated_pir}'"
+    # Compiles the source code into target code using the Java class and
+    # classpath specified in the constructor.
+    def compile(source_filename, target_filename)
+      system "java -cp '#{@classpath}' #{@compiler_class} '#{source_filename}' '#{target_filename}'"
     end
   end
 end

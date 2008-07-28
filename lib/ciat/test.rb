@@ -1,4 +1,4 @@
-module CIAT
+module CIAT #:nodoc: all
   class Test
     attr_reader :filenames
     attr_reader :description

@@ -1,43 +1,51 @@
 module CIAT
   class Filenames
-    def initialize(filename)
-      @filename = filename
+    def initialize(basename)
+      @basename = basename
     end
   
     def test_file
-      @filename + ".txt"
+      filename("txt", current_directory)
+    end
+    
+    def source
+      filename("source")
     end
 
-    def hobbes_source
-      work_directory + "/" + @filename + ".hob"
+    def expected_compilation
+      filename("compilation.expected")
     end
 
-    def expected_pir
-      work_directory + "/" + @filename + "_expected.pir"
+    def generated_compilation
+      filename("compilation.generated")
     end
 
-    def generated_pir
-      work_directory + "/" + @filename + "_generated.pir"
+    def compilation_diff
+      filename("compilation.diff")
     end
 
     def expected_output
-      work_directory + "/" + @filename + "_expected.out"
+      filename("output.expected")
     end
 
     def generated_output
-      work_directory + "/" + @filename + "_generated.out"
-    end
-
-    def pir_diff
-      work_directory + "/" + @filename + "_pir.diff"
+      filename("output.generated")
     end
 
     def output_diff
-      work_directory + "/" + @filename + "_output.diff"
+      filename("output.diff")
     end
     
-    def work_directory
-      "./work"
+    def current_directory
+      Dir.pwd
+    end
+  
+    def temp_directory
+      File.join(current_directory, "temp")
+    end
+    
+    def filename(extension, directory = temp_directory)
+      File.join(directory, "#{@basename}.#{extension}")
     end
   end
 end

@@ -10,8 +10,8 @@ module CIAT
       @compiler_class = compiler_class
     end
     
-    def compile(hobbes_source, generated_pir)
-      system "java -cp '#{@classpath}' #{@compiler_class} '#{hobbes_source}' '#{generated_pir}'"
+    def compile(source, generated_compilation)
+      system "java -cp '#{@classpath}' #{@compiler_class} '#{source}' '#{generated_compilation}'"
     end
   end
 end

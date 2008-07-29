@@ -44,7 +44,7 @@ module CIAT
     end
     
     def run_test(filename)
-      CIAT::Test.new(Filenames.new(filename), @compiler, @executor).run_test
+      CIAT::Test.new(Filenames.new(filename), @compiler, @executor).run
     end
     
     def write_file(filename, content)

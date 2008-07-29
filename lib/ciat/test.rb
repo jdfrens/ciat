@@ -14,7 +14,7 @@ module CIAT
       @traffic_lights = Hash.new
     end
     
-    def run_test
+    def run
       split_test_file
       write_output_files
       compile

@@ -15,7 +15,7 @@ describe CIAT::Test do
       @test.should_receive(:compile)
       @test.should_receive(:execute)
       @test.should_receive(:check_output)
-      @test.run_test.should == @test
+      @test.run.should == @test
     end
   end
 

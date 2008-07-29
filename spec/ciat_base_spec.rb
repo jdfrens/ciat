@@ -32,7 +32,7 @@ describe CIAT::Suite, "top level test function" do
     filenames, test, result = mock("filenames"), mock("test"), mock("result")
     CIAT::Filenames.should_receive(:new).with("foo.txt").and_return(filenames)
     CIAT::Test.should_receive(:new).with(filenames, @compiler, @executor).and_return(test)
-    test.should_receive(:run_test).and_return(result)
+    test.should_receive(:run).and_return(result)
     
     suite = CIAT::Suite.new(@compiler, @executor, ["foo.txt"])
     suite.run_test("foo.txt").should == result

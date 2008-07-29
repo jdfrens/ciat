@@ -34,11 +34,12 @@ module CIAT
     end
     
     def run
+      create_temp_directory
+
       @results = @filenames.collect do |filename|
         CIAT::Test.new(CIAT::Filenames.new(filename), @compiler, @executor).run
       end
       
-      create_temp_directory
       write_file report_filename, generate_html(@results)
       
       @results

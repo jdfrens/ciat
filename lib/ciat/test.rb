@@ -58,7 +58,7 @@ module CIAT
     end
     
     def check_output
-      @traffic_lights[:pir] = do_diff(filenames.compilation_expected, filenames.compilation_generated, filenames.compilation_diff)
+      @traffic_lights[:compilation] = do_diff(filenames.compilation_expected, filenames.compilation_generated, filenames.compilation_diff)
       @traffic_lights[:output] = do_diff(filenames.output_expected, filenames.output_generated, filenames.output_diff)
     end
     

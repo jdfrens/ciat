@@ -10,7 +10,7 @@ describe CIAT::Filenames do
     @filenames.test_file.should == "#{Dir.pwd}/filename.txt"
   end
 
-  it "should have a hobbes source file" do
+  it "should have a source file" do
     @filenames.source.should == "#{@temp_directory}/filename.source"
   end
   

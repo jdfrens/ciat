@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
 		"ciat.gemspec", 
 		"lib/ciat/base.rb", 
 		"lib/ciat/compiler_in_java.rb", 
-		"lib/ciat/executor_of_parrot.rb",
+		"lib/ciat/executors/parrot.rb",
 		"lib/ciat/filenames.rb", 
 		"lib/ciat/report.erb.html",
 		"lib/ciat/test.rb", 

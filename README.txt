@@ -19,10 +19,10 @@ A sample +Rakefile+:
 
   require 'ciat'
   require 'ciat/compiler_in_java'
-  require 'ciat/executor_of_parrot'
+  require 'ciat/executors/parrot'
 
   task :default do
-    CIAT::Base.run_tests(make_compiler, CIAT::ExecutorOfParrot.new)
+    CIAT::Base.run_tests(make_compiler, CIAT::Executors::Parrot.new)
   end
 
   def make_compiler

@@ -20,7 +20,7 @@ module CIAT
   # which will compile your code; the executor needs a
   # <code>run(target_filename,output_filename)</code> which will execute the
   # generated target code.  See CIAT::CompilerInJava and
-  # CIAT::ExecutorOfParrot.
+  # CIAT::Executors::Parrot.
   class Base
     # The only method in this class that matters to the outside work.  Call
     # this method in your rake task (or anywhere in a Ruby program, I

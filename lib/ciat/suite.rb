@@ -65,7 +65,7 @@ module CIAT
     end
 
     def template
-      File.read(File.dirname(__FILE__) + "/report.erb.html").gsub(/^  /, '')
+      File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
     end
   end
 end

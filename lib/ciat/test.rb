@@ -18,7 +18,7 @@ module CIAT
       split_test_file
       write_output_files
       compile
-      run_program
+      execute
       check_output
       self
     end
@@ -53,7 +53,7 @@ module CIAT
       @compiler.compile(filenames.source, filenames.compilation_generated)
     end
     
-    def run_program
+    def execute
       @executor.run(filenames.compilation_generated, filenames.output_generated)
     end
     

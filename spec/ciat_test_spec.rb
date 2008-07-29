@@ -13,7 +13,7 @@ describe CIAT::Test do
       @test.should_receive(:split_test_file)
       @test.should_receive(:write_output_files)
       @test.should_receive(:compile)
-      @test.should_receive(:run_program)
+      @test.should_receive(:execute)
       @test.should_receive(:check_output)
       @test.run_test.should == @test
     end
@@ -81,7 +81,7 @@ describe CIAT::Test do
         mock_and_expect_filenames(:compilation_generated, :output_generated)
       @executor.should_receive(:run).with(compilation_generated_filename, output_generated_filename)
       
-      @test.run_program
+      @test.execute
     end
   end
   

@@ -18,7 +18,7 @@ code, expected target code, and even expected result when executed.
 A sample +Rakefile+:
 
   require 'ciat'
-  require 'ciat/compiler_in_java'
+  require 'ciat/compilers/java'
   require 'ciat/executors/parrot'
 
   task :default do
@@ -26,7 +26,7 @@ A sample +Rakefile+:
   end
 
   def make_compiler
-    CIAT::CompilerInJava.new(classpath, 'org.norecess.hobbes.drivers.PIRCompiler')
+    CIAT::Compilers::Java.new(classpath, 'org.norecess.hobbes.drivers.PIRCompiler')
   end
 
   def classpath

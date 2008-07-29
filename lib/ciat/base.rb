@@ -19,7 +19,7 @@ module CIAT
   # compiler needs a <code>compile(source_filename, target_filename)</code>
   # which will compile your code; the executor needs a
   # <code>run(target_filename,output_filename)</code> which will execute the
-  # generated target code.  See CIAT::CompilerInJava and
+  # generated target code.  See CIAT::Compilers::Java and
   # CIAT::Executors::Parrot.
   class Base
     # The only method in this class that matters to the outside work.  Call

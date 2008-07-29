@@ -1,13 +1,13 @@
 require File.dirname(__FILE__) + '/spec_helper.rb'
 
-require 'ciat/compiler_in_java'
+require 'ciat/compilers/java'
 
-describe CIAT::CompilerInJava do
+describe CIAT::Compilers::Java do
   before(:each) do
     @source_file, @generated_code_file = mock("source file"), mock("generated code file")
     @classpath = mock("classpath")
     @compiler_class = mock("compiler class")
-    @compiler = CIAT::CompilerInJava.new(@classpath, @compiler_class)
+    @compiler = CIAT::Compilers::Java.new(@classpath, @compiler_class)
   end
 
   it "should run the compiler successfully" do

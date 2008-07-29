@@ -13,9 +13,9 @@ describe CIAT::Test do
       @test.should_receive(:split_test_file)
       @test.should_receive(:write_output_files)
       @test.should_receive(:compile)
-      @test.should_receive(:run_program)
+      @test.should_receive(:execute)
       @test.should_receive(:check_output)
-      @test.run_test.should == @test
+      @test.run.should == @test
     end
   end
 
@@ -57,9 +57,9 @@ describe CIAT::Test do
   
   describe "writing output files" do
     it "should write three files" do
-      mock_and_expect_filename_and_contents(:hobbes_source)
-      mock_and_expect_filename_and_contents(:expected_pir)
-      mock_and_expect_filename_and_contents(:expected_output)
+      mock_and_expect_filename_and_contents(:source)
+      mock_and_expect_filename_and_contents(:compilation_expected)
+      mock_and_expect_filename_and_contents(:output_expected)
       
       @test.write_output_files
     end
@@ -67,9 +67,9 @@ describe CIAT::Test do
   
   describe "compiling" do
     it "should compile with compiler object" do
-      hobbes_source_filename, generated_pir_filename =
-        mock_and_expect_filenames(:hobbes_source, :generated_pir)
-      @compiler.should_receive(:compile).with(hobbes_source_filename, generated_pir_filename)
+      source_filename, compilation_generated_filename =
+        mock_and_expect_filenames(:source, :compilation_generated)
+      @compiler.should_receive(:compile).with(source_filename, compilation_generated_filename)
       
       @test.compile
     end
@@ -77,22 +77,22 @@ describe CIAT::Test do
   
   describe "running program" do
     it "should run program" do
-      generated_pir_filename, generated_output_filename =
-        mock_and_expect_filenames(:generated_pir, :generated_output)
-      @executor.should_receive(:run).with(generated_pir_filename, generated_output_filename)
+      compilation_generated_filename, output_generated_filename =
+        mock_and_expect_filenames(:compilation_generated, :output_generated)
+      @executor.should_receive(:execute).with(compilation_generated_filename, output_generated_filename)
       
-      @test.run_program
+      @test.execute
     end
   end
   
   describe "checking output" do
     it "should check output" do
-      expected_pir_filename, generated_pir_filename, pir_diff_filename =
-        mock_and_expect_filenames(:expected_pir, :generated_pir, :pir_diff)
-      expected_output_filename, generated_output_filename, output_diff_filename =
-        mock_and_expect_filenames(:expected_output, :generated_output, :output_diff)
-      @test.should_receive(:do_diff).with(expected_pir_filename, generated_pir_filename, pir_diff_filename)
-      @test.should_receive(:do_diff).with(expected_output_filename, generated_output_filename, output_diff_filename)
+      compilation_expected_filename, compilation_generated_filename, compilation_diff_filename =
+        mock_and_expect_filenames(:compilation_expected, :compilation_generated, :compilation_diff)
+      output_expected_filename, output_generated_filename, output_diff_filename =
+        mock_and_expect_filenames(:output_expected, :output_generated, :output_diff)
+      @test.should_receive(:do_diff).with(compilation_expected_filename, compilation_generated_filename, compilation_diff_filename)
+      @test.should_receive(:do_diff).with(output_expected_filename, output_generated_filename, output_diff_filename)
       
       @test.check_output
     end

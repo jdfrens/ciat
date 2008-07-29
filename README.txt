@@ -18,19 +18,20 @@ code, expected target code, and even expected result when executed.
 A sample +Rakefile+:
 
   require 'ciat'
-  require 'ciat/compiler_in_java'
-  require 'ciat/executor_of_parrot'
+  require 'ciat/compilers/java'
+  require 'ciat/executors/parrot'
 
-  task :default do
-    CIAT::Base.run_tests(make_compiler, CIAT::ExecutorOfParrot.new)
+  task :ciat do
+    CIAT::Suite.new(compiler, executor).run
   end
 
-  def make_compiler
-    CIAT::CompilerInJava.new(classpath, 'org.norecess.hobbes.drivers.PIRCompiler')
+  def compiler
+    classpath = Dir.glob('../lib/*.jar').join(':') + ":../bin"
+    CIAT::Compilers::Java.new(classpath, 'org.norecess.hobbes.drivers.PIRCompiler')
   end
 
-  def classpath
-    Dir.glob('../lib/*.jar').join(':') + ":../bin"
+  def executor
+    CIAT::Executors::Parrot.new
   end
 
 A sample input file (<code>simpleinteger5.txt</code>):

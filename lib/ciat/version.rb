@@ -1,9 +1,7 @@
-module CIAT
-  module VERSION #:nodoc:
-    MAJOR = 0
-    MINOR = 0
-    TINY  = 2
+module CIAT::VERSION #:nodoc:
+  MAJOR = 0
+  MINOR = 0
+  TINY  = 2
 
-    STRING = [MAJOR, MINOR, TINY].join('.')
-  end
+  STRING = [MAJOR, MINOR, TINY].join('.')
 end

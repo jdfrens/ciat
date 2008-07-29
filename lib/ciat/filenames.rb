@@ -1,43 +1,56 @@
-module CIAT #:nodoc: all
-  class Filenames
-    def initialize(filename)
-      @filename = filename
-    end
+class CIAT::Filenames
+  attr_reader :test_file
   
-    def test_file
-      @filename + ".txt"
-    end
+  def initialize(test_file)
+    @test_file = test_file
+    @basename = File.basename(test_file).gsub(File.extname(test_file), "")
+  end
 
-    def hobbes_source
-      work_directory + "/" + @filename + ".hob"
-    end
+  def source
+    filename("source")
+  end
 
-    def expected_pir
-      work_directory + "/" + @filename + "_expected.pir"
-    end
+  def compilation_expected
+    filename("compilation.expected")
+  end
 
-    def generated_pir
-      work_directory + "/" + @filename + "_generated.pir"
-    end
+  def compilation_generated
+    filename("compilation.generated")
+  end
 
-    def expected_output
-      work_directory + "/" + @filename + "_expected.out"
-    end
+  def compilation_diff
+    filename("compilation.diff")
+  end
 
-    def generated_output
-      work_directory + "/" + @filename + "_generated.out"
-    end
+  def output_expected
+    filename("output.expected")
+  end
 
-    def pir_diff
-      work_directory + "/" + @filename + "_pir.diff"
-    end
+  def output_generated
+    filename("output.generated")
+  end
 
-    def output_diff
-      work_directory + "/" + @filename + "_output.diff"
-    end
-    
-    def work_directory
-      "./work"
-    end
+  def output_diff
+    filename("output.diff")
+  end
+  
+  def filename(extension, directory = temp_directory)
+    File.join(directory, "#{@basename}.#{extension}")
+  end
+  
+  def current_directory
+    self.class.current_directory
+  end
+
+  def temp_directory
+    self.class.temp_directory
+  end
+
+  def self.current_directory
+    Dir.pwd
+  end
+
+  def self.temp_directory
+    File.join(current_directory, "temp")
   end
 end

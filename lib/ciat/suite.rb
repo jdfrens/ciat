@@ -42,6 +42,8 @@ class CIAT::Suite
     
     write_file report_filename, generate_html(@results)
     
+    feedback "#{@filenames.length} tests executed."
+    
     @results
   end
   
@@ -66,5 +68,9 @@ class CIAT::Suite
 
   def template
     File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
+  end
+  
+  def feedback(message)
+    puts message
   end
 end

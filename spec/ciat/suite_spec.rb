@@ -14,6 +14,18 @@ describe CIAT::Suite, "top level test function" do
     suite.filenames.should == filenames
   end
   
+  it "should run tests on no files" do
+    html = mock("html")
+    
+    suite = CIAT::Suite.new(@compiler, @executor, [])
+    suite.should_receive(:generate_html).with([]).and_return(html)
+    suite.should_receive(:write_file).with(suite.report_filename, html)
+
+    suite.should_receive(:feedback).with("0 tests executed.")
+    
+    suite.run.should == []
+  end
+  
   it "should run tests on files" do
     files = ["file1.txt", "file2.txt"]
     filenames = [mock("filename1"), mock("filename2")]
@@ -31,6 +43,8 @@ describe CIAT::Suite, "top level test function" do
     suite.should_receive(:generate_html).with(results).and_return(html)
     suite.should_receive(:write_file).with(suite.report_filename, html)
     
+    suite.should_receive(:feedback).with("2 tests executed.")
+    
     suite.run.should == results
   end
   
@@ -46,6 +60,12 @@ describe CIAT::Suite, "top level test function" do
   
   it "should write file" do
     # too mundane to test
+  end
+  
+  it "should provide feedback" do
+    suite = CIAT::Suite.new(@compiler, @executor)
+    suite.should_receive(:puts).with("foobar, baby!")
+    suite.feedback("foobar, baby!")
   end
   
 end

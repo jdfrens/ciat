@@ -54,7 +54,7 @@ module CIAT
     end
     
     def execute
-      @executor.run(filenames.compilation_generated, filenames.output_generated)
+      @executor.execute(filenames.compilation_generated, filenames.output_generated)
     end
     
     def check_output

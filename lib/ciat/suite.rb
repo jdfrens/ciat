@@ -18,7 +18,7 @@ module CIAT
   # You do need to define +make_compiler+ and +make_executor+ yourself.  The
   # compiler needs a <code>compile(source_filename, target_filename)</code>
   # which will compile your code; the executor needs a
-  # <code>run(target_filename,output_filename)</code> which will execute the
+  # <code>execute(target_filename,output_filename)</code> which will execute the
   # generated target code.  See CIAT::Compilers::Java and
   # CIAT::Executors::Parrot.
   class Suite

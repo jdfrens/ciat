@@ -10,12 +10,12 @@ describe CIAT::Executors::Parrot do
 
   it "should run the generated code successfully" do
     expect_run(true)
-    @executor.run(@generated_code_file, @output_file).should == true
+    @executor.execute(@generated_code_file, @output_file).should == true
   end
 
   it "should run the generated code failurely" do
     expect_run(false)
-    @executor.run(@generated_code_file, @output_file).should == false
+    @executor.execute(@generated_code_file, @output_file).should == false
   end
   
   def expect_run(return_value)

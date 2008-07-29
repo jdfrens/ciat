@@ -79,7 +79,7 @@ describe CIAT::Test do
     it "should run program" do
       compilation_generated_filename, output_generated_filename =
         mock_and_expect_filenames(:compilation_generated, :output_generated)
-      @executor.should_receive(:run).with(compilation_generated_filename, output_generated_filename)
+      @executor.should_receive(:execute).with(compilation_generated_filename, output_generated_filename)
       
       @test.execute
     end

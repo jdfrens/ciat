@@ -14,20 +14,20 @@ describe CIAT::Filenames do
     @filenames.source.should == "#{@temp_directory}/filename.source"
   end
   
-  it "should have a expected_compilation file" do
-    @filenames.expected_compilation.should == "#{@temp_directory}/filename.compilation.expected"
+  it "should have a compilation_expected file" do
+    @filenames.compilation_expected.should == "#{@temp_directory}/filename.compilation.expected"
   end
   
-  it "should have a generated_compilation file" do
-    @filenames.generated_compilation.should == "#{@temp_directory}/filename.compilation.generated"
+  it "should have a compilation_generated file" do
+    @filenames.compilation_generated.should == "#{@temp_directory}/filename.compilation.generated"
   end
   
-  it "should have a expected_output file" do
-    @filenames.expected_output.should == "#{@temp_directory}/filename.output.expected"
+  it "should have a output_expected file" do
+    @filenames.output_expected.should == "#{@temp_directory}/filename.output.expected"
   end
   
-  it "should have a generated_output file" do
-    @filenames.generated_output.should == "#{@temp_directory}/filename.output.generated"    
+  it "should have a output_generated file" do
+    @filenames.output_generated.should == "#{@temp_directory}/filename.output.generated"    
   end
   
   it "should have a compilation_diff file" do

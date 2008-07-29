@@ -12,11 +12,11 @@ module CIAT
       filename("source")
     end
 
-    def expected_compilation
+    def compilation_expected
       filename("compilation.expected")
     end
 
-    def generated_compilation
+    def compilation_generated
       filename("compilation.generated")
     end
 
@@ -24,11 +24,11 @@ module CIAT
       filename("compilation.diff")
     end
 
-    def expected_output
+    def output_expected
       filename("output.expected")
     end
 
-    def generated_output
+    def output_generated
       filename("output.generated")
     end
 
@@ -43,7 +43,7 @@ module CIAT
     def temp_directory
       File.join(current_directory, "temp")
     end
-    
+  
     def filename(extension, directory = temp_directory)
       File.join(directory, "#{@basename}.#{extension}")
     end

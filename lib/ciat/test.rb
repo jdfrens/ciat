@@ -4,8 +4,8 @@ module CIAT
     attr_reader :description
     attr_reader :traffic_lights
     attr_reader :source
-    attr_reader :expected_compilation
-    attr_reader :expected_output
+    attr_reader :compilation_expected
+    attr_reader :output_expected
     
     def initialize(filenames, compiler, executor)
       @filenames = filenames
@@ -32,15 +32,15 @@ module CIAT
     end
     
     def split_test_file
-      @description, @source, @expected_compilation, @expected_output = File.read(filenames.test_file).split(/^====\s*$/).map do |s|
+      @description, @source, @compilation_expected, @output_expected = File.read(filenames.test_file).split(/^====\s*$/).map do |s|
         s.gsub(/^\n/, '')
       end
     end
     
     def write_output_files
       write_file(filenames.source, source)
-      write_file(filenames.expected_compilation, expected_compilation)
-      write_file(filenames.expected_output, expected_output)
+      write_file(filenames.compilation_expected, compilation_expected)
+      write_file(filenames.output_expected, output_expected)
     end
 
     def write_file(filename, content)
@@ -50,16 +50,16 @@ module CIAT
     end
 
     def compile
-      @compiler.compile(filenames.source, filenames.generated_compilation)
+      @compiler.compile(filenames.source, filenames.compilation_generated)
     end
     
     def run_program
-      @executor.run(filenames.generated_compilation, filenames.generated_output)
+      @executor.run(filenames.compilation_generated, filenames.output_generated)
     end
     
     def check_output
-      @traffic_lights[:pir] = do_diff(filenames.expected_compilation, filenames.generated_compilation, filenames.compilation_diff)
-      @traffic_lights[:output] = do_diff(filenames.expected_output, filenames.generated_output, filenames.output_diff)
+      @traffic_lights[:pir] = do_diff(filenames.compilation_expected, filenames.compilation_generated, filenames.compilation_diff)
+      @traffic_lights[:output] = do_diff(filenames.output_expected, filenames.output_generated, filenames.output_diff)
     end
     
     def do_diff(expected, generated, diff)

@@ -10,8 +10,8 @@ module CIAT
       @compiler_class = compiler_class
     end
     
-    def compile(source, generated_compilation)
-      system "java -cp '#{@classpath}' #{@compiler_class} '#{source}' '#{generated_compilation}'"
+    def compile(source, compilation_generated)
+      system "java -cp '#{@classpath}' #{@compiler_class} '#{source}' '#{compilation_generated}'"
     end
   end
 end

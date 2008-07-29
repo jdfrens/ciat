@@ -58,8 +58,8 @@ describe CIAT::Test do
   describe "writing output files" do
     it "should write three files" do
       mock_and_expect_filename_and_contents(:source)
-      mock_and_expect_filename_and_contents(:expected_compilation)
-      mock_and_expect_filename_and_contents(:expected_output)
+      mock_and_expect_filename_and_contents(:compilation_expected)
+      mock_and_expect_filename_and_contents(:output_expected)
       
       @test.write_output_files
     end
@@ -67,9 +67,9 @@ describe CIAT::Test do
   
   describe "compiling" do
     it "should compile with compiler object" do
-      source_filename, generated_compilation_filename =
-        mock_and_expect_filenames(:source, :generated_compilation)
-      @compiler.should_receive(:compile).with(source_filename, generated_compilation_filename)
+      source_filename, compilation_generated_filename =
+        mock_and_expect_filenames(:source, :compilation_generated)
+      @compiler.should_receive(:compile).with(source_filename, compilation_generated_filename)
       
       @test.compile
     end
@@ -77,9 +77,9 @@ describe CIAT::Test do
   
   describe "running program" do
     it "should run program" do
-      generated_compilation_filename, generated_output_filename =
-        mock_and_expect_filenames(:generated_compilation, :generated_output)
-      @executor.should_receive(:run).with(generated_compilation_filename, generated_output_filename)
+      compilation_generated_filename, output_generated_filename =
+        mock_and_expect_filenames(:compilation_generated, :output_generated)
+      @executor.should_receive(:run).with(compilation_generated_filename, output_generated_filename)
       
       @test.run_program
     end
@@ -87,12 +87,12 @@ describe CIAT::Test do
   
   describe "checking output" do
     it "should check output" do
-      expected_compilation_filename, generated_compilation_filename, compilation_diff_filename =
-        mock_and_expect_filenames(:expected_compilation, :generated_compilation, :compilation_diff)
-      expected_output_filename, generated_output_filename, output_diff_filename =
-        mock_and_expect_filenames(:expected_output, :generated_output, :output_diff)
-      @test.should_receive(:do_diff).with(expected_compilation_filename, generated_compilation_filename, compilation_diff_filename)
-      @test.should_receive(:do_diff).with(expected_output_filename, generated_output_filename, output_diff_filename)
+      compilation_expected_filename, compilation_generated_filename, compilation_diff_filename =
+        mock_and_expect_filenames(:compilation_expected, :compilation_generated, :compilation_diff)
+      output_expected_filename, output_generated_filename, output_diff_filename =
+        mock_and_expect_filenames(:output_expected, :output_generated, :output_diff)
+      @test.should_receive(:do_diff).with(compilation_expected_filename, compilation_generated_filename, compilation_diff_filename)
+      @test.should_receive(:do_diff).with(output_expected_filename, output_generated_filename, output_diff_filename)
       
       @test.check_output
     end

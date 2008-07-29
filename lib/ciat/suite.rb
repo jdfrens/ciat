@@ -2,21 +2,22 @@ require 'erb'
 
 # This is the class to use.
 #
-# You should put all of your tests into files with an <code>.txt</code> into one
-# directory.  Write a +Rakefile+ in that same directory.  CIAT will use a
-# subdirectory named +work+ to do all of its work.  (For now, you may have
-# to create this directory yourself.)
+# Put all of your tests into <code>ciat/*.txt</code>. 
 #
-# The +Rakefile+ should contain a task like this:
+# CIAT will use a subdirectory named +temp+ to do all of its work.
+#
+# Add a rake task to your +Rakefile+ (or create a +Rakefile+ if needed)
+#
+# Your +Rakefile+ should contain a task like this:
 #   task :ciat do
-#     CIAT::Suite.new(compiler, executor).run
+#     CIAT::Suite.new(CIAT::Compilers::Java.new(classpath, compiler_class), CIAT::Executors::Parrot.new).run
 #   end
 #
 # <code>rake ciat</code> will execute all of your acceptance tests.
 #
-# You do need to define +compiler+ and +executor+ yourself.  The
+# You can create your own compiler and executor.  The
 # compiler needs a <code>compile(source, compilation_generated)</code>
-# which will compile your code; the executor needs a
+# which will compile your code; the executor needs an
 # <code>execute(compilation_generated, output_generated)</code> which will execute the
 # generated target code.  See CIAT::Compilers::Java and
 # CIAT::Executors::Parrot.
@@ -25,7 +26,7 @@ class CIAT::Suite
   
   # The only method in this class that matters to the outside work.  Call
   # this method in your rake task (or anywhere in a Ruby program, I
-  # suppose).  It will automatically find all the <code>.txt</code> files as
+  # suppose).  It will automatically find all the <code>ciat/*.txt</code> files as
   # acceptance tests.  Read the class comments above for an example and an
   # explanation of the parameters.
   def initialize(compiler, executor, filenames = Dir["ciat/*.txt"])

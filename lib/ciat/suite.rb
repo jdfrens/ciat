@@ -22,6 +22,8 @@ module CIAT
   # generated target code.  See CIAT::Compilers::Java and
   # CIAT::Executors::Parrot.
   class Suite
+    attr_reader :filenames
+    
     # The only method in this class that matters to the outside work.  Call
     # this method in your rake task (or anywhere in a Ruby program, I
     # suppose).  It will automatically find all the <code>.txt</code> files as
@@ -32,19 +34,23 @@ module CIAT
     end
     
     def run
-      Dir.mkdir(Filenames.temp_directory) unless File.exist?(Filenames.temp_directory)
-      write_file(
-        File.join(Filenames.temp_directory, "acceptance.html"), 
-        generate_html(run_tests_on_files)
-      )
+      @results = @filenames.collect do |filename|
+        CIAT::Test.new(CIAT::Filenames.new(filename), @compiler, @executor).run
+      end
+      
+      create_temp_directory
+      write_file report_filename, generate_html(@results)
+      
+      @results
     end
     
-    def run_tests_on_files
-      @filenames.map { |filename| run_test(filename) }
+    def generate_html(test_reports)
+      # FIXME: binding here is wrong---very, very wrong!
+      ERB.new(template).result(lambda { binding })
     end
-    
-    def run_test(filename)
-      CIAT::Test.new(Filenames.new(filename), @compiler, @executor).run
+
+    def create_temp_directory
+      Dir.mkdir(CIAT::Filenames.temp_directory) unless File.exist?(CIAT::Filenames.temp_directory)
     end
     
     def write_file(filename, content)
@@ -52,10 +58,9 @@ module CIAT
         file.write content
       end
     end
-    
-    def generate_html(test_reports)
-      # FIXME: binding here is wrong---very, very wrong!
-      ERB.new(template).result(lambda { binding })
+        
+    def report_filename
+      File.join(Filenames.temp_directory, "acceptance.html")
     end
 
     def template

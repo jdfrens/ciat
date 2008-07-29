@@ -4,7 +4,7 @@ module CIAT
     # using the +parrot+ executable.
     class Parrot
       def execute(compilation_generated, output_generated)
-        system("parrot '#{compilation_generated}' &> '#{output_generated}'")
+        system "parrot '#{compilation_generated}' &> '#{output_generated}'"
       end
     end
   end

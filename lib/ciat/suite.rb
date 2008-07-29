@@ -9,13 +9,13 @@ module CIAT
   # to create this directory yourself.)
   #
   # The +Rakefile+ should contain a task like this:
-  #   task :acceptance_tests do
-  #     CIAT::Suite.new(make_compiler, make_executor).run
+  #   task :ciat do
+  #     CIAT::Suite.new(compiler, executor).run
   #   end
   #
-  # <code>rake acceptance_tests</code> will execute all of your acceptance tests.
+  # <code>rake ciat</code> will execute all of your acceptance tests.
   #
-  # You do need to define +make_compiler+ and +make_executor+ yourself.  The
+  # You do need to define +compiler+ and +executor+ yourself.  The
   # compiler needs a <code>compile(source, compilation_generated)</code>
   # which will compile your code; the executor needs a
   # <code>execute(compilation_generated, output_generated)</code> which will execute the
@@ -61,7 +61,7 @@ module CIAT
     end
         
     def report_filename
-      File.join(Filenames.temp_directory, "acceptance.html")
+      File.join(Filenames.temp_directory, "ciat.html")
     end
 
     def template

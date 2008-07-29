@@ -22,7 +22,7 @@ A sample +Rakefile+:
   require 'ciat/executors/parrot'
 
   task :default do
-    CIAT::Base.run_tests(make_compiler, CIAT::Executors::Parrot.new)
+    CIAT::Suite.new(make_compiler, CIAT::Executors::Parrot.new).run
   end
 
   def make_compiler

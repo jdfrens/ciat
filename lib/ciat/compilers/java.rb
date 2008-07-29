@@ -1,6 +1,6 @@
 module CIAT
   module Compilers
-    # Implements a compiler for CIAT::Base.run_tests which is written in Java.
+    # Implements a compiler for CIAT::Suite which is written in Java.
     class Java
       # Constructs the compiler object.  +classpath+ is the complete classpath to execute the
       # compiler.  +compiler_class+ is the fullname of the class that executes the compiler; this driver

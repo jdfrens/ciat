@@ -10,7 +10,7 @@ module CIAT
   #
   # The +Rakefile+ should contain a task like this:
   #   task :acceptance_tests do
-  #     CIAT::Base.run_tests(make_compiler, make_executor)
+  #     CIAT::Suite.new(make_compiler, make_executor).run
   #   end
   #
   # <code>rake acceptance_tests</code> will execute all of your acceptance tests.
@@ -21,40 +21,44 @@ module CIAT
   # <code>run(target_filename,output_filename)</code> which will execute the
   # generated target code.  See CIAT::Compilers::Java and
   # CIAT::Executors::Parrot.
-  class Base
+  class Suite
     # The only method in this class that matters to the outside work.  Call
     # this method in your rake task (or anywhere in a Ruby program, I
     # suppose).  It will automatically find all the <code>.txt</code> files as
     # acceptance tests.  Read the class comments above for an example and an
     # explanation of the parameters.
-    def self.run_tests(compiler, executor, files = Dir["ciat/*.txt"])
+    def initialize(compiler, executor, filenames = Dir["ciat/*.txt"])
+      @compiler, @executor, @filenames = compiler, executor, filenames
+    end
+    
+    def run
       Dir.mkdir(Filenames.temp_directory) unless File.exist?(Filenames.temp_directory)
       write_file(
         File.join(Filenames.temp_directory, "acceptance.html"), 
-        generate_html(run_tests_on_files(files, compiler, executor))
+        generate_html(run_tests_on_files)
       )
     end
     
-    def self.run_tests_on_files(filenames, compiler, executor)
-      filenames.map { |filename| run_test(filename, compiler, executor) }      
+    def run_tests_on_files
+      @filenames.map { |filename| run_test(filename) }
     end
     
-    def self.run_test(filename, compiler, executor)
-      CIAT::Test.new(Filenames.new(filename), compiler, executor).run_test
+    def run_test(filename)
+      CIAT::Test.new(Filenames.new(filename), @compiler, @executor).run_test
     end
     
-    def self.write_file(filename, content)
+    def write_file(filename, content)
       File.open(filename, "w") do |file|
         file.write content
       end
     end
     
-    def self.generate_html(test_reports)
+    def generate_html(test_reports)
       # FIXME: binding here is wrong---very, very wrong!
       ERB.new(template).result(lambda { binding })
     end
 
-    def self.template
+    def template
       File.read(File.dirname(__FILE__) + "/report.erb.html").gsub(/^  /, '')
     end
   end

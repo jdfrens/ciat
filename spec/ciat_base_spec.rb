@@ -8,7 +8,7 @@ describe CIAT::Base, "top level test function" do
  
   it "should get a directory listing " do
     filenames, tests, html, result = mock("filenames"), mock("tests"), mock("html"), mock("result")
-    Dir.should_receive(:glob).with("*.txt").and_return(filenames)
+    Dir.should_receive(:[]).with("ciat/*.txt").and_return(filenames)
     CIAT::Base.should_receive(:run_tests_on_files).with(filenames, @compiler, @executor).and_return(tests)
     CIAT::Base.should_receive(:generate_html).with(tests).and_return(html)
     CIAT::Base.should_receive(:write_file).with("acceptance.html", html).and_return(result)

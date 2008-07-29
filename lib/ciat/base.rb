@@ -27,8 +27,8 @@ module CIAT
     # suppose).  It will automatically find all the <code>.txt</code> files as
     # acceptance tests.  Read the class comments above for an example and an
     # explanation of the parameters.
-    def self.run_tests(compiler, executor)
-      write_file("acceptance.html", generate_html(run_tests_on_files(Dir.glob("*.txt"), compiler, executor)))
+    def self.run_tests(compiler, executor, files = Dir["ciat/*.txt"])
+      write_file("acceptance.html", generate_html(run_tests_on_files(files, compiler, executor)))
     end
     
     def self.run_tests_on_files(filenames, compiler, executor)

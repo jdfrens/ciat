@@ -28,7 +28,11 @@ module CIAT
     # acceptance tests.  Read the class comments above for an example and an
     # explanation of the parameters.
     def self.run_tests(compiler, executor, files = Dir["ciat/*.txt"])
-      write_file("acceptance.html", generate_html(run_tests_on_files(files, compiler, executor)))
+      Dir.mkdir(Filenames.temp_directory) unless File.exist?(Filenames.temp_directory)
+      write_file(
+        File.join(Filenames.temp_directory, "acceptance.html"), 
+        generate_html(run_tests_on_files(files, compiler, executor))
+      )
     end
     
     def self.run_tests_on_files(filenames, compiler, executor)
@@ -36,7 +40,7 @@ module CIAT
     end
     
     def self.run_test(filename, compiler, executor)
-      CIAT::Test.new(Filenames.new(filename.gsub(/\.txt$/, '')), compiler, executor).run_test
+      CIAT::Test.new(Filenames.new(filename), compiler, executor).run_test
     end
     
     def self.write_file(filename, content)

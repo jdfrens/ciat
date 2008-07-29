@@ -2,12 +2,12 @@ require File.dirname(__FILE__) + '/spec_helper.rb'
 
 describe CIAT::Filenames do
   before(:each) do
-    @filenames = CIAT::Filenames.new("filename")
+    @filenames = CIAT::Filenames.new("/ciat/filename.txt")
     @temp_directory = File.join(Dir.pwd, 'temp')
   end
     
   it "should have a test file" do
-    @filenames.test_file.should == "#{Dir.pwd}/filename.txt"
+    @filenames.test_file.should == "/ciat/filename.txt"
   end
 
   it "should have a source file" do

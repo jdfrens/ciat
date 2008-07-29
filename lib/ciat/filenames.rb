@@ -1,13 +1,12 @@
 module CIAT
   class Filenames
-    def initialize(basename)
-      @basename = basename
+    attr_reader :test_file
+    
+    def initialize(test_file)
+      @test_file = test_file
+      @basename = File.basename(test_file).gsub(File.extname(test_file), "")
     end
   
-    def test_file
-      filename("txt", current_directory)
-    end
-    
     def source
       filename("source")
     end
@@ -36,16 +35,24 @@ module CIAT
       filename("output.diff")
     end
     
+    def filename(extension, directory = temp_directory)
+      File.join(directory, "#{@basename}.#{extension}")
+    end
+    
     def current_directory
-      Dir.pwd
+      self.class.current_directory
     end
   
     def temp_directory
-      File.join(current_directory, "temp")
+      self.class.temp_directory
     end
   
-    def filename(extension, directory = temp_directory)
-      File.join(directory, "#{@basename}.#{extension}")
+    def self.current_directory
+      Dir.pwd
+    end
+  
+    def self.temp_directory
+      File.join(current_directory, "temp")
     end
   end
 end

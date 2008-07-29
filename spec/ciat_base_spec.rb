@@ -11,7 +11,7 @@ describe CIAT::Base, "top level test function" do
     Dir.should_receive(:[]).with("ciat/*.txt").and_return(filenames)
     CIAT::Base.should_receive(:run_tests_on_files).with(filenames, @compiler, @executor).and_return(tests)
     CIAT::Base.should_receive(:generate_html).with(tests).and_return(html)
-    CIAT::Base.should_receive(:write_file).with("acceptance.html", html).and_return(result)
+    CIAT::Base.should_receive(:write_file).with("#{CIAT::Filenames.temp_directory}/acceptance.html", html).and_return(result)
     
     CIAT::Base.run_tests(@compiler, @executor).should == result
   end
@@ -27,7 +27,7 @@ describe CIAT::Base, "top level test function" do
   
   it "should run a test" do
     filenames, test, result = mock("filenames"), mock("test"), mock("result")
-    CIAT::Filenames.should_receive(:new).with("foo").and_return(filenames)
+    CIAT::Filenames.should_receive(:new).with("foo.txt").and_return(filenames)
     CIAT::Test.should_receive(:new).with(filenames, @compiler, @executor).and_return(test)
     test.should_receive(:run_test).and_return(result)
     

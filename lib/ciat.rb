@@ -3,6 +3,8 @@ $:.unshift(File.dirname(__FILE__)) unless
 
 # Loads in the basic files needed to use CIAT.  Compilers and executors have to be required separately.
 # CIAT::Suite is the class you really want to look at.
+module CIAT; end
+
 require 'ciat/suite'
 require 'ciat/test'
 require 'ciat/filenames'

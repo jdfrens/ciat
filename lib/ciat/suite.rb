@@ -2,7 +2,7 @@ require 'erb'
 
 # This is the class to use.
 #
-# Put all of your tests into <code>ciat/*.txt</code>. 
+# Put all of your tests into <code>.ciat</code> files in a <code>ciat</code> directory. 
 #
 # CIAT will use a subdirectory named +temp+ to do all of its work.
 #
@@ -26,10 +26,10 @@ class CIAT::Suite
   
   # The only method in this class that matters to the outside work.  Call
   # this method in your rake task (or anywhere in a Ruby program, I
-  # suppose).  It will automatically find all the <code>ciat/*.txt</code> files as
+  # suppose).  It will automatically find all the <code>ciat/*.ciat</code> files as
   # acceptance tests.  Read the class comments above for an example and an
   # explanation of the parameters.
-  def initialize(compiler, executor, filenames = Dir["ciat/*.txt"])
+  def initialize(compiler, executor, filenames = Dir["ciat/*.ciat"])
     @compiler, @executor, @filenames = compiler, executor, filenames
   end
   

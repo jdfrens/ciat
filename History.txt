@@ -2,6 +2,7 @@
 
 * IN PROGRESS
   * Major refactoring of internals
+  * Expecting .ciat as file extension of CIAT test files.
 
 == 0.0.2 2008-07-28
 

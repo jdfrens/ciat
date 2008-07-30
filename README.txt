@@ -34,7 +34,7 @@ A sample +Rakefile+:
     CIAT::Executors::Parrot.new
   end
 
-A sample input file (<code>simpleinteger5.txt</code>):
+A sample input file (<code>simpleinteger5.ciat</code>):
 
   Compiles a simple integer.
   ====
@@ -47,7 +47,7 @@ A sample input file (<code>simpleinteger5.txt</code>):
   ====
   5
 
-Test files must be named with a <code>.txt</code> (for now).  Contents must be ordered: description, source input, expected target code, expected execution output (again, for now).
+Test files must be named with a <code>.ciat</code> (for now).  Contents must be ordered: description, source input, expected target code, expected execution output (again, for now).
 
 == REQUIREMENTS:
 

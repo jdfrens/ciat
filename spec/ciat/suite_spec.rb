@@ -8,7 +8,7 @@ describe CIAT::Suite, "top level test function" do
   
   it "should get a directory listing" do
     filenames = mock("filenames")
-    Dir.should_receive(:[]).with("ciat/*.txt").and_return(filenames)
+    Dir.should_receive(:[]).with("ciat/*.ciat").and_return(filenames)
     
     suite = CIAT::Suite.new(@compiler, @executor)
     suite.filenames.should == filenames
@@ -27,7 +27,7 @@ describe CIAT::Suite, "top level test function" do
   end
   
   it "should run tests on files" do
-    files = ["file1.txt", "file2.txt"]
+    files = ["file1.ciat", "file2.ciat"]
     filenames = [mock("filename1"), mock("filename2")]
     tests = [mock("test1"), mock("test2")]
     results = [mock("result1"), mock("result2")]

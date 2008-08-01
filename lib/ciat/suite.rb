@@ -29,8 +29,10 @@ class CIAT::Suite
   # suppose).  It will automatically find all the <code>ciat/*.ciat</code> files as
   # acceptance tests.  Read the class comments above for an example and an
   # explanation of the parameters.
-  def initialize(compiler, executor, filenames = Dir["ciat/*.ciat"])
-    @compiler, @executor, @filenames = compiler, executor, filenames
+  def initialize(compiler, executor, options = {})
+    @compiler, @executor = compiler, executor
+    options = { :filenames => Dir["ciat/*.ciat"] }.merge(options)
+    @filenames = options[:filenames]
   end
   
   def run

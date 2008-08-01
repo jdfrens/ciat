@@ -37,7 +37,7 @@ class CIAT::Suite
     create_temp_directory
 
     @results = @filenames.collect do |filename|
-      CIAT::Test.new(CIAT::Filenames.new(filename), @compiler, @executor).run
+      run_test(filename)
     end
     
     write_file report_filename, generate_html(@results)
@@ -45,6 +45,10 @@ class CIAT::Suite
     feedback "#{@filenames.length} tests executed."
     
     @results
+  end
+  
+  def run_test(testname)
+    CIAT::Test.new(CIAT::Filenames.new(testname), @compiler, @executor).run
   end
   
   def generate_html(test_reports)

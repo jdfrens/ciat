@@ -2,10 +2,10 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::Test do
   before(:each) do
-    @filenames = mock("filenames")
+    @namer = mock("namer")
     @compiler = mock("compiler")
     @executor = mock("executor")
-    @test = CIAT::Test.new(@filenames, @compiler, @executor)
+    @test = CIAT::Test.new(@namer, @compiler, @executor)
   end
 
   describe "running a test" do
@@ -45,10 +45,10 @@ describe CIAT::Test do
     end
   end
 
-  describe "splitting an input file" do
-    it "should split the input file" do
+  describe "splitting a test file" do
+    it "should split the test file" do
       filename = mock("filename")
-      @filenames.should_receive(:test_file).and_return(filename)
+      @namer.should_receive(:test_file).and_return(filename)
       File.should_receive(:read).with(filename).and_return("d\n====\ns\n====\np\n====\no\n====\n")
       
       @test.split_test_file.should == ["d\n", "s\n", "p\n", "o\n"]
@@ -129,7 +129,7 @@ describe CIAT::Test do
   def mock_and_expect_filenames(*types)
     types.map do |type|
       filename = mock(type.to_s + " filename")
-      @filenames.should_receive(type).and_return(filename)
+      @namer.should_receive(type).and_return(filename)
       filename
     end
   end

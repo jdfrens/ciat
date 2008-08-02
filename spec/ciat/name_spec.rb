@@ -1,8 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
-describe CIAT::Filenames do
+describe CIAT::Namer do
   before(:each) do
-    @filenames = CIAT::Filenames.new("/ciat/filename.ciat")
+    @filenames = CIAT::Namer.new("/ciat/filename.ciat")
     @temp_directory = File.join(Dir.pwd, 'temp')
   end
     

@@ -22,7 +22,7 @@ require 'erb'
 # generated target code.  See CIAT::Compilers::Java and
 # CIAT::Executors::Parrot.
 class CIAT::Suite
-  attr_reader :filenames
+  attr_reader :testnames
   
   # The only method in this class that matters to the outside work.  Call
   # this method in your rake task (or anywhere in a Ruby program, I
@@ -31,24 +31,24 @@ class CIAT::Suite
   # explanation of the parameters.
   def initialize(compiler, executor, options = {})
     @compiler, @executor = compiler, executor
-    @filenames = options[:filenames] || Dir["ciat/*.ciat"]
+    @testnames = options[:testnames] || Dir["ciat/*.ciat"]
     @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
   end
   
   def size
-    filenames.size
+    testnames.size
   end
   
   def run
     create_temp_directory
-    results = @filenames.collect { |filename| run_test(filename) }
+    results = @testnames.collect { |testname| run_test(testname) }
     write_file report_filename, generate_html(results)
     @feedback.post_tests(self)
     results
   end
   
   def run_test(testname)
-    CIAT::Test.new(CIAT::Filenames.new(testname), @compiler, @executor).run
+    CIAT::Test.new(CIAT::Namer.new(testname), @compiler, @executor).run
   end
   
   def generate_html(test_reports)
@@ -57,7 +57,7 @@ class CIAT::Suite
   end
 
   def create_temp_directory
-    Dir.mkdir(CIAT::Filenames.temp_directory) unless File.exist?(CIAT::Filenames.temp_directory)
+    Dir.mkdir(CIAT::Namer.temp_directory) unless File.exist?(CIAT::Namer.temp_directory)
   end
   
   def write_file(filename, content)
@@ -67,7 +67,7 @@ class CIAT::Suite
   end
       
   def report_filename
-    File.join(CIAT::Filenames.temp_directory, "ciat.html")
+    File.join(CIAT::Namer.temp_directory, "ciat.html")
   end
 
   def template

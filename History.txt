@@ -1,3 +1,7 @@
+== 0.0.4 2008-
+
+* IN PROGRESS
+
 == 0.0.3 2008-08-02
 
 * 2 major enhancements:

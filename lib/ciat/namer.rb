@@ -1,4 +1,4 @@
-class CIAT::Filenames
+class CIAT::Namer
   attr_reader :test_file
   
   def initialize(test_file)

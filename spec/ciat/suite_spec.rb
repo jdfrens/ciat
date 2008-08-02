@@ -4,6 +4,7 @@ describe CIAT::Suite, "top level test function" do
   before(:each) do
     @compiler = mock("compiler")
     @executor = mock("executor")
+    @feedback = mock("feedback")
   end
   
   it "should get a directory listing of CIAT files" do
@@ -15,13 +16,22 @@ describe CIAT::Suite, "top level test function" do
     suite.filenames.should == filenames
   end
   
+  it "should have a size based on the number of test files" do
+    filenames = mock("filenames")
+
+    filenames.should_receive(:size).and_return(42)
+    suite = CIAT::Suite.new(@compiler, @executor, :filenames => filenames)
+    
+    suite.size.should == 42
+  end
+  
   it "should run tests on no test files" do
     html = mock("html")
     
-    suite = CIAT::Suite.new(@compiler, @executor, :filenames => [])
+    suite = CIAT::Suite.new(@compiler, @executor, :filenames => [], :feedback => @feedback)
     suite.should_receive(:generate_html).with([]).and_return(html)
     suite.should_receive(:write_file).with(suite.report_filename, html)
-    suite.should_receive(:feedback).with("0 tests executed.")
+    @feedback.should_receive(:post_tests).with(suite)
     
     suite.run.should == []
   end
@@ -31,13 +41,13 @@ describe CIAT::Suite, "top level test function" do
     results = [mock("result1"), mock("result2")]
     html = mock("html")
     
-    suite = CIAT::Suite.new(@compiler, @executor, :filenames => filenames)
+    suite = CIAT::Suite.new(@compiler, @executor, :filenames => filenames, :feedback => @feedback)
     filenames.zip(results).each do |filename, result|
       suite.should_receive(:run_test).with(filename).and_return(result)
     end  
     suite.should_receive(:generate_html).with(results).and_return(html)
     suite.should_receive(:write_file).with(suite.report_filename, html)    
-    suite.should_receive(:feedback).with("2 tests executed.")
+    @feedback.should_receive(:post_tests).with(suite)
     
     suite.run.should == results
   end
@@ -66,11 +76,4 @@ describe CIAT::Suite, "top level test function" do
   it "should write file" do
     # too mundane to test
   end
-  
-  it "should provide feedback" do
-    suite = CIAT::Suite.new(@compiler, @executor)
-    suite.should_receive(:puts).with("foobar, baby!")
-    suite.feedback("foobar, baby!")
-  end
-  
 end

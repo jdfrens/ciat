@@ -8,3 +8,4 @@ module CIAT; end
 require 'ciat/suite'
 require 'ciat/test'
 require 'ciat/filenames'
+require 'ciat/feedback/standard_output'

@@ -31,22 +31,20 @@ class CIAT::Suite
   # explanation of the parameters.
   def initialize(compiler, executor, options = {})
     @compiler, @executor = compiler, executor
-    options = { :filenames => Dir["ciat/*.ciat"] }.merge(options)
-    @filenames = options[:filenames]
+    @filenames = options[:filenames] || Dir["ciat/*.ciat"]
+    @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
+  end
+  
+  def size
+    filenames.size
   end
   
   def run
     create_temp_directory
-
-    @results = @filenames.collect do |filename|
-      run_test(filename)
-    end
-    
-    write_file report_filename, generate_html(@results)
-    
-    feedback "#{@filenames.length} tests executed."
-    
-    @results
+    results = @filenames.collect { |filename| run_test(filename) }
+    write_file report_filename, generate_html(results)
+    @feedback.post_tests(self)
+    results
   end
   
   def run_test(testname)
@@ -74,9 +72,5 @@ class CIAT::Suite
 
   def template
     File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
-  end
-  
-  def feedback(message)
-    puts message
   end
 end

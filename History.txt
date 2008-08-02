@@ -1,7 +1,9 @@
-== 0.0.3 2008-07-29
+== 0.0.3 2008-08-02
 
-* IN PROGRESS
+* 2 major enhancements:
   * Major refactoring of internals
+  * Feedback mechanisms (for simple status reports, not failure/success yet) added
+* 1 modification:
   * Expecting .ciat as file extension of CIAT test files.
 
 == 0.0.2 2008-07-28

@@ -1,0 +1,4 @@
+.sub main
+	print 5
+	print "\n"
+.end

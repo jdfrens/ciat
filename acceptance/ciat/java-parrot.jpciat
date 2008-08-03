@@ -1,0 +1,10 @@
+The contents of the input file will be ignored; the PIR output should work though.
+====
+Ignore these contents!!!!
+====
+.sub main
+	print 5
+	print "\n"
+.end
+====
+5

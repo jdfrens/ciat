@@ -1,0 +1,91 @@
+$:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+
+require 'ciat'
+require 'ciat/compilers/java'
+require 'ciat/compilers/copy'
+require 'ciat/executors/cat'
+
+task :default => [:clean_start, :ciat_simple, :ciat_java_cat] do
+  check_temp_files
+end
+
+desc "Cleans out the temp directory"
+task :clean_start do
+  File.unlink(*Dir.glob("temp/*"))
+end
+
+desc "Copy compiler, cat executor, default filenames"
+task :ciat_simple do
+  puts "Copy compiler, cat executor, default filenames"
+  CIAT::Suite.new(copy_compiler, cat_executor, :feedback => FeedbackTester.new(1)).run
+end
+  
+desc "Java compiler, cat executor, default filenames"
+task :ciat_java_cat do
+  puts "Java compiler, cat executor, default filenames"
+  CIAT::Suite.new(java_hello_compiler, cat_executor,
+    :testnames => Dir.glob("ciat/*.jcciat"), :feedback => FeedbackTester.new(1)).run
+end
+
+# TODO: compiler fails
+# TODO: output of compiler is wrong
+# TODO: executor fails
+# TODO: output of execution is wrong
+
+def copy_compiler
+  CIAT::Compilers::Copy.new
+end
+
+def java_hello_compiler
+  CIAT::Compilers::Java.new('./java/', 'HelloCompiler')
+end
+
+def cat_executor
+  CIAT::Executors::Cat.new
+end
+
+def check_temp_files
+  puts "Checking temp files."
+  check_temp_file_names
+  check_temp_file_contents
+end
+
+def check_temp_file_names
+  extra_expected = expected_files - generated_files
+  extra_generated = generated_files - expected_files
+  unless extra_expected == [] && extra_generated == []
+    puts "**** Extra files:"
+    puts "  expected: #{extra_expected.join(',')}"
+    puts "  generated: #{extra_generated.join(',')}"
+    raise Exception.new
+  end
+end
+
+def check_temp_file_contents
+  failure = false
+  expected_files do |filename|
+    unless system("diff expected_temp/#{expected_file} temp/#{generated_file}")
+      failure = true
+      puts "expected_temp/#{expected_file} and temp/#{generated_file} differ!"
+    end
+  end
+  raise Exception.new if failure
+end
+
+def expected_files
+  Dir.glob("expected_temp/*").map { |filename| File.basename(filename) }
+end
+
+def generated_files
+  Dir.glob("temp/*").map { |filename| File.basename(filename) }
+end
+
+class FeedbackTester
+  def initialize(size)
+    @size = size
+  end
+  
+  def post_tests(suite)
+    puts "*** Wrong number of tests: #{@size} expected, got #{suite.size}" unless suite.size == @size
+  end
+end

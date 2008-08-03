@@ -2,6 +2,9 @@
 
 * IN PROGRESS
 
+* minor
+  * Internal renamings.
+
 == 0.0.3 2008-08-02
 
 * 2 major enhancements:

@@ -4,9 +4,16 @@ require 'ciat'
 require 'ciat/compilers/java'
 require 'ciat/compilers/copy'
 require 'ciat/executors/cat'
+require 'ciat/executors/parrot'
 
-task :default => [:clean_start, :ciat_simple, :ciat_java_cat] do
+task :default => [:clean_start, :compile_java,
+                  :ciat_simple, :ciat_java_cat, :ciat_java_parrot] do
   check_temp_files
+end
+
+desc "Compile Java code"
+task :compile_java do
+  sh "cd java ; javac *.java"
 end
 
 desc "Cleans out the temp directory"
@@ -14,17 +21,21 @@ task :clean_start do
   File.unlink(*Dir.glob("temp/*"))
 end
 
-desc "Copy compiler, cat executor, default filenames"
 task :ciat_simple do
   puts "Copy compiler, cat executor, default filenames"
   CIAT::Suite.new(copy_compiler, cat_executor, :feedback => FeedbackTester.new(1)).run
 end
   
-desc "Java compiler, cat executor, default filenames"
 task :ciat_java_cat do
-  puts "Java compiler, cat executor, default filenames"
+  puts "Java compiler, cat executor, special extensions"
   CIAT::Suite.new(java_hello_compiler, cat_executor,
     :testnames => Dir.glob("ciat/*.jcciat"), :feedback => FeedbackTester.new(1)).run
+end
+
+task :ciat_java_parrot do
+  puts "Java compiler, Parrot executor, special extensions"
+  CIAT::Suite.new(java_parrot5_compiler, parrot_executor,
+    :testnames => Dir.glob("ciat/*.jpciat"), :feedback => FeedbackTester.new(1)).run  
 end
 
 # TODO: compiler fails
@@ -32,6 +43,9 @@ end
 # TODO: executor fails
 # TODO: output of execution is wrong
 
+#
+# Comilers & Executors
+#
 def copy_compiler
   CIAT::Compilers::Copy.new
 end
@@ -40,10 +54,21 @@ def java_hello_compiler
   CIAT::Compilers::Java.new('./java/', 'HelloCompiler')
 end
 
+def java_parrot5_compiler
+  CIAT::Compilers::Java.new('./java/', 'Parrot5Compiler')
+end
+
 def cat_executor
   CIAT::Executors::Cat.new
 end
 
+def parrot_executor
+  CIAT::Executors::Parrot.new
+end
+
+#
+# Temp file checking
+#
 def check_temp_files
   puts "Checking temp files."
   check_temp_file_names
@@ -63,10 +88,10 @@ end
 
 def check_temp_file_contents
   failure = false
-  expected_files do |filename|
-    unless system("diff expected_temp/#{expected_file} temp/#{generated_file}")
+  expected_files.each do |filename|
+    unless system("diff expected_temp/#{filename} temp/#{filename}")
       failure = true
-      puts "expected_temp/#{expected_file} and temp/#{generated_file} differ!"
+      puts "expected_temp/#{filename} and temp/#{filename} differ!"
     end
   end
   raise Exception.new if failure
@@ -80,6 +105,9 @@ def generated_files
   Dir.glob("temp/*").map { |filename| File.basename(filename) }
 end
 
+#
+# Feedback from running suite
+#
 class FeedbackTester
   def initialize(size)
     @size = size

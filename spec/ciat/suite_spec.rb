@@ -16,6 +16,15 @@ describe CIAT::Suite, "top level test function" do
     suite.testnames.should == testnames
   end
   
+  it "should handle subfolders" do
+    folder, testnames = "THE_FOLDER", mock("testnames")
+    
+    Dir.should_receive(:[]).with("ciat/THE_FOLDER/*.ciat").and_return(testnames)
+    suite = CIAT::Suite.new(@compiler, @executor, :folder => folder)
+    
+    suite.testnames.should == testnames
+  end
+  
   it "should have a size based on the number of test files" do
     testnames = mock("testnames")
 
@@ -37,13 +46,14 @@ describe CIAT::Suite, "top level test function" do
   end
   
   it "should run tests on test files" do
-    testnames = [mock("filename1"), mock("filename2")]
+    folder = "THE_FOLDER"
+    testnames = [mock("testname1"), mock("testname1")]
     results = [mock("result1"), mock("result2")]
     html = mock("html")
     
     suite = CIAT::Suite.new(@compiler, @executor, :testnames => testnames, :feedback => @feedback)
-    testnames.zip(results).each do |filename, result|
-      suite.should_receive(:run_test).with(filename).and_return(result)
+    testnames.zip(results).each do |testname, result|
+      suite.should_receive(:run_test).with(testname).and_return(result)
     end  
     suite.should_receive(:generate_html).with(results).and_return(html)
     suite.should_receive(:write_file).with(suite.report_filename, html)    
@@ -53,7 +63,7 @@ describe CIAT::Suite, "top level test function" do
   end
 
   it "should run a test" do
-    testname, namer, test, result = mock("testname"), mock("namer"), mock("test"), mock("result")
+    testname, folder, namer, test, result = mock("testname"), mock("folder"), mock("namer"), mock("test"), mock("result")
     
     CIAT::Namer.should_receive(:new).with(testname).and_return(namer)
     CIAT::Test.should_receive(:new).with(namer, @compiler, @executor).and_return(test)

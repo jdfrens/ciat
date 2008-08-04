@@ -6,17 +6,18 @@ require 'ciat/compilers/copy'
 require 'ciat/executors/cat'
 require 'ciat/executors/parrot'
 
+desc "Cleans the temp directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
                   :ciat_simple, :ciat_java_cat, :ciat_java_parrot] do
   check_temp_files
 end
 
-desc "Compile Java code"
 task :compile_java do
-  sh "cd java ; javac *.java"
+  unless system("cd java ; javac *.java")
+    raise Exception.new
+  end
 end
 
-desc "Cleans out the temp directory"
 task :clean_start do
   File.unlink(*Dir.glob("temp/*"))
 end
@@ -27,15 +28,24 @@ task :ciat_simple do
 end
   
 task :ciat_java_cat do
-  puts "Java compiler, cat executor, special extensions"
-  CIAT::Suite.new(java_hello_compiler, cat_executor,
-    :testnames => Dir.glob("ciat/*.jcciat"), :feedback => FeedbackTester.new(1)).run
+  puts "Java compiler, cat executor, special folder"
+  CIAT::Suite.new(java_compiler("Hello"), cat_executor,
+    :folder => 'java-cat',
+    :feedback => FeedbackTester.new(1)).run
 end
 
 task :ciat_java_parrot do
-  puts "Java compiler, Parrot executor, special extensions"
-  CIAT::Suite.new(java_parrot5_compiler, parrot_executor,
-    :testnames => Dir.glob("ciat/*.jpciat"), :feedback => FeedbackTester.new(1)).run  
+  puts "Java compiler, Parrot executor, special folder"
+  CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
+    :folder => 'java-parrot',
+    :feedback => FeedbackTester.new(1)).run  
+end
+
+task :ciat_failures do
+  puts "Failures, special folder"
+  CIAT::Suite.new(java_compiler("Failing"), cat_executor,
+    :folder => 'failures',
+    :feedback => FeedbackTester.new(1, "G")).run
 end
 
 # TODO: compiler fails
@@ -50,12 +60,8 @@ def copy_compiler
   CIAT::Compilers::Copy.new
 end
 
-def java_hello_compiler
-  CIAT::Compilers::Java.new('./java/', 'HelloCompiler')
-end
-
-def java_parrot5_compiler
-  CIAT::Compilers::Java.new('./java/', 'Parrot5Compiler')
+def java_compiler(type)
+  CIAT::Compilers::Java.new('./java', type + 'Compiler')
 end
 
 def cat_executor

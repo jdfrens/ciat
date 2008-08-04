@@ -23,6 +23,7 @@ require 'erb'
 # CIAT::Executors::Parrot.
 class CIAT::Suite
   attr_reader :testnames
+  attr_reader :folder
   
   # The only method in this class that matters to the outside work.  Call
   # this method in your rake task (or anywhere in a Ruby program, I
@@ -31,7 +32,8 @@ class CIAT::Suite
   # explanation of the parameters.
   def initialize(compiler, executor, options = {})
     @compiler, @executor = compiler, executor
-    @testnames = options[:testnames] || Dir["ciat/*.ciat"]
+    @folder = options[:folder]
+    @testnames = options[:testnames] || default_testnames(@folder)
     @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
   end
   
@@ -72,5 +74,10 @@ class CIAT::Suite
 
   def template
     File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
+  end
+  
+  private
+  def default_testnames(folder)
+    Dir[File.join(["ciat", folder, "*.ciat"].compact)]
   end
 end

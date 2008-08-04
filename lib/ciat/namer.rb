@@ -1,7 +1,23 @@
 class CIAT::Namer
   attr_reader :test_file
   
-  def initialize(test_file)
+  OUTPUT_FOLDER = "temp"
+  
+  def self.create(options={})
+    output_folder = options[:output_folder] || "temp"
+    if options[:files]
+      folder = nil
+      filenames = options[:files]
+    else  
+      folder = options[:folder] || "ciat"
+      pattern = options[:pattern] || "*.ciat"
+      path = File.join(folder, "**", pattern)
+      filenames = Dir[path]
+    end
+    filenames.map { |filename| new(filename, { :folder => folder, :output_folder => output_folder }) }
+  end
+  
+  def initialize(test_file, options={})
     @test_file = test_file
     @basename = File.basename(test_file).gsub(File.extname(test_file), "")
   end

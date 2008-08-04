@@ -1,0 +1,7 @@
+To be run by the failure compiler.
+====
+Source not really necessary.
+====
+There won't be any compiler output to compare.
+====
+And certainly the target code will NEVER be executed.

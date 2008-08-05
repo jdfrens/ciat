@@ -7,5 +7,5 @@ module CIAT; end
 
 require 'ciat/suite'
 require 'ciat/test'
-require 'ciat/namer'
+require 'ciat/ciat_names'
 require 'ciat/feedback/standard_output'

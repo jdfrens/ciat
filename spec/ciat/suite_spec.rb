@@ -65,7 +65,7 @@ describe CIAT::Suite, "top level test function" do
   it "should run a test" do
     testname, folder, namer, test, result = mock("testname"), mock("folder"), mock("namer"), mock("test"), mock("result")
     
-    CIAT::Namer.should_receive(:new).with(testname).and_return(namer)
+    CIAT::CiatNames.should_receive(:new).with(testname).and_return(namer)
     CIAT::Test.should_receive(:new).with(namer, @compiler, @executor).and_return(test)
     test.should_receive(:run).and_return(result)
     suite = CIAT::Suite.new(@compiler, @executor)

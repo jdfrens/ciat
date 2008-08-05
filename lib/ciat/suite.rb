@@ -50,7 +50,7 @@ class CIAT::Suite
   end
   
   def run_test(testname)
-    CIAT::Test.new(CIAT::Namer.new(testname), @compiler, @executor).run
+    CIAT::Test.new(CIAT::CiatNames.new(testname), @compiler, @executor).run
   end
   
   def generate_html(test_reports)
@@ -59,7 +59,7 @@ class CIAT::Suite
   end
 
   def create_temp_directory
-    Dir.mkdir(CIAT::Namer.temp_directory) unless File.exist?(CIAT::Namer.temp_directory)
+    Dir.mkdir(CIAT::CiatNames.temp_directory) unless File.exist?(CIAT::CiatNames.temp_directory)
   end
   
   def write_file(filename, content)
@@ -69,7 +69,7 @@ class CIAT::Suite
   end
       
   def report_filename
-    File.join(CIAT::Namer.temp_directory, "ciat.html")
+    File.join(CIAT::CiatNames.temp_directory, "ciat.html")
   end
 
   def template

@@ -1,4 +1,4 @@
-class CIAT::Namer
+class CIAT::CiatNames
   attr_reader :test_file
   
   OUTPUT_FOLDER = "temp"

@@ -1,10 +1,13 @@
 class CIAT::CiatNames
   attr_reader :test_file
+  attr_reader :folder_name
+  attr_reader :basename
+  attr_reader :output_folder
   
   OUTPUT_FOLDER = "temp"
   
   def self.create(options={})
-    output_folder = options[:output_folder] || "temp"
+    output_folder = options[:output_folder] || OUTPUT_FOLDER
     if options[:files]
       folder = nil
       filenames = options[:files]
@@ -14,59 +17,49 @@ class CIAT::CiatNames
       path = File.join(folder, "**", pattern)
       filenames = Dir[path]
     end
-    filenames.map { |filename| new(filename, { :folder => folder, :output_folder => output_folder }) }
+    filenames.map { |filename| new(filename, output_folder) }
   end
   
-  def initialize(test_file, options={})
+  def initialize(test_file, output_folder)
     @test_file = test_file
+    @folder_name = File.dirname(test_file)
     @basename = File.basename(test_file).gsub(File.extname(test_file), "")
+    @output_folder = output_folder
+  end
+  
+  def test
+    @test_file
   end
 
   def source
-    filename("source")
+    output_filename("source")
   end
 
   def compilation_expected
-    filename("compilation.expected")
+    output_filename("compilation", "expected")
   end
 
   def compilation_generated
-    filename("compilation.generated")
+    output_filename("compilation", "generated")
   end
 
   def compilation_diff
-    filename("compilation.diff")
+    output_filename("compilation", "diff")
   end
 
   def output_expected
-    filename("output.expected")
+    output_filename("output", "expected")
   end
 
   def output_generated
-    filename("output.generated")
+    output_filename("output", "generated")
   end
 
   def output_diff
-    filename("output.diff")
+    output_filename("output", "diff")
   end
   
-  def filename(extension, directory = temp_directory)
-    File.join(directory, "#{@basename}.#{extension}")
-  end
-  
-  def current_directory
-    self.class.current_directory
-  end
-
-  def temp_directory
-    self.class.temp_directory
-  end
-
-  def self.current_directory
-    Dir.pwd
-  end
-
-  def self.temp_directory
-    File.join(current_directory, "temp")
+  def output_filename(*modifiers)
+    File.join(output_folder, [basename, *modifiers].compact.join("_"))
   end
 end

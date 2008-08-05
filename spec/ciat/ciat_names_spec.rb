@@ -3,94 +3,127 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 describe CIAT::CiatNames, "factory method" do
   before(:each) do
     @filenames = [mock("filename1"), mock("filename2"), mock("filename3")]
-    @testnames = [mock("testname1"), mock("testname2"), mock("testname3")]
+    @ciat_names = [mock("ciat_name1"), mock("ciat_name2"), mock("ciat_name3")]
   end
   
   it "should use default values" do
     expect_standard_dir_lookup("ciat/**/*.ciat")
-    CIAT::CiatNames.create().should == @testnames
+    CIAT::CiatNames.create().should == @ciat_names
   end
   
   it "should use specified pattern" do
     expect_standard_dir_lookup("ciat/**/*.foobar")
-    CIAT::CiatNames.create(:pattern => "*.foobar").should == @testnames
+    CIAT::CiatNames.create(:pattern => "*.foobar").should == @ciat_names
   end
   
   it "should use specified folder" do
     expect_standard_dir_lookup("jimmy/**/*.ciat", :folder => "jimmy")
-    CIAT::CiatNames.create(:folder => "jimmy").should == @testnames
+    CIAT::CiatNames.create(:folder => "jimmy").should == @ciat_names
   end
   
   it "should use specified output folder" do
     output_folder = mock("output folder")
     expect_standard_dir_lookup("ciat/**/*.ciat", :output_folder => output_folder)
-    CIAT::CiatNames.create(:output_folder => output_folder).should == @testnames
+    CIAT::CiatNames.create(:output_folder => output_folder).should == @ciat_names
   end
   
   it "should use specified folder and specified pattern and specified output folder" do
     output_folder = mock("output folder")
     expect_standard_dir_lookup("angel/**/*_ppc.ciat", :folder => "angel", :output_folder => output_folder)
-    CIAT::CiatNames.create(:folder => "angel", :pattern => "*_ppc.ciat", :output_folder => output_folder).should == @testnames    
+    CIAT::CiatNames.create(:folder => "angel", :pattern => "*_ppc.ciat", :output_folder => output_folder).should == @ciat_names    
   end
   
   it "should use specified files without lookup" do
-    expect_filenames_turned_into_testnames(:folder => nil, :output_folder => CIAT::CiatNames::OUTPUT_FOLDER)
-    CIAT::CiatNames.create(:files => @filenames).should == @testnames
+    expect_filenames_turned_into_ciat_names(:folder => nil, :output_folder => CIAT::CiatNames::OUTPUT_FOLDER)
+    CIAT::CiatNames.create(:files => @filenames).should == @ciat_names
   end
   
   def expect_standard_dir_lookup(path, options={})
     options = { :folder => 'ciat', :output_folder => CIAT::CiatNames::OUTPUT_FOLDER}.merge(options)
     Dir.should_receive(:[]).with(path).and_return(@filenames)
-    expect_filenames_turned_into_testnames(options)
+    expect_filenames_turned_into_ciat_names(options)
   end
   
-  def expect_filenames_turned_into_testnames(options)
-    @filenames.zip(@testnames) do |filename, testname|
-      CIAT::CiatNames.should_receive(:new).with(filename, options).and_return(testname)
+  def expect_filenames_turned_into_ciat_names(options)
+    @filenames.zip(@ciat_names) do |filename, ciat_name|
+      CIAT::CiatNames.should_receive(:new).with(filename, options[:output_folder]).and_return(ciat_name)
     end
   end
 end
 
-describe CIAT::CiatNames do
+describe CIAT::CiatNames, "generating interesting names" do
   before(:each) do
-    @filenames = CIAT::CiatNames.new("/ciat/filename.ciat")
-    @temp_directory = File.join(Dir.pwd, 'temp')
+    @output_folder = mock("output folder")
+    @ciat_names = CIAT::CiatNames.new("ciat/filename.ciat", @output_folder)
+    @expected_filename = mock("expected filename")
   end
     
   it "should have a test file" do
-    @filenames.test_file.should == "/ciat/filename.ciat"
+    @ciat_names.test_file.should == "ciat/filename.ciat"
+  end
+  
+  it "should have a basename" do
+    @ciat_names.basename.should == "filename"
+  end
+  
+  it "should have a folder name" do
+    @ciat_names.folder_name.should == "ciat"
   end
 
   it "should have a source file" do
-    @filenames.source.should == "#{@temp_directory}/filename.source"
+    set_expected_output_modifiers("source")
+    @ciat_names.source.should == @expected_filename
   end
   
   it "should have a compilation_expected file" do
-    @filenames.compilation_expected.should == "#{@temp_directory}/filename.compilation.expected"
+    set_expected_output_modifiers("compilation", "expected")
+    @ciat_names.compilation_expected.should == @expected_filename
   end
   
   it "should have a compilation_generated file" do
-    @filenames.compilation_generated.should == "#{@temp_directory}/filename.compilation.generated"
+    set_expected_output_modifiers("compilation", "generated")
+    @ciat_names.compilation_generated.should == @expected_filename
   end
   
   it "should have a output_expected file" do
-    @filenames.output_expected.should == "#{@temp_directory}/filename.output.expected"
+    set_expected_output_modifiers("output", "expected")
+    @ciat_names.output_expected.should == @expected_filename
   end
   
   it "should have a output_generated file" do
-    @filenames.output_generated.should == "#{@temp_directory}/filename.output.generated"    
+    set_expected_output_modifiers("output", "generated")
+    @ciat_names.output_generated.should == @expected_filename    
   end
   
   it "should have a compilation_diff file" do
-    @filenames.compilation_diff.should == "#{@temp_directory}/filename.compilation.diff"    
+    set_expected_output_modifiers("compilation", "diff")
+    @ciat_names.compilation_diff.should == @expected_filename    
   end
   
   it "should have a output_diff file" do
-    @filenames.output_diff.should == "#{@temp_directory}/filename.output.diff"    
+    set_expected_output_modifiers("output", "diff")
+    @ciat_names.output_diff.should == @expected_filename    
   end
   
-  it "should have a temp_directory file" do
-    @filenames.temp_directory.should == "#{@temp_directory}"
+  it "should have an output folder" do
+    @ciat_names.output_folder.should == @output_folder
   end
   
+  def set_expected_output_modifiers(*modifiers)
+    @ciat_names.should_receive(:output_filename).with(*modifiers).and_return(@expected_filename)    
+  end
+end
+
+describe CIAT::CiatNames, "generating actual file names" do
+  before(:each) do
+    @ciat_names = CIAT::CiatNames.new("philenamus", "outie")
+  end
+  
+  it "should work with no modifiers" do
+    @ciat_names.output_filename().should == "outie/philenamus"
+  end
+  
+  it "should work with multiple modifiers" do
+      @ciat_names.output_filename("one", "two", "three").should == "outie/philenamus_one_two_three"
+  end
 end

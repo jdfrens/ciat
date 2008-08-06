@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
-describe CIAT::Cargo, "factory method" do
+describe CIAT::Cargo, "initializing" do
   before(:each) do
     @filenames = [mock("filename1"), mock("filename2"), mock("filename3")]
     @crates = [mock("crate1"), mock("crate2"), mock("crate3")]
@@ -31,7 +31,7 @@ describe CIAT::Cargo, "factory method" do
     CIAT::Cargo.new().report_filename.should == CIAT::Cargo::REPORT_FILENAME
   end
   
-  it "should shit" do
+  it "should use specified report filename" do
     report_filename = mock("report filename")
     CIAT::Cargo.new(:report_filename => report_filename).report_filename.should == report_filename
   end
@@ -49,6 +49,11 @@ describe CIAT::Cargo, "factory method" do
     overspecified_cargo.report_filename.should == report_filename
   end
   
+  it "should have a size based on number of crates" do
+    expect_standard_dir_lookup("ciat/**/*.ciat")
+    CIAT::Cargo.new().size.should == 3
+  end
+
   def expect_standard_dir_lookup(path, options={})
     options = { :folder => 'ciat', :output_folder => CIAT::Cargo::OUTPUT_FOLDER }.merge(options)
     Dir.should_receive(:[]).with(path).and_return(@filenames)
@@ -59,5 +64,21 @@ describe CIAT::Cargo, "factory method" do
     @filenames.zip(@crates) do |filename, crate|
       CIAT::Crate.should_receive(:new).with(filename, options[:output_folder]).and_return(crate)
     end
+  end
+end
+
+describe CIAT::Cargo, "creating output folder" do
+  it "should create the default output folder" do
+    response = mock("response")
+    cargo = CIAT::Cargo.new(:files => [])
+    Dir.should_receive(:mkdir).with(CIAT::Cargo::OUTPUT_FOLDER).and_return(response)
+    cargo.create_output_folder.should == response
+  end
+  
+  it "should create a specified output folder" do
+    output_folder, response = mock("output_folder"), mock("response")
+    cargo = CIAT::Cargo.new(:files => [], :output_folder => output_folder)
+    Dir.should_receive(:mkdir).with(output_folder).and_return(response)
+    cargo.create_output_folder.should == response
   end
 end

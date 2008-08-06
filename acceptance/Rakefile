@@ -1,15 +1,17 @@
 $:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
 
+require 'fileutils'
+
 require 'ciat'
 require 'ciat/compilers/java'
 require 'ciat/compilers/copy'
 require 'ciat/executors/cat'
 require 'ciat/executors/parrot'
 
-desc "Cleans the temp directory, compiles the Java code, runs tests"
+desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
                   :ciat_simple, :ciat_java_cat, :ciat_java_parrot] do
-  check_temp_files
+  check_output_files
 end
 
 task :compile_java do
@@ -19,33 +21,35 @@ task :compile_java do
 end
 
 task :clean_start do
-  File.unlink(*Dir.glob("temp/*"))
+  FileUtils.rm_r("temp/") if File.exists?("temp/")
 end
 
 task :ciat_simple do
   puts "Copy compiler, cat executor, default filenames"
-  CIAT::Suite.new(copy_compiler, cat_executor, :feedback => FeedbackTester.new(1)).run
+  CIAT::Suite.new(copy_compiler, cat_executor,
+    CIAT::Cargo.new(:files => ['ciat/copy-cat.ciat']),
+    :feedback => FeedbackTester.new(1)).run
 end
   
 task :ciat_java_cat do
-  puts "Java compiler, cat executor, special folder"
-  CIAT::Suite.new(java_compiler("Hello"), cat_executor,
-    :folder => 'java-cat',
-    :feedback => FeedbackTester.new(1)).run
+  # puts "Java compiler, cat executor, special folder"
+  # CIAT::Suite.new(java_compiler("Hello"), cat_executor,
+  #   :folder => 'java-cat',
+  #   :feedback => FeedbackTester.new(1)).run
 end
 
 task :ciat_java_parrot do
-  puts "Java compiler, Parrot executor, special folder"
-  CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
-    :folder => 'java-parrot',
-    :feedback => FeedbackTester.new(1)).run  
+  # puts "Java compiler, Parrot executor, special folder"
+  # CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
+  #   :folder => 'java-parrot',
+  #   :feedback => FeedbackTester.new(1)).run  
 end
 
 task :ciat_failures do
-  puts "Failures, special folder"
-  CIAT::Suite.new(java_compiler("Failing"), cat_executor,
-    :folder => 'failures',
-    :feedback => FeedbackTester.new(1, "G")).run
+  # puts "Failures, special folder"
+  # CIAT::Suite.new(java_compiler("Failing"), cat_executor,
+  #   :folder => 'failures',
+  #   :feedback => FeedbackTester.new(1, "G")).run
 end
 
 # TODO: compiler fails
@@ -75,32 +79,11 @@ end
 #
 # Temp file checking
 #
-def check_temp_files
-  puts "Checking temp files."
-  check_temp_file_names
-  check_temp_file_contents
-end
-
-def check_temp_file_names
-  extra_expected = expected_files - generated_files
-  extra_generated = generated_files - expected_files
-  unless extra_expected == [] && extra_generated == []
-    puts "**** Extra files:"
-    puts "  expected: #{extra_expected.join(',')}"
-    puts "  generated: #{extra_generated.join(',')}"
-    raise Exception.new
+def check_output_files
+  puts "Checking output files."
+  unless system("diff expected_temp/ temp/")
+    raise("**** diff failed!")
   end
-end
-
-def check_temp_file_contents
-  failure = false
-  expected_files.each do |filename|
-    unless system("diff expected_temp/#{filename} temp/#{filename}")
-      failure = true
-      puts "expected_temp/#{filename} and temp/#{filename} differ!"
-    end
-  end
-  raise Exception.new if failure
 end
 
 def expected_files

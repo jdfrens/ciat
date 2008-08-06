@@ -22,44 +22,37 @@ require 'erb'
 # generated target code.  See CIAT::Compilers::Java and
 # CIAT::Executors::Parrot.
 class CIAT::Suite
-  attr_reader :testnames
-  attr_reader :folder
+  attr_reader :cargo
   
   # The only method in this class that matters to the outside work.  Call
   # this method in your rake task (or anywhere in a Ruby program, I
   # suppose).  It will automatically find all the <code>ciat/*.ciat</code> files as
   # acceptance tests.  Read the class comments above for an example and an
   # explanation of the parameters.
-  def initialize(compiler, executor, options = {})
-    @compiler, @executor = compiler, executor
-    @folder = options[:folder]
-    @testnames = options[:testnames] || default_testnames(@folder)
+  def initialize(compiler, executor, cargo, options = {})
+    @compiler, @executor, @cargo = compiler, executor, cargo
     @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
   end
   
   def size
-    testnames.size
+    cargo.size
   end
   
   def run
-    create_temp_directory
-    results = @testnames.collect { |testname| run_test(testname) }
-    write_file report_filename, generate_html(results)
+    cargo.create_output_folder
+    results = cargo.crates.collect { |crate| run_test(crate) }
+    write_file(cargo.report_filename, generate_html(results))
     @feedback.post_tests(self)
     results
   end
   
-  def run_test(testname)
-    CIAT::Test.new(CIAT::CiatNames.new(testname), @compiler, @executor).run
+  def run_test(crate)
+    CIAT::Test.new(crate, @compiler, @executor).run
   end
   
   def generate_html(test_reports)
     # FIXME: binding here is wrong---very, very wrong!
     ERB.new(template).result(lambda { binding })
-  end
-
-  def create_temp_directory
-    Dir.mkdir(CIAT::CiatNames.temp_directory) unless File.exist?(CIAT::CiatNames.temp_directory)
   end
   
   def write_file(filename, content)
@@ -68,16 +61,7 @@ class CIAT::Suite
     end
   end
       
-  def report_filename
-    File.join(CIAT::CiatNames.temp_directory, "ciat.html")
-  end
-
   def template
     File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
-  end
-  
-  private
-  def default_testnames(folder)
-    Dir[File.join(["ciat", folder, "*.ciat"].compact)]
   end
 end

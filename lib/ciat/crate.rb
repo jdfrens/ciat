@@ -1,25 +1,9 @@
-class CIAT::CiatNames
+class CIAT::Crate
   attr_reader :test_file
   attr_reader :folder_name
   attr_reader :basename
   attr_reader :output_folder
-  
-  OUTPUT_FOLDER = "temp"
-  
-  def self.create(options={})
-    output_folder = options[:output_folder] || OUTPUT_FOLDER
-    if options[:files]
-      folder = nil
-      filenames = options[:files]
-    else  
-      folder = options[:folder] || "ciat"
-      pattern = options[:pattern] || "*.ciat"
-      path = File.join(folder, "**", pattern)
-      filenames = Dir[path]
-    end
-    filenames.map { |filename| new(filename, output_folder) }
-  end
-  
+    
   def initialize(test_file, output_folder)
     @test_file = test_file
     @folder_name = File.dirname(test_file)

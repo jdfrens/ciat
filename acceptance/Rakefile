@@ -10,7 +10,8 @@ require 'ciat/executors/parrot'
 
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
-                  :ciat_simple, :ciat_java_cat, :ciat_java_parrot] do
+                  :ciat_simple, :ciat_java_cat, :ciat_java_parrot,
+                  :ciat_failures] do
   check_output_files
 end
 
@@ -39,17 +40,17 @@ task :ciat_java_cat do
 end
 
 task :ciat_java_parrot do
-  # puts "Java compiler, Parrot executor, special folder"
-  # CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
-  #   :folder => 'java-parrot',
-  #   :feedback => FeedbackTester.new(1)).run  
+  puts "Java compiler, Parrot executor, special folder"
+  CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
+    :folder => 'ciat/java-parrot',
+    :feedback => FeedbackTester.new(1)).run  
 end
 
 task :ciat_failures do
   # puts "Failures, special folder"
   # CIAT::Suite.new(java_compiler("Failing"), cat_executor,
-  #   :folder => 'failures',
-  #   :feedback => FeedbackTester.new(1, "G")).run
+  #   :folder => 'ciat/failures',
+  #   :feedback => FeedbackTester.new(1)).run
 end
 
 # TODO: compiler fails

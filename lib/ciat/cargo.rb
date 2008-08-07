@@ -9,23 +9,24 @@ class CIAT::Cargo
   def initialize(options={})
     @output_folder = options[:output_folder] || OUTPUT_FOLDER
     if options[:files]
-      folder = nil
       filenames = options[:files]
     else  
       folder = options[:folder] || "ciat"
       pattern = options[:pattern] || "*.ciat"
-      path = File.join(folder, "**", pattern)
-      filenames = Dir[path]
+      filenames = Dir[File.join(folder, "**", pattern)]
     end
-    @crates = filenames.map { |filename| CIAT::Crate.new(filename, @output_folder) }
-    @report_filename = options[:report_filename] || REPORT_FILENAME
+    @crates = filenames.map { |filename| CIAT::Crate.new(filename, self) }
+    @report_filename = options[:report_filename] || (File.join(@output_folder, REPORT_FILENAME))
   end
   
   def size
     crates.size
   end
   
-  def create_output_folder
-    Dir.mkdir(output_folder)
+  def write_file(filename, content)
+    FileUtils.mkdir_p(File.dirname(filename))
+    File.open(filename, "w") do |file|
+      file.write content
+    end
   end
 end

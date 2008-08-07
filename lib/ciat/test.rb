@@ -37,15 +37,9 @@ class CIAT::Test
   end
   
   def write_output_files
-    write_file(crate.source, source)
-    write_file(crate.compilation_expected, compilation_expected)
-    write_file(crate.output_expected, output_expected)
-  end
-
-  def write_file(filename, content)
-    File.open(filename, "w") do |file|
-      file.write content
-    end
+    crate.write_file(crate.source, source)
+    crate.write_file(crate.compilation_expected, compilation_expected)
+    crate.write_file(crate.output_expected, output_expected)
   end
 
   def compile

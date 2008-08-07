@@ -7,23 +7,23 @@ describe CIAT::Cargo, "initializing" do
   end
   
   it "should use default values" do
-    expect_standard_dir_lookup("ciat/**/*.ciat")
+    expect_dir_lookup("ciat/**/*.ciat")
     CIAT::Cargo.new().crates.should == @crates
   end
   
   it "should use specified pattern" do
-    expect_standard_dir_lookup("ciat/**/*.foobar")
+    expect_dir_lookup("ciat/**/*.foobar")
     CIAT::Cargo.new(:pattern => "*.foobar").crates.should == @crates
   end
   
   it "should use specified folder" do
-    expect_standard_dir_lookup("jimmy/**/*.ciat", :folder => "jimmy")
+    expect_dir_lookup("jimmy/**/*.ciat", :folder => "jimmy")
     CIAT::Cargo.new(:folder => "jimmy").crates.should == @crates
   end
   
   it "should use specified output folder" do
     output_folder = mock("output folder")
-    expect_standard_dir_lookup("ciat/**/*.ciat", :output_folder => output_folder)
+    expect_dir_lookup("ciat/**/*.ciat", :output_folder => output_folder)
     CIAT::Cargo.new(:output_folder => output_folder).crates.should == @crates
   end
   
@@ -43,18 +43,18 @@ describe CIAT::Cargo, "initializing" do
   
   it "should use specified folder and specified pattern and specified output folder and specified report filename" do
     output_folder, report_filename = mock("output folder"), mock("report filename")
-    expect_standard_dir_lookup("angel/**/*_ppc.ciat", :folder => "angel", :output_folder => output_folder)
+    expect_dir_lookup("angel/**/*_ppc.ciat", :folder => "angel", :output_folder => output_folder)
     overspecified_cargo = CIAT::Cargo.new(:folder => "angel", :pattern => "*_ppc.ciat", :output_folder => output_folder, :report_filename => report_filename)
     overspecified_cargo.crates.should == @crates
     overspecified_cargo.report_filename.should == report_filename
   end
   
   it "should have a size based on number of crates" do
-    expect_standard_dir_lookup("ciat/**/*.ciat")
+    expect_dir_lookup("ciat/**/*.ciat")
     CIAT::Cargo.new().size.should == 3
   end
 
-  def expect_standard_dir_lookup(path, options={})
+  def expect_dir_lookup(path, options={})
     options = { :folder => 'ciat', :output_folder => CIAT::Cargo::OUTPUT_FOLDER }.merge(options)
     Dir.should_receive(:[]).with(path).and_return(@filenames)
     expect_filenames_turned_into_crates(options)
@@ -62,23 +62,19 @@ describe CIAT::Cargo, "initializing" do
   
   def expect_filenames_turned_into_crates(options)
     @filenames.zip(@crates) do |filename, crate|
-      CIAT::Crate.should_receive(:new).with(filename, options[:output_folder]).and_return(crate)
+      CIAT::Crate.should_receive(:new).with(filename, duck_type(:write_file, :output_folder)).and_return(crate)
     end
   end
 end
 
-describe CIAT::Cargo, "creating output folder" do
-  it "should create the default output folder" do
-    response = mock("response")
-    cargo = CIAT::Cargo.new(:files => [])
-    Dir.should_receive(:mkdir).with(CIAT::Cargo::OUTPUT_FOLDER).and_return(response)
-    cargo.create_output_folder.should == response
-  end
-  
-  it "should create a specified output folder" do
-    output_folder, response = mock("output_folder"), mock("response")
-    cargo = CIAT::Cargo.new(:files => [], :output_folder => output_folder)
-    Dir.should_receive(:mkdir).with(output_folder).and_return(response)
-    cargo.create_output_folder.should == response
+describe CIAT::Cargo, "writing a file" do
+  it "should create folder and write file" do
+    content, response = mock("content"), mock("response")
+    cargo = CIAT::Cargo.new(:files => [], :output_folder => "NOT USED")
+    
+    FileUtils.should_receive(:mkdir_p).with("a/b/c/d")
+    File.should_receive(:open).with("a/b/c/d/foo.ciat", "w").and_return(response)
+    
+    cargo.write_file("a/b/c/d/foo.ciat", content).should == response
   end
 end

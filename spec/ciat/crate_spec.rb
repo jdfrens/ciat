@@ -2,8 +2,8 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::Crate, "generating interesting names" do
   before(:each) do
-    @output_folder = mock("output folder")
-    @crate = CIAT::Crate.new("ciat/filename.ciat", @output_folder)
+    @cargo = mock("cargo")
+    @crate = CIAT::Crate.new("ciat/filename.ciat", @cargo)
     @expected_filename = mock("expected filename")
   end
     
@@ -11,14 +11,10 @@ describe CIAT::Crate, "generating interesting names" do
     @crate.test_file.should == "ciat/filename.ciat"
   end
   
-  it "should have a basename" do
-    @crate.basename.should == "filename"
+  it "should have a stub" do
+    @crate.stub.should == "ciat/filename"
   end
   
-  it "should have a folder name" do
-    @crate.folder_name.should == "ciat"
-  end
-
   it "should have a source file" do
     set_expected_output_modifiers("source")
     @crate.source.should == @expected_filename
@@ -54,25 +50,36 @@ describe CIAT::Crate, "generating interesting names" do
     @crate.output_diff.should == @expected_filename    
   end
   
-  it "should have an output folder" do
-    @crate.output_folder.should == @output_folder
+  it "should have a parent cargo" do
+    @crate.cargo.should == @cargo
   end
   
   def set_expected_output_modifiers(*modifiers)
-    @crate.should_receive(:output_filename).with(*modifiers).and_return(@expected_filename)    
+    @crate.should_receive(:output_filename).with(*modifiers).and_return(@expected_filename)
   end
 end
 
 describe CIAT::Crate, "generating actual file names" do
   before(:each) do
-    @crate = CIAT::Crate.new("philenamus", "outie")
+    @cargo = mock("cargo", :output_folder => "outie")
+    @crate = CIAT::Crate.new("ciat/phile.ciat", @cargo)
   end
   
   it "should work with no modifiers" do
-    @crate.output_filename().should == "outie/philenamus"
+    @crate.output_filename().should == "outie/ciat/phile"
   end
   
   it "should work with multiple modifiers" do
-      @crate.output_filename("one", "two", "three").should == "outie/philenamus_one_two_three"
+    @crate.output_filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
+  end
+end
+
+describe CIAT::Crate, "writing a file" do
+  it "should defer to cargo" do
+    cargo = mock("cargo")
+    crate = CIAT::Crate.new("NOT USED", cargo)
+    cargo.should_receive(:write_file).with("phile.txt", "contents")
+    
+    crate.write_file("phile.txt", "contents")
   end
 end

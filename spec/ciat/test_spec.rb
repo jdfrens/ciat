@@ -2,10 +2,10 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::Test do
   before(:each) do
-    @namer = mock("namer")
+    @crate = mock("crate")
     @compiler = mock("compiler")
     @executor = mock("executor")
-    @test = CIAT::Test.new(@namer, @compiler, @executor)
+    @test = CIAT::Test.new(@crate, @compiler, @executor)
   end
 
   describe "running a test" do
@@ -48,7 +48,7 @@ describe CIAT::Test do
   describe "splitting a test file" do
     it "should split the test file" do
       filename = mock("filename")
-      @namer.should_receive(:test_file).and_return(filename)
+      @crate.should_receive(:test_file).and_return(filename)
       File.should_receive(:read).with(filename).and_return("d\n====\ns\n====\np\n====\no\n====\n")
       
       @test.split_test_file.should == ["d\n", "s\n", "p\n", "o\n"]
@@ -123,13 +123,13 @@ describe CIAT::Test do
     filename = mock_and_expect_filenames(type)[0]
     contents = mock(type.to_s + " contents")
     @test.should_receive(type).and_return(contents)
-    @test.should_receive(:write_file).with(filename, contents)
+    @crate.should_receive(:write_file).with(filename, contents)
   end
 
   def mock_and_expect_filenames(*types)
     types.map do |type|
       filename = mock(type.to_s + " filename")
-      @namer.should_receive(type).and_return(filename)
+      @crate.should_receive(type).and_return(filename)
       filename
     end
   end

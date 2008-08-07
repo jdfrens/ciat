@@ -39,9 +39,8 @@ class CIAT::Suite
   end
   
   def run
-    cargo.create_output_folder
     results = cargo.crates.collect { |crate| run_test(crate) }
-    write_file(cargo.report_filename, generate_html(results))
+    cargo.write_file(cargo.report_filename, generate_html(results))
     @feedback.post_tests(self)
     results
   end
@@ -54,13 +53,7 @@ class CIAT::Suite
     # FIXME: binding here is wrong---very, very wrong!
     ERB.new(template).result(lambda { binding })
   end
-  
-  def write_file(filename, content)
-    File.open(filename, "w") do |file|
-      file.write content
-    end
-  end
-      
+ 
   def template
     File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
   end

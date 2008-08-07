@@ -81,13 +81,13 @@ end
 #
 def check_output_files
   puts "Checking output files."
-  unless system("diff expected_temp/ temp/")
+  unless system("diff -r temp_expected/ temp/")
     raise("**** diff failed!")
   end
 end
 
 def expected_files
-  Dir.glob("expected_temp/*").map { |filename| File.basename(filename) }
+  Dir.glob("temp_expected/*").map { |filename| File.basename(filename) }
 end
 
 def generated_files

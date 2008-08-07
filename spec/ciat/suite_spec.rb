@@ -20,11 +20,10 @@ describe CIAT::Suite, "top level test function" do
     html, report_filename = mock("html"), mock("report filename")
     suite = CIAT::Suite.new(@compiler, @executor, @cargo, :feedback => @feedback)
     
-    @cargo.should_receive(:create_output_folder)
     @cargo.should_receive(:crates).and_return([])
     suite.should_receive(:generate_html).with([]).and_return(html)
     @cargo.should_receive(:report_filename).and_return(report_filename)
-    suite.should_receive(:write_file).with(report_filename, html)
+    @cargo.should_receive(:write_file).with(report_filename, html)
     @feedback.should_receive(:post_tests).with(suite)
     
     suite.run.should == []
@@ -35,16 +34,15 @@ describe CIAT::Suite, "top level test function" do
     crates = [mock("crate1"), mock("crate2")]
     results = [mock("result1"), mock("result2")]
     html, report_filename = mock("html"), mock("report filename")
-    
     suite = CIAT::Suite.new(@compiler, @executor, @cargo, :feedback => @feedback)
-    @cargo.should_receive(:create_output_folder)
+
     @cargo.should_receive(:crates).with().and_return(crates)
     crates.zip(results).each do |crate, result|
       suite.should_receive(:run_test).with(crate).and_return(result)
     end  
     suite.should_receive(:generate_html).with(results).and_return(html)
     @cargo.should_receive(:report_filename).and_return(report_filename)
-    suite.should_receive(:write_file).with(report_filename, html)    
+    @cargo.should_receive(:write_file).with(report_filename, html)    
     @feedback.should_receive(:post_tests).with(suite)
     
     suite.run.should == results

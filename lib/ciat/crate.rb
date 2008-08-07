@@ -1,14 +1,12 @@
 class CIAT::Crate
   attr_reader :test_file
-  attr_reader :folder_name
-  attr_reader :basename
-  attr_reader :output_folder
+  attr_reader :stub
+  attr_reader :cargo
     
-  def initialize(test_file, output_folder)
+  def initialize(test_file, cargo)
     @test_file = test_file
-    @folder_name = File.dirname(test_file)
-    @basename = File.basename(test_file).gsub(File.extname(test_file), "")
-    @output_folder = output_folder
+    @stub = test_file.gsub(File.extname(test_file), "")
+    @cargo = cargo
   end
   
   def test
@@ -44,6 +42,10 @@ class CIAT::Crate
   end
   
   def output_filename(*modifiers)
-    File.join(output_folder, [basename, *modifiers].compact.join("_"))
+    File.join(cargo.output_folder, [stub, *modifiers].compact.join("_"))
+  end
+  
+  def write_file(filename, contents)
+    @cargo.write_file(filename, contents)
   end
 end

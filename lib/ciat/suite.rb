@@ -29,8 +29,9 @@ class CIAT::Suite
   # suppose).  It will automatically find all the <code>ciat/*.ciat</code> files as
   # acceptance tests.  Read the class comments above for an example and an
   # explanation of the parameters.
-  def initialize(compiler, executor, cargo, options = {})
-    @compiler, @executor, @cargo = compiler, executor, cargo
+  def initialize(compiler, executor, options = {})
+    @compiler, @executor = compiler, executor
+    @cargo = options[:cargo] || CIAT::Cargo.new(options)
     @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
   end
   

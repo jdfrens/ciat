@@ -5,40 +5,48 @@ describe CIAT::Cargo, "initializing" do
     @filenames = [mock("filename1"), mock("filename2"), mock("filename3")]
     @crates = [mock("crate1"), mock("crate2"), mock("crate3")]
   end
+
+  describe "building crates" do
+    it "should use default values" do
+      expect_dir_lookup("ciat/**/*.ciat")
+      CIAT::Cargo.new().crates.should == @crates
+    end
   
-  it "should use default values" do
-    expect_dir_lookup("ciat/**/*.ciat")
-    CIAT::Cargo.new().crates.should == @crates
+    it "should use specified pattern" do
+      expect_dir_lookup("ciat/**/*.foobar")
+      CIAT::Cargo.new(:pattern => "*.foobar").crates.should == @crates
+    end
+  
+    it "should use specified folder" do
+      expect_dir_lookup("jimmy/**/*.ciat", :folder => "jimmy")
+      CIAT::Cargo.new(:folder => "jimmy").crates.should == @crates
+    end
+  
+    it "should use specified output folder" do
+      expect_dir_lookup("ciat/**/*.ciat", :output_folder => "SPECIFIED FOLDER")
+      CIAT::Cargo.new(:output_folder => "SPECIFIED FOLDER").crates.should == @crates
+    end
+    
+    it "should use specified files without lookup" do
+      expect_filenames_turned_into_crates(:folder => nil, :output_folder => CIAT::Cargo::OUTPUT_FOLDER)
+      CIAT::Cargo.new(:files => @filenames).crates.should == @crates
+    end
   end
   
-  it "should use specified pattern" do
-    expect_dir_lookup("ciat/**/*.foobar")
-    CIAT::Cargo.new(:pattern => "*.foobar").crates.should == @crates
-  end
+  describe "report filename" do
+    it "should use default report filename" do
+      CIAT::Cargo.new().report_filename.should == File.join(CIAT::Cargo::OUTPUT_FOLDER, CIAT::Cargo::REPORT_FILENAME)
+    end
   
-  it "should use specified folder" do
-    expect_dir_lookup("jimmy/**/*.ciat", :folder => "jimmy")
-    CIAT::Cargo.new(:folder => "jimmy").crates.should == @crates
-  end
+    it "should use specified output folder for report filename" do
+      expect_dir_lookup("ciat/**/*.ciat", :output_folder => "SPECIFIED FOLDER")
+      CIAT::Cargo.new(:output_folder => "SPECIFIED FOLDER").report_filename.should == File.join("SPECIFIED FOLDER", CIAT::Cargo::REPORT_FILENAME)
+    end
   
-  it "should use specified output folder" do
-    output_folder = mock("output folder")
-    expect_dir_lookup("ciat/**/*.ciat", :output_folder => output_folder)
-    CIAT::Cargo.new(:output_folder => output_folder).crates.should == @crates
-  end
-  
-  it "should use default report filename" do
-    CIAT::Cargo.new().report_filename.should == CIAT::Cargo::REPORT_FILENAME
-  end
-  
-  it "should use specified report filename" do
-    report_filename = mock("report filename")
-    CIAT::Cargo.new(:report_filename => report_filename).report_filename.should == report_filename
-  end
-  
-  it "should use specified files without lookup" do
-    expect_filenames_turned_into_crates(:folder => nil, :output_folder => CIAT::Cargo::OUTPUT_FOLDER)
-    CIAT::Cargo.new(:files => @filenames).crates.should == @crates
+    it "should use specified report filename" do
+      report_filename = mock("report filename")
+      CIAT::Cargo.new(:report_filename => report_filename).report_filename.should == report_filename
+    end
   end
   
   it "should use specified folder and specified pattern and specified output folder and specified report filename" do

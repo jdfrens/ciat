@@ -27,15 +27,15 @@ end
 task :ciat_simple do
   puts "Copy compiler, cat executor, default filenames"
   CIAT::Suite.new(copy_compiler, cat_executor,
-    CIAT::Cargo.new(:files => ['ciat/copy-cat.ciat']),
+    :files => ['ciat/copy-cat.ciat'],
     :feedback => FeedbackTester.new(1)).run
 end
   
 task :ciat_java_cat do
-  # puts "Java compiler, cat executor, special folder"
-  # CIAT::Suite.new(java_compiler("Hello"), cat_executor,
-  #   :folder => 'java-cat',
-  #   :feedback => FeedbackTester.new(1)).run
+  puts "Java compiler, cat executor, special folder"
+  CIAT::Suite.new(java_compiler("Hello"), cat_executor,
+    :folder => 'ciat/java-cat',
+    :feedback => FeedbackTester.new(1)).run
 end
 
 task :ciat_java_parrot do

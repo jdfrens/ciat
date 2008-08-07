@@ -50,13 +50,16 @@ class CIAT::Test
   end
   
   def check_output
-    do_diff(:compilation, crate.compilation_expected, crate.compilation_generated, crate.compilation_diff)
+    do_diff(:compilation)
     unless traffic_lights[:compilation].yellow?
-      do_diff(:output, crate.output_expected, crate.output_generated, crate.output_diff)
+      do_diff(:output)
     end
   end
   
-  def do_diff(which, expected, generated, diff)
+  def do_diff(which)
+    expected = crate.output_filename(which, :expected)
+    generated = crate.output_filename(which, :generated)
+    diff = crate.output_filename(which, :diff)
     if system("diff '#{expected}' '#{generated}' > '#{diff}'")
       @traffic_lights[which].green!
     else

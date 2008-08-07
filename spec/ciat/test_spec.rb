@@ -93,21 +93,15 @@ describe CIAT::Test do
   
   describe "checking output" do
     it "should check all output when everything runs fine" do
-      compilation_expected_filename, compilation_generated_filename, compilation_diff_filename =
-        mock_and_expect_filenames(:compilation_expected, :compilation_generated, :compilation_diff)
-      output_expected_filename, output_generated_filename, output_diff_filename =
-        mock_and_expect_filenames(:output_expected, :output_generated, :output_diff)
-      @test.should_receive(:do_diff).with(:compilation, compilation_expected_filename, compilation_generated_filename, compilation_diff_filename)
+      @test.should_receive(:do_diff).with(:compilation)
       @traffic_lights[:compilation].should_receive(:yellow?).and_return(false)
-      @test.should_receive(:do_diff).with(:output, output_expected_filename, output_generated_filename, output_diff_filename)
+      @test.should_receive(:do_diff).with(:output)
       
       @test.check_output
     end
 
     it "should check output of just compiler when compiler fails" do
-      compilation_expected_filename, compilation_generated_filename, compilation_diff_filename =
-        mock_and_expect_filenames(:compilation_expected, :compilation_generated, :compilation_diff)
-      @test.should_receive(:do_diff).with(:compilation, compilation_expected_filename, compilation_generated_filename, compilation_diff_filename)
+      @test.should_receive(:do_diff).with(:compilation)
       @traffic_lights[:compilation].should_receive(:yellow?).and_return(true)
 
       @test.check_output
@@ -117,22 +111,27 @@ describe CIAT::Test do
   describe "doing a diff" do
     before(:each) do
       @expected, @generated, @diff = mock("expected"), mock("generated"), mock("diff")
+      @filenames = { :expected => @expected, :generated => @generated, :diff => @diff}
+      @which = :output
+      @filenames.keys.each do |type|
+        @crate.should_receive(:output_filename).
+          with(@which, type).and_return(@filenames[type])
+      end
+      @result = mock("result")
     end
     
     it "should be green for no difference" do
-      result = mock("result")
       @test.should_receive(:system).with("diff '#{@expected}' '#{@generated}' > '#{@diff}'").and_return(true)
-      @traffic_lights[:compilation].should_receive(:green!).and_return(result)
+      @traffic_lights[@which].should_receive(:green!).and_return(@result)
       
-      @test.do_diff(:compilation, @expected, @generated, @diff).should == result
+      @test.do_diff(@which).should == @result
     end
 
     it "should be red for some difference" do
-      result = mock("result")
       @test.should_receive(:system).with("diff '#{@expected}' '#{@generated}' > '#{@diff}'").and_return(false)
-      @traffic_lights[:output].should_receive(:red!).and_return(result)
+      @traffic_lights[@which].should_receive(:red!).and_return(@result)
       
-      @test.do_diff(:output, @expected, @generated, @diff).should == result
+      @test.do_diff(@which).should == @result
     end
   end
 

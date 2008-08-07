@@ -10,8 +10,7 @@ require 'ciat/executors/parrot'
 
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
-                  :ciat_simple, :ciat_java_cat, :ciat_java_parrot,
-                  :ciat_failures] do
+                  :simple, :java_cat, :java_parrot, :failures] do
   check_output_files
 end
 
@@ -25,32 +24,32 @@ task :clean_start do
   FileUtils.rm_r("temp/") if File.exists?("temp/")
 end
 
-task :ciat_simple do
+task :simple do
   puts "Copy compiler, cat executor, default filenames"
   CIAT::Suite.new(copy_compiler, cat_executor,
     :files => ['ciat/copy-cat.ciat'],
     :feedback => FeedbackTester.new(1)).run
 end
   
-task :ciat_java_cat do
+task :java_cat do
   puts "Java compiler, cat executor, special folder"
   CIAT::Suite.new(java_compiler("Hello"), cat_executor,
     :folder => 'ciat/java-cat',
     :feedback => FeedbackTester.new(1)).run
 end
 
-task :ciat_java_parrot do
+task :java_parrot do
   puts "Java compiler, Parrot executor, special folder"
   CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
     :folder => 'ciat/java-parrot',
     :feedback => FeedbackTester.new(1)).run  
 end
 
-task :ciat_failures do
-  # puts "Failures, special folder"
-  # CIAT::Suite.new(java_compiler("Failing"), cat_executor,
-  #   :folder => 'ciat/failures',
-  #   :feedback => FeedbackTester.new(1)).run
+task :failures do
+  puts "Failures, special folder"
+  CIAT::Suite.new(java_compiler("Failing"), cat_executor,
+    :folder => 'ciat/failures',
+    :feedback => FeedbackTester.new(1)).run
 end
 
 # TODO: compiler fails
@@ -78,21 +77,13 @@ def parrot_executor
 end
 
 #
-# Temp file checking
+# Output file checking
 #
 def check_output_files
   puts "Checking output files."
   unless system("diff -r temp_expected/ temp/")
     raise("**** diff failed!")
   end
-end
-
-def expected_files
-  Dir.glob("temp_expected/*").map { |filename| File.basename(filename) }
-end
-
-def generated_files
-  Dir.glob("temp/*").map { |filename| File.basename(filename) }
 end
 
 #

@@ -47,14 +47,19 @@ A sample input file (<code>simpleinteger5.ciat</code>):
   ====
   5
 
-Test files must be named with a <code>.ciat</code> (for now).  Contents must be ordered: description, source input, expected target code, expected execution output (again, for now).
+Test files must be named with a <code>.ciat</code> (for now). Contents must be ordered:
+description, source input, expected target code, expected execution output (again, for now).
+
+A compilation that fails should return a non-zero status so that the generated code is not sent
+through an executor. The compiler should send error messages to the output file (instead of raw
+code) to be checked.
 
 == REQUIREMENTS:
 
 * Pronounce "CIAT" as "dog".
 * Must have +diff+ executable.
-* You have to provide your own target-code executors (e.g., +parrot+ for the Parrot Virtual Machine, +spim+
-  for MIPS emulation, etc.)
+* You have to provide your own target-code executors (e.g., +parrot+ for the Parrot Virtual
+  Machine, +spim+ for MIPS emulation, etc.)
 
 == INSTALL:
 

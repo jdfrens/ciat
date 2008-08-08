@@ -54,10 +54,15 @@ task :failures do
   CIAT::Suite.new(copy_compiler, ExceptionalExecutor.new,
     :files => 'ciat/failures/bad-compile.ciat',
     :feedback => FeedbackTester.new(1)).run
+  puts "Failed execution"
+  CIAT::Suite.new(copy_compiler, FailingExecutor.new,
+    :files => 'ciat/failures/failed-execution.ciat',
+    :feedback => FeedbackTester.new(1)).run
+  puts "Wrong execution"
+  CIAT::Suite.new(copy_compiler, cat_executor,
+    :files => 'ciat/failures/wrong-execution.ciat',
+    :feedback => FeedbackTester.new(1)).run
 end
-
-# TODO: executor fails
-# TODO: output of execution is wrong
 
 #
 # Compilers & Executors
@@ -81,6 +86,13 @@ end
 class ExceptionalExecutor
   def execute(x,y)
     raise("**** should not run this executor!!!")
+  end
+end
+
+class FailingExecutor
+  def execute(x, output_file)
+    system("echo this should be the error output > #{output_file}")
+    false
   end
 end
 

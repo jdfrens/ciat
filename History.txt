@@ -1,9 +1,10 @@
 == 0.0.4 2008-
 
 * IN PROGRESS
-
+  * Flexible way to specified test files (including recursive search).
+  * Executor triggered only if compilation phase is green.
 * minor
-  * Internal renamings.
+  * Internal renamings and restructuring.
 
 == 0.0.3 2008-08-02
 

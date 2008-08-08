@@ -3,8 +3,8 @@
 == DESCRIPTION:
 
 CIAT (pronounced "dog") provides a system for writing high-level acceptance tests for compilers and
-interpreters. Each acceptance test is entered into a single file, including the test's description, source
-code, expected target code, and even expected result when executed.
+interpreters. Each acceptance test is entered into a single file, including the test's description,
+source code, expected target code, and even expected result when executed.
 
 == FEATURES/PROBLEMS:
 
@@ -34,6 +34,13 @@ A sample +Rakefile+:
     CIAT::Executors::Parrot.new
   end
 
+This rakefile will find all of the <code>.ciat</code> files inside a +ciat+ directory, each one
+representing a test. Each test will be executed, and the results are put into a folder named
++temp+. All of these settings can be tweaked; see the documentation for CIAT::Suite for more
+information.
+
+The requirements for the compiler and executor can also be found in the documentation for CIAT::Suite.
+
 A sample input file (<code>simpleinteger5.ciat</code>):
 
   Compiles a simple integer.
@@ -47,12 +54,10 @@ A sample input file (<code>simpleinteger5.ciat</code>):
   ====
   5
 
-Test files must be named with a <code>.ciat</code> (for now). Contents must be ordered:
-description, source input, expected target code, expected execution output (again, for now).
+By default, test files should be named with a <code>.ciat</code> extension. Contents must be
+ordered: description, source input, expected target code, expected execution output. For more
+information about test files, see the documentation for CIAT::Suite.
 
-A compilation that fails should return a non-zero status so that the generated code is not sent
-through an executor. The compiler should send error messages to the output file (instead of raw
-code) to be checked.
 
 == REQUIREMENTS:
 
@@ -61,10 +66,12 @@ code) to be checked.
 * You have to provide your own target-code executors (e.g., +parrot+ for the Parrot Virtual
   Machine, +spim+ for MIPS emulation, etc.)
 
+
 == INSTALL:
 
 * Install +diff+.
-* sudo gem install jdfrens-ciat
+* <code>sudo gem install jdfrens-ciat</code>
+
 
 == LICENSE:
 

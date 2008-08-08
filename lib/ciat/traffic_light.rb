@@ -1,5 +1,5 @@
 class CIAT::TrafficLight
-  def initialize(setting = :unset)
+  def initialize(setting = :unset) #:nodoc:
     @setting = setting
   end
   
@@ -7,7 +7,7 @@ class CIAT::TrafficLight
     @setting == :green
   end
   
-  def green!
+  def green! #:nodoc:
     @setting = :green unless yellow?
   end
   
@@ -15,7 +15,7 @@ class CIAT::TrafficLight
     @setting == :yellow
   end
   
-  def yellow!
+  def yellow! #:nodoc:
     @setting = :yellow
   end
   
@@ -23,7 +23,7 @@ class CIAT::TrafficLight
     @setting == :red
   end
   
-  def red!
+  def red! #:nodoc:
     @setting = :red unless yellow?
   end
 end

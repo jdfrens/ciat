@@ -1,6 +1,6 @@
-== 0.0.4 2008-
+== 0.0.4 2008-08-08
 
-* IN PROGRESS
+* 2 major enhancements:
   * Flexible way to specified test files (including recursive search).
   * Executor triggered only if compilation phase is green.
 * minor

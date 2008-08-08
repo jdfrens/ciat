@@ -1,34 +1,87 @@
 require 'erb'
 
-# This is the class to use.
+# = A Suite of Tests
 #
-# Put all of your tests into <code>.ciat</code> files in a <code>ciat</code> directory. 
+# This is the class to use in your +Rakefile+.  The simplest use looks like
+# this:
 #
-# CIAT will use a subdirectory named +temp+ to do all of its work.
-#
-# Add a rake task to your +Rakefile+ (or create a +Rakefile+ if needed)
-#
-# Your +Rakefile+ should contain a task like this:
 #   task :ciat do
-#     CIAT::Suite.new(CIAT::Compilers::Java.new(classpath, compiler_class), CIAT::Executors::Parrot.new).run
+#     CIAT::Suite.new(compiler, executor).run
 #   end
 #
-# <code>rake ciat</code> will execute all of your acceptance tests.
+# Define +compiler+ and +executor+ in the +Rakefile+ to return a compiler and
+# executor, respectively.  See the "Compilers and Executors" section below.
 #
-# You can create your own compiler and executor.  The
-# compiler needs a <code>compile(source, compilation_generated)</code>
-# which will compile your code; the executor needs an
-# <code>execute(compilation_generated, output_generated)</code> which will execute the
-# generated target code.  See CIAT::Compilers::Java and
-# CIAT::Executors::Parrot.
+# == Specifying Test and Output Files and Folders
+#
+# By default, this suite will do the following:
+# * find tests ending in <code>.ciat</code> in a folder named
+#   <code>ciat</code>,
+# * use simple standard-output feedback,
+# * put all output files into a folder named <code>temp</code>,
+# * produce a report in <code>temp/report.html</code>.
+#
+# Each of these settings can be overridden with these options:
+# * <code>:folder</code> specifies folders to search for test files (default:
+#   <code>ciat/**</code>).
+# * <code>:pattern</code> specifies a pattern for matching test files
+#   (default: <code>*.ciat</code>).
+# * <code>:files</code> is an array of specific files (default: none).
+# * <code>:output_folder</code> is the output folder (default: +temp+)
+# * <code>:report_filename</code> is the name of the report (default:
+#   <code>report.html</code> in the output folder)
+# * <code>:feedback</code> specifies a feedback mechanism (default: a
+#   CIAT::Feedback::StandardOutput).
+#
+# <code>:folder</code> and <code>:pattern</code> can be used together;
+# <code>:files</code> overrides both <code>:folder</code> and
+# <code>:pattern</code>.
+#
+# == Compilers and Executors
+#
+# You can create your own compiler and executor.  The compiler needs a
+# <code>compile(source, compilation_generated)</code> which receives filenames
+# and compiles your code; the executor needs an
+# <code>execute(compilation_generated, output_generated)</code> which also
+# receives filenames and execute the generated target code.  See
+# CIAT::Compilers::Java and CIAT::Executors::Parrot (to learn how to use them
+# and how to write others).
+#
+# == Test File
+#
+# A test file consists of a description, source code, expected target code,
+# and expected output.
+# * The description is used in feedback and reports.
+# * The source code is the code you want compiled by your compiler.
+# * The expected target code is the code you expect your compiler to spit out.
+# * The expected output is the output you expect when <em>your</em> target
+#   code is executed.
+#
+# For example:
+#         
+#   Compiles a simple integer.
+#   ====
+#   2 + 3
+#   ====
+#   .sub main
+#     I0 = 2
+#     I1 = 3
+#     I0 = I0 + I1
+#     print I0
+#     print "\n"
+#   .end
+#   ====
+#   5
+#
+# This example turns the source code <code>2+3</code> into the equivalent PIR
+# code (with output).  When the generated PIR code is executed, we expect
+# <code>5</code> as a result.
+#
 class CIAT::Suite
   attr_reader :cargo
   
-  # The only method in this class that matters to the outside work.  Call
-  # this method in your rake task (or anywhere in a Ruby program, I
-  # suppose).  It will automatically find all the <code>ciat/*.ciat</code> files as
-  # acceptance tests.  Read the class comments above for an example and an
-  # explanation of the parameters.
+  # Constructs a suite of CIAT tests.  See the instructions above for possible
+  # values for the +options+.
   def initialize(compiler, executor, options = {})
     @compiler, @executor = compiler, executor
     @cargo = options[:cargo] || CIAT::Cargo.new(options)
@@ -46,16 +99,16 @@ class CIAT::Suite
     results
   end
   
-  def run_test(crate)
+  def run_test(crate) #:nodoc:
     CIAT::Test.new(crate, @compiler, @executor).run
   end
   
-  def generate_html(test_reports)
+  def generate_html(test_reports) #:nodoc:
     # FIXME: binding here is wrong---very, very wrong!
     ERB.new(template).result(lambda { binding })
   end
  
-  def template
+  def template #:nodoc:
     File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
   end
 end

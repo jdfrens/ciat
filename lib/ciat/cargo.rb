@@ -1,4 +1,4 @@
-class CIAT::Cargo
+class CIAT::Cargo #:nodoc:all
   OUTPUT_FOLDER = "temp"
   REPORT_FILENAME = "report.html"
   

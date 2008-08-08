@@ -1,4 +1,4 @@
-class CIAT::Crate
+class CIAT::Crate #:nodoc:all
   attr_reader :test_file
   attr_reader :stub
   attr_reader :cargo

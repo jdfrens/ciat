@@ -7,7 +7,7 @@ class CIAT::Test
   attr_reader :compilation_light
   attr_reader :execution_light
   
-  def initialize(crate, compiler, executor, options={})
+  def initialize(crate, compiler, executor, options={}) #:nodoc:
     @crate = crate
     @compiler = compiler
     @executor = executor
@@ -27,13 +27,13 @@ class CIAT::Test
     self
   end
   
-  def split_test_file
+  def split_test_file #:nodoc:
     @description, @source, @compilation_expected, @output_expected = File.read(crate.test_file).split(/^====\s*$/).map do |s|
       s.gsub(/^\n/, '')
     end
   end
   
-  def write_output_files
+  def write_output_files #:nodoc:
     crate.write_file(crate.source, source)
     crate.write_file(crate.compilation_expected, compilation_expected)
     unless output_expected =~ /^\s*NONE\s*$/
@@ -41,17 +41,17 @@ class CIAT::Test
     end
   end
 
-  def compile
+  def compile #:nodoc:
     unless @compiler.compile(crate.source, crate.compilation_generated)
       @compilation_light.yellow!
     end
   end
   
-  def execute
+  def execute #:nodoc:
     @executor.execute(crate.compilation_generated, crate.output_generated)
   end
   
-  def check(which, traffic_light)
+  def check(which, traffic_light) #:nodoc:
     expected = crate.output_filename(which, :expected)
     generated = crate.output_filename(which, :generated)
     diff = crate.output_filename(which, :diff)

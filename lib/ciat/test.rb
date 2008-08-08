@@ -1,25 +1,29 @@
 class CIAT::Test
   attr_reader :crate
   attr_reader :description
-  attr_reader :traffic_lights
   attr_reader :source
   attr_reader :compilation_expected
   attr_reader :output_expected
+  attr_reader :compilation_light
+  attr_reader :execution_light
   
   def initialize(crate, compiler, executor, options={})
     @crate = crate
     @compiler = compiler
     @executor = executor
-    @traffic_lights = options[:traffic_lights] || 
-      { :compilation => CIAT::TrafficLight.new, :output => CIAT::TrafficLight.new }
+    @compilation_light = options[:compilation_light] || CIAT::TrafficLight.new
+    @execution_light = options[:execution_light] || CIAT::TrafficLight.new
   end
   
   def run
     split_test_file
     write_output_files
     compile
-    execute
-    check_output
+    check(:compilation, @compilation_light)
+    if @compilation_light.green?
+      execute
+      check(:output, @execution_light)
+    end
     self
   end
   
@@ -39,31 +43,22 @@ class CIAT::Test
 
   def compile
     unless @compiler.compile(crate.source, crate.compilation_generated)
-      traffic_lights[:compilation].yellow!
+      @compilation_light.yellow!
     end
   end
   
   def execute
-    unless traffic_lights[:compilation].yellow?
-      @executor.execute(crate.compilation_generated, crate.output_generated)
-    end
+    @executor.execute(crate.compilation_generated, crate.output_generated)
   end
   
-  def check_output
-    do_diff(:compilation)
-    unless traffic_lights[:compilation].yellow?
-      do_diff(:output)
-    end
-  end
-  
-  def do_diff(which)
+  def check(which, traffic_light)
     expected = crate.output_filename(which, :expected)
     generated = crate.output_filename(which, :generated)
     diff = crate.output_filename(which, :diff)
     if system("diff '#{expected}' '#{generated}' > '#{diff}'")
-      @traffic_lights[which].green!
+      traffic_light.green!
     else
-      @traffic_lights[which].red!
+      traffic_light.red!
     end
   end
 end

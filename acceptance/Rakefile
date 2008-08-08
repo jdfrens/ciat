@@ -46,19 +46,21 @@ task :java_parrot do
 end
 
 task :failures do
-  puts "Failures, special folder"
-  CIAT::Suite.new(java_compiler("Failing"), cat_executor,
-    :folder => 'ciat/failures',
+  puts "Failed compilation"
+  CIAT::Suite.new(java_compiler("Failing"), ExceptionalExecutor.new,
+    :files => 'ciat/failures/failed-compile.ciat',
+    :feedback => FeedbackTester.new(1)).run
+  puts "Wrong compilation"
+  CIAT::Suite.new(copy_compiler, ExceptionalExecutor.new,
+    :files => 'ciat/failures/bad-compile.ciat',
     :feedback => FeedbackTester.new(1)).run
 end
 
-# TODO: compiler fails
-# TODO: output of compiler is wrong
 # TODO: executor fails
 # TODO: output of execution is wrong
 
 #
-# Comilers & Executors
+# Compilers & Executors
 #
 def copy_compiler
   CIAT::Compilers::Copy.new
@@ -74,6 +76,12 @@ end
 
 def parrot_executor
   CIAT::Executors::Parrot.new
+end
+
+class ExceptionalExecutor
+  def execute(x,y)
+    raise("**** should not run this executor!!!")
+  end
 end
 
 #

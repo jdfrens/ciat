@@ -7,7 +7,7 @@ public class HelloCompiler {
         String input = reader.readLine();
         reader.close();
         PrintWriter printer = new PrintWriter(args[1]);
-        printer.println("Hello, " + input + ".\n");
+        printer.println("Hello, " + input + ".");
         printer.close();
         System.exit(0);
     }

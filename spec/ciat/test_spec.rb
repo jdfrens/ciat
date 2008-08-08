@@ -5,8 +5,10 @@ describe CIAT::Test do
     @crate = mock("crate")
     @compiler = mock("compiler")
     @executor = mock("executor")
-    @traffic_lights = { :compilation => mock("compilation traffic light"), :output => mock("output traffic light") }
-    @test = CIAT::Test.new(@crate, @compiler, @executor, :traffic_lights => @traffic_lights)
+    @compilation_light = mock("compilation traffic light")
+    @execution_light = mock("output traffic light")
+    @test = CIAT::Test.new(@crate, @compiler, @executor,
+      :compilation_light => @compilation_light, :execution_light => @execution_light)
   end
 
   describe "running a test" do
@@ -14,8 +16,19 @@ describe CIAT::Test do
       @test.should_receive(:split_test_file)
       @test.should_receive(:write_output_files)
       @test.should_receive(:compile)
+      @test.should_receive(:check).with(:compilation, @compilation_light)
+      @compilation_light.should_receive(:green?).and_return(true)
       @test.should_receive(:execute)
-      @test.should_receive(:check_output)
+      @test.should_receive(:check).with(:output, @execution_light)
+      @test.run.should == @test
+    end
+
+    it "should run a test up to red compilation" do
+      @test.should_receive(:split_test_file)
+      @test.should_receive(:write_output_files)
+      @test.should_receive(:compile)
+      @test.should_receive(:check).with(:compilation, @compilation_light)
+      @compilation_light.should_receive(:green?).and_return(false)
       @test.run.should == @test
     end
   end
@@ -67,44 +80,19 @@ describe CIAT::Test do
         should_receive(:compile).
         with(source_filename, compilation_generated_filename).
         and_return(false)
-      @traffic_lights[:compilation].
-        should_receive(:yellow!)
+      @compilation_light.should_receive(:yellow!)
       
       @test.compile
     end
   end
   
-  describe "running program" do
-    it "should run program when compilation was successful" do
+  describe "executing target code" do
+    it "should execute when compilation was successful" do
       compilation_generated_filename, output_generated_filename =
         mock_and_expect_filenames(:compilation_generated, :output_generated)
-      @traffic_lights[:compilation].should_receive(:yellow?).and_return(false)
       @executor.should_receive(:execute).with(compilation_generated_filename, output_generated_filename)
       
       @test.execute
-    end
-
-    it "should run program" do
-      @traffic_lights[:compilation].should_receive(:yellow?).and_return(true)
-      
-      @test.execute
-    end
-  end
-  
-  describe "checking output" do
-    it "should check all output when everything runs fine" do
-      @test.should_receive(:do_diff).with(:compilation)
-      @traffic_lights[:compilation].should_receive(:yellow?).and_return(false)
-      @test.should_receive(:do_diff).with(:output)
-      
-      @test.check_output
-    end
-
-    it "should check output of just compiler when compiler fails" do
-      @test.should_receive(:do_diff).with(:compilation)
-      @traffic_lights[:compilation].should_receive(:yellow?).and_return(true)
-
-      @test.check_output
     end
   end
   
@@ -117,21 +105,22 @@ describe CIAT::Test do
         @crate.should_receive(:output_filename).
           with(@which, type).and_return(@filenames[type])
       end
+      @traffic_light = mock("traffic light")
       @result = mock("result")
     end
     
     it "should be green for no difference" do
       @test.should_receive(:system).with("diff '#{@expected}' '#{@generated}' > '#{@diff}'").and_return(true)
-      @traffic_lights[@which].should_receive(:green!).and_return(@result)
+      @traffic_light.should_receive(:green!).and_return(@result)
       
-      @test.do_diff(@which).should == @result
+      @test.check(@which, @traffic_light).should == @result
     end
 
     it "should be red for some difference" do
       @test.should_receive(:system).with("diff '#{@expected}' '#{@generated}' > '#{@diff}'").and_return(false)
-      @traffic_lights[@which].should_receive(:red!).and_return(@result)
+      @traffic_light.should_receive(:red!).and_return(@result)
       
-      @test.do_diff(@which).should == @result
+      @test.check(@which, @traffic_light).should == @result
     end
   end
 

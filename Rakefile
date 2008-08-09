@@ -22,3 +22,10 @@ Rake::RDocTask.new(:doc) do |t|
   t.rdoc_files.include('History.txt')
   t.rdoc_files.include('lib/**/*.rb')
 end
+
+desc "Make and install gem"
+task :gem => [:specs_with_rcov] do
+  system "sudo gem uninstall ciat"
+  system "gem build ciat.gemspec"
+  system "sudo gem install ciat*.gem"
+end

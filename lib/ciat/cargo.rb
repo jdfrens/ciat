@@ -16,7 +16,7 @@ class CIAT::Cargo #:nodoc:all
       filenames = Dir[File.join(folder, "**", pattern)]
     end
     @crates = filenames.map { |filename| CIAT::Crate.new(filename, self) }
-    @report_filename = options[:report_filename] || (File.join(@output_folder, REPORT_FILENAME))
+    @report_filename = File.join(@output_folder, options[:report_filename] || REPORT_FILENAME)
   end
   
   def size

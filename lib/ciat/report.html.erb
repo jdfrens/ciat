@@ -1,0 +1,25 @@
+<html>
+	<head>
+		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+		<title>CIAT Report</title>
+	</head>
+	
+	<body><% result = results[0] %>
+		<h1><%= result.description %></h1>
+		
+		<h2>Source</h2>
+<pre>
+<%= result.source %></pre>
+
+		<h2>Target Code</h2>
+		
+<pre>
+<%= result.compilation_expected %></pre>
+
+		<h2>Execution Output</h2>
+		
+<pre>
+<%= result.output_expected %></pre>
+
+	</body>
+</html>

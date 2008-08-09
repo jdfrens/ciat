@@ -33,6 +33,7 @@ describe CIAT::Suite, "top level test function" do
     @feedback.should_receive(:post_tests).with(suite)
     
     suite.run.should == []
+    suite.results.should == []
   end
   
   it "should run tests on test files" do
@@ -52,6 +53,7 @@ describe CIAT::Suite, "top level test function" do
     @feedback.should_receive(:post_tests).with(suite)
     
     suite.run.should == results
+    suite.results.should == results
   end
 
   it "should run a test" do
@@ -65,11 +67,12 @@ describe CIAT::Suite, "top level test function" do
   end
   
   it "should generate html" do
-    erb_template, result = mock("erb_template"), mock("result")
+    erb_template, binding, result = mock("erb_template"), mock("binding"), mock("result")
     suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo)
     
     ERB.should_receive(:new).with(suite.template).and_return(erb_template)
-    erb_template.should_receive(:result).with(duck_type(:call)).and_return(result)
+    suite.should_receive(:binding).with().and_return(binding)
+    erb_template.should_receive(:result).with(binding).and_return(result)
     
     suite.generate_html(nil)
   end

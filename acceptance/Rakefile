@@ -25,7 +25,7 @@ task :clean_start do
 end
 
 task :simple do
-  puts "Copy compiler, cat executor, default filenames"
+  puts "Copy compiler, cat executor"
   CIAT::Suite.new(copy_compiler, cat_executor,
     :files => ['ciat/copy-cat.ciat'],
     :feedback => FeedbackTester.new(1)).run
@@ -35,6 +35,7 @@ task :java_cat do
   puts "Java compiler, cat executor, special folder"
   CIAT::Suite.new(java_compiler("Hello"), cat_executor,
     :folder => 'ciat/java-cat',
+    :report_filename => 'java-cat.html',
     :feedback => FeedbackTester.new(1)).run
 end
 
@@ -42,6 +43,7 @@ task :java_parrot do
   puts "Java compiler, Parrot executor, special folder"
   CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
     :folder => 'ciat/java-parrot',
+    :report_filename => 'java-parrot.html',
     :feedback => FeedbackTester.new(1)).run  
 end
 
@@ -49,18 +51,22 @@ task :failures do
   puts "Failed compilation"
   CIAT::Suite.new(java_compiler("Failing"), ExceptionalExecutor.new,
     :files => 'ciat/failures/failed-compile.ciat',
+    :report_filename => 'failed-compiler.html',
     :feedback => FeedbackTester.new(1)).run
   puts "Wrong compilation"
   CIAT::Suite.new(copy_compiler, ExceptionalExecutor.new,
     :files => 'ciat/failures/bad-compile.ciat',
+    :report_filename => 'bad-compile.html',
     :feedback => FeedbackTester.new(1)).run
   puts "Failed execution"
   CIAT::Suite.new(copy_compiler, FailingExecutor.new,
     :files => 'ciat/failures/failed-execution.ciat',
+    :report_filename => 'failed-execution.html',
     :feedback => FeedbackTester.new(1)).run
   puts "Wrong execution"
   CIAT::Suite.new(copy_compiler, cat_executor,
     :files => 'ciat/failures/wrong-execution.ciat',
+    :report_filename => 'wrong-execution.html',
     :feedback => FeedbackTester.new(1)).run
 end
 

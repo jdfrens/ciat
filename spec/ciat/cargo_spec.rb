@@ -35,26 +35,30 @@ describe CIAT::Cargo, "initializing" do
   
   describe "report filename" do
     it "should use default report filename" do
-      CIAT::Cargo.new().report_filename.should == File.join(CIAT::Cargo::OUTPUT_FOLDER, CIAT::Cargo::REPORT_FILENAME)
+      CIAT::Cargo.new().report_filename.should == 
+        File.join(CIAT::Cargo::OUTPUT_FOLDER, CIAT::Cargo::REPORT_FILENAME)
     end
   
     it "should use specified output folder for report filename" do
       expect_dir_lookup("ciat/**/*.ciat", :output_folder => "SPECIFIED FOLDER")
-      CIAT::Cargo.new(:output_folder => "SPECIFIED FOLDER").report_filename.should == File.join("SPECIFIED FOLDER", CIAT::Cargo::REPORT_FILENAME)
+      CIAT::Cargo.new(:output_folder => "SPECIFIED FOLDER").report_filename.should == 
+        File.join("SPECIFIED FOLDER", CIAT::Cargo::REPORT_FILENAME)
     end
   
-    it "should use specified report filename" do
-      report_filename = mock("report filename")
-      CIAT::Cargo.new(:report_filename => report_filename).report_filename.should == report_filename
+    it "should use specified report filename (and default output folder)" do
+      CIAT::Cargo.new(:report_filename => "jimmy.html").report_filename.should ==
+        File.join(CIAT::Cargo::OUTPUT_FOLDER, "jimmy.html")
     end
   end
   
   it "should use specified folder and specified pattern and specified output folder and specified report filename" do
-    output_folder, report_filename = mock("output folder"), mock("report filename")
+    output_folder, report_filename, report_path = mock("output folder"), mock("report filename"), mock("report path")
     expect_dir_lookup("angel/**/*_ppc.ciat", :folder => "angel", :output_folder => output_folder)
+    File.should_receive(:join).with("angel", "**", "*_ppc.ciat").and_return("angel/**/*_ppc.ciat")
+    File.should_receive(:join).with(output_folder, report_filename).and_return(report_path)
     overspecified_cargo = CIAT::Cargo.new(:folder => "angel", :pattern => "*_ppc.ciat", :output_folder => output_folder, :report_filename => report_filename)
     overspecified_cargo.crates.should == @crates
-    overspecified_cargo.report_filename.should == report_filename
+    overspecified_cargo.report_filename.should == report_path
   end
   
   it "should have a size based on number of crates" do

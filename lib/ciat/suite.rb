@@ -79,6 +79,7 @@ require 'erb'
 #
 class CIAT::Suite
   attr_reader :cargo
+  attr_reader :results
   
   # Constructs a suite of CIAT tests.  See the instructions above for possible
   # values for the +options+.
@@ -93,10 +94,10 @@ class CIAT::Suite
   end
   
   def run
-    results = cargo.crates.collect { |crate| run_test(crate) }
+    @results = cargo.crates.collect { |crate| run_test(crate) }
     cargo.write_file(cargo.report_filename, generate_html(results))
     @feedback.post_tests(self)
-    results
+    @results
   end
   
   def run_test(crate) #:nodoc:
@@ -104,8 +105,7 @@ class CIAT::Suite
   end
   
   def generate_html(test_reports) #:nodoc:
-    # FIXME: binding here is wrong---very, very wrong!
-    ERB.new(template).result(lambda { binding })
+    ERB.new(template).result(binding)
   end
  
   def template #:nodoc:

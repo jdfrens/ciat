@@ -48,7 +48,9 @@ class CIAT::Test
   end
   
   def execute #:nodoc:
-    @executor.execute(crate.compilation_generated, crate.output_generated)
+    unless @executor.execute(crate.compilation_generated, crate.output_generated)
+      @execution_light.yellow!
+    end
   end
   
   def check(which, traffic_light) #:nodoc:

@@ -10,7 +10,40 @@
 		</style>
 	</head>
 	
+<%
+def test_text(color)
+	case color
+	when "red" then "FAILURE"
+	when "yellow" then "ERROR"
+	when "green" then "passed"
+	when "unset" then "n/a"
+	end
+end
+%>
+	
 	<body>
+		
+	<h1>Summary Table</h1>
+	
+	<table border="1" summary="Test summary">
+		<tr>
+			<th>Description</th>
+			<th>Compilation</th>
+			<th>Execution</th>
+		</tr>		
+		<% results.each do |result| %>
+		<tr>
+			<td><%= result.description %></td>
+			<td class="<%= result.compilation_light.color %>">
+				<%= test_text(result.compilation_light.color) %>
+			</td>
+			<td class="<%= result.execution_light.color %>">
+				<%= test_text(result.execution_light.color) %>
+			</td>
+		</tr>
+		<% end %>
+	</table>
+		
 	<% results.each do |result| %>
 		<div class="<%= result.compilation_light.color %>">
 		<h1><%= result.description %></h1>

@@ -89,13 +89,17 @@ class CIAT::Suite
     @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
   end
   
+  # Returns the number of tests in the suite.
   def size
     cargo.size
   end
   
+  # Runs all of the tests in the suite, and returns the results.  The results
+  # are also available through #results.
   def run
+    @cargo.copy_suite_data
     @results = cargo.crates.collect { |crate| run_test(crate) }
-    cargo.write_file(cargo.report_filename, generate_html(results))
+    generate_report
     @feedback.post_tests(self)
     @results
   end
@@ -103,8 +107,12 @@ class CIAT::Suite
   def run_test(crate) #:nodoc:
     CIAT::Test.new(crate, @compiler, @executor).run
   end
+
+  def generate_report #:nodoc:
+    cargo.write_file(cargo.report_filename, generate_html)
+  end
   
-  def generate_html(test_reports) #:nodoc:
+  def generate_html #:nodoc:
     ERB.new(template).result(binding)
   end
  

@@ -23,6 +23,11 @@ class CIAT::Cargo #:nodoc:all
     crates.size
   end
   
+  def copy_suite_data
+    FileUtils.mkdir_p(output_folder)
+    FileUtils.cp(File.join(File.dirname(__FILE__), "..", "data", "ciat.css"), output_folder)
+  end
+  
   def write_file(filename, content)
     FileUtils.mkdir_p(File.dirname(filename))
     File.open(filename, "w") do |file|

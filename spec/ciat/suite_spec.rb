@@ -1,6 +1,6 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
-describe CIAT::Suite, "top level test function" do
+describe CIAT::Suite do
   before(:each) do
     @compiler = mock("compiler")
     @executor = mock("executor")
@@ -21,42 +21,40 @@ describe CIAT::Suite, "top level test function" do
 
     suite.size.should == 42
   end
-  
-  it "should run tests on no test files" do
-    html, report_filename = mock("html"), mock("report filename")
-    suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo, :feedback => @feedback)
-    
-    @cargo.should_receive(:crates).and_return([])
-    suite.should_receive(:generate_html).with([]).and_return(html)
-    @cargo.should_receive(:report_filename).and_return(report_filename)
-    @cargo.should_receive(:write_file).with(report_filename, html)
-    @feedback.should_receive(:post_tests).with(suite)
-    
-    suite.run.should == []
-    suite.results.should == []
-  end
-  
-  it "should run tests on test files" do
-    folder = "THE_FOLDER"
-    crates = [mock("crate1"), mock("crate2")]
-    results = [mock("result1"), mock("result2")]
-    html, report_filename = mock("html"), mock("report filename")
-    suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo, :feedback => @feedback)
 
-    @cargo.should_receive(:crates).with().and_return(crates)
-    crates.zip(results).each do |crate, result|
-      suite.should_receive(:run_test).with(crate).and_return(result)
-    end  
-    suite.should_receive(:generate_html).with(results).and_return(html)
-    @cargo.should_receive(:report_filename).and_return(report_filename)
-    @cargo.should_receive(:write_file).with(report_filename, html)    
-    @feedback.should_receive(:post_tests).with(suite)
+  describe "the top-level function to run the tests" do
+    it "should run tests on no test files" do
+      suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo, :feedback => @feedback)
     
-    suite.run.should == results
-    suite.results.should == results
+      @cargo.should_receive(:copy_suite_data)
+      @cargo.should_receive(:crates).and_return([])
+      suite.should_receive(:generate_report).with()
+      @feedback.should_receive(:post_tests).with(suite)
+    
+      suite.run.should == []
+      suite.results.should == []
+    end
+  
+    it "should run tests on test files" do
+      folder = "THE_FOLDER"
+      crates = [mock("crate1"), mock("crate2")]
+      results = [mock("result1"), mock("result2")]
+      suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo, :feedback => @feedback)
+
+      @cargo.should_receive(:copy_suite_data)
+      @cargo.should_receive(:crates).with().and_return(crates)
+      crates.zip(results).each do |crate, result|
+        suite.should_receive(:run_test).with(crate).and_return(result)
+      end
+      suite.should_receive(:generate_report).with()
+      @feedback.should_receive(:post_tests).with(suite)
+    
+      suite.run.should == results
+      suite.results.should == results
+    end
   end
 
-  it "should run a test" do
+  it "should run a single test" do
     crate, test, result = mock("crate"), mock("test"), mock("result")
     suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo, :feedback => @feedback)
 
@@ -64,6 +62,16 @@ describe CIAT::Suite, "top level test function" do
     test.should_receive(:run).and_return(result)
     
     suite.run_test(crate).should == result
+  end
+  
+  it "should generate a report" do
+    html, report_filename = mock("html"), mock("report filename")
+    suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo, :feedback => @feedback)
+    suite.should_receive(:generate_html).with().and_return(html)
+    @cargo.should_receive(:report_filename).and_return(report_filename)
+    @cargo.should_receive(:write_file).with(report_filename, html)
+    
+    suite.generate_report
   end
   
   it "should generate html" do
@@ -74,10 +82,6 @@ describe CIAT::Suite, "top level test function" do
     suite.should_receive(:binding).with().and_return(binding)
     erb_template.should_receive(:result).with(binding).and_return(result)
     
-    suite.generate_html(nil)
-  end
-  
-  it "should write file" do
-    # too mundane to test
+    suite.generate_html()
   end
 end

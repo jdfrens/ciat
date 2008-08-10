@@ -28,7 +28,8 @@ describe CIAT::Cargo, "initializing" do
     end
     
     it "should use specified files without lookup" do
-      expect_filenames_turned_into_crates(:folder => nil, :output_folder => CIAT::Cargo::OUTPUT_FOLDER)
+      expect_filenames_turned_into_crates(:folder => nil,
+        :output_folder => CIAT::Cargo::OUTPUT_FOLDER)
       CIAT::Cargo.new(:files => @filenames).crates.should == @crates
     end
   end
@@ -51,12 +52,15 @@ describe CIAT::Cargo, "initializing" do
     end
   end
   
-  it "should use specified folder and specified pattern and specified output folder and specified report filename" do
-    output_folder, report_filename, report_path = mock("output folder"), mock("report filename"), mock("report path")
+  it "should handle being overspecified" do
+    output_folder, report_filename, report_path =
+      mock("output folder"), mock("report filename"), mock("report path")
     expect_dir_lookup("angel/**/*_ppc.ciat", :folder => "angel", :output_folder => output_folder)
     File.should_receive(:join).with("angel", "**", "*_ppc.ciat").and_return("angel/**/*_ppc.ciat")
     File.should_receive(:join).with(output_folder, report_filename).and_return(report_path)
-    overspecified_cargo = CIAT::Cargo.new(:folder => "angel", :pattern => "*_ppc.ciat", :output_folder => output_folder, :report_filename => report_filename)
+    overspecified_cargo =
+      CIAT::Cargo.new(:folder => "angel", :pattern => "*_ppc.ciat",
+                      :output_folder => output_folder, :report_filename => report_filename)
     overspecified_cargo.crates.should == @crates
     overspecified_cargo.report_filename.should == report_path
   end
@@ -74,8 +78,30 @@ describe CIAT::Cargo, "initializing" do
   
   def expect_filenames_turned_into_crates(options)
     @filenames.zip(@crates) do |filename, crate|
-      CIAT::Crate.should_receive(:new).with(filename, duck_type(:write_file, :output_folder)).and_return(crate)
+      CIAT::Crate.should_receive(:new).
+        with(filename, duck_type(:write_file, :output_folder)).
+        and_return(crate)
     end
+  end
+end
+
+describe CIAT::Cargo, "copying suite data" do
+  it "should copy CSS files for report to default folder" do
+    cargo = CIAT::Cargo.new(:files => [])
+    FileUtils.should_receive(:mkdir_p).with(CIAT::Cargo::OUTPUT_FOLDER)
+    FileUtils.should_receive(:cp).with("./spec/ciat/../../lib/ciat/../data/ciat.css", CIAT::Cargo::OUTPUT_FOLDER)
+    
+    cargo.copy_suite_data
+  end
+  
+  it "should copy CSS files for report to output folder" do
+    output_folder = "output folder"
+    cargo = CIAT::Cargo.new(:files => [], :output_folder => output_folder)
+    
+    FileUtils.should_receive(:mkdir_p).with(output_folder)
+    FileUtils.should_receive(:cp).with("./spec/ciat/../../lib/ciat/../data/ciat.css", output_folder)
+    
+    cargo.copy_suite_data
   end
 end
 

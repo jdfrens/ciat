@@ -26,4 +26,8 @@ class CIAT::TrafficLight
   def red! #:nodoc:
     @setting = :red unless yellow?
   end
+  
+  def color
+    @setting.to_s
+  end
 end

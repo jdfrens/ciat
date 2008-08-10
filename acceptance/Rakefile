@@ -32,11 +32,11 @@ task :simple do
 end
   
 task :java_cat do
-  puts "Java compiler, cat executor, special folder"
+  puts "Java compiler, cat executor, TWO tests, special folder"
   CIAT::Suite.new(java_compiler("Hello"), cat_executor,
     :folder => 'ciat/java-cat',
     :report_filename => 'java-cat.html',
-    :feedback => FeedbackTester.new(1)).run
+    :feedback => FeedbackTester.new(2)).run
 end
 
 task :java_parrot do
@@ -48,25 +48,25 @@ task :java_parrot do
 end
 
 task :failures do
-  puts "Failed compilation"
-  CIAT::Suite.new(java_compiler("Failing"), ExceptionalExecutor.new,
-    :files => 'ciat/failures/failed-compile.ciat',
-    :report_filename => 'failed-compiler.html',
+  puts "Error during compilation"
+  CIAT::Suite.new(java_compiler("Erroring"), ExceptionalExecutor.new,
+    :files => 'ciat/failures/compile-error.ciat',
+    :report_filename => 'compile-error.html',
     :feedback => FeedbackTester.new(1)).run
-  puts "Wrong compilation"
+  puts "Compilation fails expectation"
   CIAT::Suite.new(copy_compiler, ExceptionalExecutor.new,
-    :files => 'ciat/failures/bad-compile.ciat',
-    :report_filename => 'bad-compile.html',
+    :files => 'ciat/failures/compile-fail.ciat',
+    :report_filename => 'compile-fail.html',
     :feedback => FeedbackTester.new(1)).run
-  puts "Failed execution"
-  CIAT::Suite.new(copy_compiler, FailingExecutor.new,
-    :files => 'ciat/failures/failed-execution.ciat',
-    :report_filename => 'failed-execution.html',
+  puts "Error during execution"
+  CIAT::Suite.new(copy_compiler, ErroringExecutor.new,
+    :files => 'ciat/failures/execution-error.ciat',
+    :report_filename => 'execution-error.html',
     :feedback => FeedbackTester.new(1)).run
-  puts "Wrong execution"
+  puts "Execution fails expectation"
   CIAT::Suite.new(copy_compiler, cat_executor,
-    :files => 'ciat/failures/wrong-execution.ciat',
-    :report_filename => 'wrong-execution.html',
+    :files => 'ciat/failures/execution-fail.ciat',
+    :report_filename => 'execution-fail.html',
     :feedback => FeedbackTester.new(1)).run
 end
 
@@ -95,7 +95,7 @@ class ExceptionalExecutor
   end
 end
 
-class FailingExecutor
+class ErroringExecutor
   def execute(x, output_file)
     system("echo this should be the error output > #{output_file}")
     false
@@ -107,6 +107,9 @@ end
 #
 def check_output_files
   puts "Checking output files."
+  Dir["**/*.html"].each do |file|
+    system "tidy -mq #{file}"
+  end
   unless system("diff -r temp_expected/ temp/")
     raise("**** diff failed!")
   end
@@ -121,6 +124,6 @@ class FeedbackTester
   end
   
   def post_tests(suite)
-    puts "*** Wrong number of tests: #{@size} expected, got #{suite.size}" unless suite.size == @size
+    raise "Wrong number of tests: #{@size} expected, got #{suite.size}" unless suite.size == @size
   end
 end

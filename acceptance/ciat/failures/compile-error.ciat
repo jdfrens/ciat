@@ -1,0 +1,7 @@
+To be run by the error compiler.
+====
+Source is actually ignored.
+====
+This compiler always quits with an error.
+====
+NONE

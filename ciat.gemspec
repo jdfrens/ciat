@@ -21,7 +21,8 @@ Gem::Specification.new do |s|
       "lib/ciat/test.rb"                    ,
       "lib/ciat/traffic_light.rb"           ,
       "lib/ciat/version.rb"                 ,
-      "lib/ciat.rb"                         ]
+      "lib/ciat.rb"                         ,
+      "lib/data/ciat.css"]
   s.extra_rdoc_files = ["README.txt", "History.txt"]
   s.rdoc_options << '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<
                     '--main' << 'README.txt' <<

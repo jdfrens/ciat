@@ -34,4 +34,8 @@ class CIAT::Cargo #:nodoc:all
       file.write content
     end
   end
+  
+  def read_file(filename)
+    File.read(filename)
+  end
 end

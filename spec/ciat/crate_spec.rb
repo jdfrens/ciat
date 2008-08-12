@@ -74,12 +74,20 @@ describe CIAT::Crate, "generating actual file names" do
   end
 end
 
-describe CIAT::Crate, "writing a file" do
-  it "should defer to cargo" do
+describe CIAT::Crate, "file manipulation" do
+  it "should write a file with cargo" do
     cargo = mock("cargo")
     crate = CIAT::Crate.new("NOT USED", cargo)
     cargo.should_receive(:write_file).with("phile.txt", "contents")
     
     crate.write_file("phile.txt", "contents")
+  end
+
+  it "should read a file with cargo" do
+    cargo, contents = mock("cargo"), mock("contents")
+    crate = CIAT::Crate.new("NOT USED", cargo)
+    cargo.should_receive(:read_file).with("phile.txt").and_return(contents)
+    
+    crate.read_file("phile.txt").should == contents
   end
 end

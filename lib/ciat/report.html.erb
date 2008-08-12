@@ -6,13 +6,24 @@
 	</head>
 	
 <%
-def test_text(color)
+def color_to_word(color)
 	case color
 	when "red" then "FAILURE"
 	when "yellow" then "ERROR"
 	when "green" then "passed"
 	when "unset" then "n/a"
 	end
+end
+
+def color_to_sentence(prefix, color)
+	"<span class=\"#{color}\">#{prefix} " +
+	case color
+	when "red" then "failed"
+	when "yellow" then "errored"
+	when "green" then "passed"
+	when "unset" then "not run"
+	end +
+	".</span>"
 end
 %>
 	
@@ -30,33 +41,48 @@ end
 		<tr>
 			<td><%= result.description %></td>
 			<td class="<%= result.compilation_light.color %>">
-				<%= test_text(result.compilation_light.color) %>
+				<%= color_to_word(result.compilation_light.color) %>
 			</td>
 			<td class="<%= result.execution_light.color %>">
-				<%= test_text(result.execution_light.color) %>
+				<%= color_to_word(result.execution_light.color) %>
 			</td>
 		</tr>
 		<% end %>
 	</table>
 		
+	<h1>Detailed Results</h1>
+	
 	<% results.each do |result| %>
-		<div class="<%= result.compilation_light.color %>">
-		<h1><%= result.description %></h1>
+	
+		<h2><%= result.description %></h2>
 
-		<h2>Source</h2>
+		<p>
+			<%= color_to_sentence("Compiler", result.compilation_light.color) %>
+			<%= color_to_sentence("Executor", result.execution_light.color) %>
+		</p>
+
+		<h3>Source</h3>
 
 <pre>
 <%= result.source %></pre>
 
-		<h2>Target Code</h2>
+		<h3>Target Code</h3>
 
-<pre>
-<%= result.compilation_expected %></pre>
+<table>
+	<tr><th>Expected</th><th>Generated</th></tr>
+<%= result.compilation_diff %>
+</table>
 
-		<h2>Execution Output</h2>
+		<h3>Execution Output</h3>
 
-<pre>
-<%= result.output_expected %></pre>
+<% if result.compilation_light.green? %>
+		<table>
+			<tr><th>Expected</th><th>Generated</th></tr>
+<%= result.output_diff %>
+</table>
+<% else %>
+  <p>No target code to execute...</p>
+<% end %>
 		</div>
 	<% end %>
 	</body>

@@ -43,6 +43,24 @@ describe CIAT::Test do
     end
   end
   
+  describe "reading diff information" do
+    it "should read compiled diff" do
+      filename, contents = mock("compilation diff filename"), mock("contents")
+      @crate.should_receive(:compilation_diff).and_return(filename)
+      @crate.should_receive(:read_file).with(filename).and_return(contents)
+      
+      @test.compilation_diff.should == contents
+    end
+    
+    it "should read output diff" do
+      filename, contents = mock("output diff filename"), mock("contents")
+      @crate.should_receive(:output_diff).and_return(filename)
+      @crate.should_receive(:read_file).with(filename).and_return(contents)
+      
+      @test.output_diff.should == contents
+    end
+  end
+  
   describe "writing output files" do
     it "should write three files" do
       mock_and_expect_filename_and_contents(:source)
@@ -119,14 +137,14 @@ describe CIAT::Test do
     end
     
     it "should be green for no difference" do
-      @test.should_receive(:system).with("diff '#{@expected}' '#{@generated}' > '#{@diff}'").and_return(true)
+      @test.should_receive(:diff).with(@expected, @generated, @diff).and_return(true)
       @traffic_light.should_receive(:green!).and_return(@result)
       
       @test.check(@which, @traffic_light).should == @result
     end
 
     it "should be red for some difference" do
-      @test.should_receive(:system).with("diff '#{@expected}' '#{@generated}' > '#{@diff}'").and_return(false)
+      @test.should_receive(:diff).with(@expected, @generated, @diff).and_return(false)
       @traffic_light.should_receive(:red!).and_return(@result)
       
       @test.check(@which, @traffic_light).should == @result

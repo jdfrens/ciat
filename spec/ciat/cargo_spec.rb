@@ -105,7 +105,7 @@ describe CIAT::Cargo, "copying suite data" do
   end
 end
 
-describe CIAT::Cargo, "writing a file" do
+describe CIAT::Cargo, "file manipulation" do
   it "should create folder and write file" do
     content, response = mock("content"), mock("response")
     cargo = CIAT::Cargo.new(:files => [], :output_folder => "NOT USED")
@@ -114,5 +114,14 @@ describe CIAT::Cargo, "writing a file" do
     File.should_receive(:open).with("a/b/c/d/foo.ciat", "w").and_return(response)
     
     cargo.write_file("a/b/c/d/foo.ciat", content).should == response
+  end
+  
+  it "should read a file" do
+    filename, contents = mock("filename"), mock("contents")
+    cargo = CIAT::Cargo.new(:files => [], :output_folder => "NOT USED")
+
+    File.should_receive(:read).with(filename).and_return(contents)
+    
+    cargo.read_file(filename).should == contents
   end
 end

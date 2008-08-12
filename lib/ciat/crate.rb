@@ -48,4 +48,8 @@ class CIAT::Crate #:nodoc:all
   def write_file(filename, contents)
     @cargo.write_file(filename, contents)
   end
+
+  def read_file(filename)
+    @cargo.read_file(filename)
+  end
 end

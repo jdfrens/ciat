@@ -1,12 +1,13 @@
+/* color scheme from FitNesse */
 .red {
-    background-color: red;
+    background-color: #FFAAAA;
 }
 .green {
-    background-color: green;
+    background-color: #AAFFAA;
 }
 .yellow {
-    background-color: yellow;
+    background-color: #FFFFAA;
 }
 .unset {
-    background-color: white;
+    background-color: #CCCCCC;
 }

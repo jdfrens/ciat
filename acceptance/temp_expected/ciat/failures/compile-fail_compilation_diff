@@ -1,4 +1,3 @@
-1c1
-< something else (which won't match!)
----
-> something
+<tr class="yellow"><td><pre>something else (which won't match!)
+</pre></td><td><pre>something
+</pre></td></tr>

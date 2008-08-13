@@ -11,3 +11,16 @@
 .unset {
     background-color: #CCCCCC;
 }
+
+.results {
+  clear: both;
+  width: 100%;
+}
+
+.result td {
+  padding: 1em;
+}
+
+.result td h3 {
+  margin-top: 0;
+}

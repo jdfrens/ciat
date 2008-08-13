@@ -1,4 +1,3 @@
-1c1
-< but this won't match!
----
-> just copy me
+<tr class="yellow"><td><pre>but this won't match!
+</pre></td><td><pre>just copy me
+</pre></td></tr>

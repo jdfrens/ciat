@@ -1,0 +1,9 @@
+<tr class="green"><td><pre>.sub main
+	print 5
+	print "\n"
+.end
+</pre></td><td><pre>.sub main
+	print 5
+	print "\n"
+.end
+</pre></td></tr>

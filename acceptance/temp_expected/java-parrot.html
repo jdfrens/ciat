@@ -1,47 +1,82 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
 <meta name="generator" content=
-"HTML Tidy for Mac OS X (vers 1 September 2005), see www.w3.org">
+"HTML Tidy for Mac OS X (vers 31 October 2006 - Apple Inc. build 13), see www.w3.org">
 <meta http-equiv="Content-type" content=
 "text/html; charset=us-ascii">
 <title>CIAT Report</title>
 <link rel="stylesheet" href="ciat.css" type="text/css">
+<script src="prototype.js" type="text/javascript">
+</script>
 </head>
 <body>
 <h1>Summary Table</h1>
-<table border="1" summary="Test summary">
+<a href="#" onclick=
+"$$('.results .result').invoke('toggle'); return false;">Expand/Collapse
+All</a>
+<table border="1" summary="Test summary" class="results">
 <tr>
 <th>Description</th>
 <th>Compilation</th>
 <th>Execution</th>
 </tr>
 <tr>
-<td>The contents of the input file will be ignored; the PIR output
-should work though.</td>
+<td><a href="#" onclick=
+"$(this).up('tr').next().toggle(); return false;">The contents of
+the input file will be ignored; the PIR output should work
+though.</a></td>
 <td class="green">passed</td>
 <td class="green">passed</td>
 </tr>
-</table>
-<h1>Detailed Results</h1>
-<h2>The contents of the input file will be ignored; the PIR output
-should work though.</h2>
-<p><span class="green">Compiler passed.</span> <span class=
-"green">Executor passed.</span></p>
+<tr class="result" style="display:none">
+<td colspan="3">
 <h3>Source</h3>
 <pre>
 Ignore these contents!!!!
 </pre>
 <h3>Target Code</h3>
+<table>
+<tr>
+<th>Expected</th>
+<th>Generated</th>
+</tr>
+<tr class="green">
+<td>
 <pre>
 .sub main
         print 5
         print "\n"
 .end
-</pre>
+</pre></td>
+<td>
+<pre>
+.sub main
+        print 5
+        print "\n"
+.end
+</pre></td>
+</tr>
+</table>
 <h3>Execution Output</h3>
+<table>
+<tr>
+<th>Expected</th>
+<th>Generated</th>
+</tr>
+<tr class="green">
+<td>
 <pre>
 5
-</pre>
+</pre></td>
+<td>
+<pre>
+5
+</pre></td>
+</tr>
+</table>
+</td>
+</tr>
+</table>
 </body>
 </html>

@@ -26,6 +26,7 @@ class CIAT::Cargo #:nodoc:all
   def copy_suite_data
     FileUtils.mkdir_p(output_folder)
     FileUtils.cp(File.join(File.dirname(__FILE__), "..", "data", "ciat.css"), output_folder)
+    FileUtils.cp(File.join(File.dirname(__FILE__), "..", "data", "prototype.js"), output_folder)
   end
   
   def write_file(filename, content)

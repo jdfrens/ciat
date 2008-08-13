@@ -26,6 +26,10 @@ def color_to_sentence(prefix, color)
 	end +
 	".</span>"
 end
+
+def replace_tabs(string)
+	string.gsub("\t", "    ")
+end
 %>
 	<body>
   	<h1>Summary Table</h1>
@@ -51,19 +55,19 @@ end
     		<tr class="result" style="display:none">
     		  <td colspan="3">
         		<h3>Source</h3>
-            <pre><%= result.source %></pre>
+            <pre class="source"><%= replace_tabs(result.source) %></pre>
 
         		<h3>Target Code</h3>
             <table>
         	    <tr><th>Expected</th><th>Generated</th></tr>
-              <%= result.compilation_diff %>
+              <%= replace_tabs(result.compilation_diff) %>
             </table>
 
         		<h3>Execution Output</h3>
             <% if result.compilation_light.green? %>
         		  <table>
         			  <tr><th>Expected</th><th>Generated</th></tr>
-                <%= result.output_diff %>
+                <%= replace_tabs(result.output_diff) %>
               </table>
             <% else %>
               <p>No target code to execute...</p>

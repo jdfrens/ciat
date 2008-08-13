@@ -21,6 +21,10 @@
   padding: 1em;
 }
 
-.result td h3 {
-  margin-top: 0;
+.result td pre {
+  margin: 0;
+}
+
+pre.source {
+    background-color: #FFC929;
 }

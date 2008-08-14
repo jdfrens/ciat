@@ -13,6 +13,7 @@ class CIAT::Test
     @executor = executor
     @compilation_light = options[:compilation_light] || CIAT::TrafficLight.new
     @execution_light = options[:execution_light] || CIAT::TrafficLight.new
+    @feedback = options[:feedback]
   end
   
   def run
@@ -24,6 +25,7 @@ class CIAT::Test
       execute
       check(:output, @execution_light)
     end
+    report_lights
     self
   end
   
@@ -81,5 +83,10 @@ class CIAT::Test
     "--new-group-format='<tr><td></td><td class=\"red\"><pre>%></pre><td></tr>' " +
     "--changed-group-format='<tr class=\"yellow\"><td><pre>%<</pre></td><td><pre>%></pre></td></tr>' " +
     "--unchanged-group-format='<tr class=\"green\"><td><pre>%=</pre></td><td><pre>%=</pre></td></tr>'"
+  end
+  
+  def report_lights
+    @feedback.compilation(compilation_light.setting)
+    @feedback.execution(execution_light.setting)
   end
 end

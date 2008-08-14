@@ -105,7 +105,7 @@ class CIAT::Suite
   end
   
   def run_test(crate) #:nodoc:
-    CIAT::Test.new(crate, @compiler, @executor).run
+    CIAT::Test.new(crate, @compiler, @executor, :feedback => @feedback).run
   end
 
   def generate_report #:nodoc:

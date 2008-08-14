@@ -1,4 +1,6 @@
 class CIAT::TrafficLight
+  attr_reader :setting
+  
   def initialize(setting = :unset) #:nodoc:
     @setting = setting
   end

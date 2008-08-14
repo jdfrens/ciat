@@ -10,7 +10,8 @@ require 'ciat/executors/parrot'
 
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
-                  :simple, :java_cat, :java_parrot, :failures] do
+                  :simple, :simple_with_output,
+                  :java_cat, :java_parrot, :failures] do
   check_output_files
 end
 
@@ -28,7 +29,13 @@ task :simple do
   puts "Copy compiler, cat executor"
   CIAT::Suite.new(copy_compiler, cat_executor,
     :files => ['ciat/copy-cat.ciat'],
-    :feedback => FeedbackTester.new(1)).run
+    :feedback => FeedbackTester.new(1, [:green, :green])).run
+end
+  
+task :simple_with_output do
+  puts "Copy compiler, cat executor, standard output feedback"
+  CIAT::Suite.new(copy_compiler, cat_executor,
+    :files => ['ciat/copy-cat.ciat']).run
 end
   
 task :java_cat do
@@ -36,7 +43,7 @@ task :java_cat do
   CIAT::Suite.new(java_compiler("Hello"), cat_executor,
     :folder => 'ciat/java-cat',
     :report_filename => 'java-cat.html',
-    :feedback => FeedbackTester.new(2)).run
+    :feedback => FeedbackTester.new(2, [:green, :green, :green, :green])).run
 end
 
 task :java_parrot do
@@ -44,7 +51,7 @@ task :java_parrot do
   CIAT::Suite.new(java_compiler("Parrot5"), parrot_executor,
     :folder => 'ciat/java-parrot',
     :report_filename => 'java-parrot.html',
-    :feedback => FeedbackTester.new(1)).run  
+    :feedback => FeedbackTester.new(1, [:green, :green])).run  
 end
 
 task :failures do
@@ -52,22 +59,22 @@ task :failures do
   CIAT::Suite.new(java_compiler("Erroring"), ExceptionalExecutor.new,
     :files => 'ciat/failures/compile-error.ciat',
     :report_filename => 'compile-error.html',
-    :feedback => FeedbackTester.new(1)).run
+    :feedback => FeedbackTester.new(1, [:yellow, :unset])).run
   puts "Compilation fails expectation"
   CIAT::Suite.new(copy_compiler, ExceptionalExecutor.new,
     :files => 'ciat/failures/compile-fail.ciat',
     :report_filename => 'compile-fail.html',
-    :feedback => FeedbackTester.new(1)).run
+    :feedback => FeedbackTester.new(1, [:red, :unset])).run
   puts "Error during execution"
   CIAT::Suite.new(copy_compiler, ErroringExecutor.new,
     :files => 'ciat/failures/execution-error.ciat',
     :report_filename => 'execution-error.html',
-    :feedback => FeedbackTester.new(1)).run
+    :feedback => FeedbackTester.new(1, [:green, :yellow])).run
   puts "Execution fails expectation"
   CIAT::Suite.new(copy_compiler, cat_executor,
     :files => 'ciat/failures/execution-fail.ciat',
     :report_filename => 'execution-fail.html',
-    :feedback => FeedbackTester.new(1)).run
+    :feedback => FeedbackTester.new(1, [:green, :red])).run
 end
 
 #
@@ -119,11 +126,26 @@ end
 # Feedback from running suite
 #
 class FeedbackTester
-  def initialize(size)
+  def initialize(size, expected_lights)
     @size = size
+    @expected_lights = expected_lights
+    @lights = []
+  end
+  
+  def compilation(light)
+    @lights << light
+  end
+  
+  def execution(light)
+    @lights << light
   end
   
   def post_tests(suite)
-    raise "Wrong number of tests: #{@size} expected, got #{suite.size}" unless suite.size == @size
+    unless @expected_lights == @lights
+      raise "Wrong lights: [#{@expected_lights.join(',')}] expected, got [#{@lights.join(',')}]"
+    end
+    unless suite.size == @size
+      raise "Wrong number of tests: #{@size} expected, got #{suite.size}"
+    end
   end
 end

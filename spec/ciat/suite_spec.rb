@@ -58,7 +58,7 @@ describe CIAT::Suite do
     crate, test, result = mock("crate"), mock("test"), mock("result")
     suite = CIAT::Suite.new(@compiler, @executor, :cargo => @cargo, :feedback => @feedback)
 
-    CIAT::Test.should_receive(:new).with(crate, @compiler, @executor).and_return(test)
+    CIAT::Test.should_receive(:new).with(crate, @compiler, @executor, :feedback => @feedback).and_return(test)
     test.should_receive(:run).and_return(result)
     
     suite.run_test(crate).should == result

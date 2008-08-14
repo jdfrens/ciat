@@ -20,6 +20,8 @@ describe CIAT::Test do
       @compilation_light.should_receive(:green?).and_return(true)
       @test.should_receive(:execute)
       @test.should_receive(:check).with(:output, @execution_light)
+      @test.should_receive(:report_lights)
+      
       @test.run.should == @test
     end
 
@@ -29,6 +31,8 @@ describe CIAT::Test do
       @test.should_receive(:compile)
       @test.should_receive(:check).with(:compilation, @compilation_light)
       @compilation_light.should_receive(:green?).and_return(false)
+      @test.should_receive(:report_lights)
+
       @test.run.should == @test
     end
   end
@@ -148,6 +152,18 @@ describe CIAT::Test do
       @traffic_light.should_receive(:red!).and_return(@result)
       
       @test.check(@which, @traffic_light).should == @result
+    end
+  end
+  
+  describe "reporting lights" do
+    it "should report both lights to feedback" do
+      setting1, setting2 = mock("setting 1"), mock("setting 2")
+      @compilation_light.should_receive(:setting).and_return(setting1)
+      @feedback.should_receive(:compilation).with(setting1)
+      @execution_light.should_receive(:setting).and_return(setting2)
+      @feedback.should_receive(:execution).with(setting2)
+      
+      @test.report_lights
     end
   end
 

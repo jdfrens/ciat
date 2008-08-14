@@ -2,16 +2,16 @@
 
 == DESCRIPTION:
 
-CIAT (pronounced "dog") provides a system for writing high-level acceptance tests for compilers and
-interpreters. Each acceptance test is entered into a single file, including the test's description,
-source code, expected target code, and even expected result when executed.
+CIAT (pronounced "dog") provides a system for writing high-level acceptance
+tests for compilers and interpreters. Each acceptance test is entered into a
+single file, including the test's description, source code, expected target
+code, and even expected result when executed. The test files can be organized
+into subdirectories for organizational convenience.
 
-== FEATURES/PROBLEMS:
+Output includes immediate feedback indicating which phases are passing,
+erring, and failing. The output also includes an HTML report which provides
+side-by-side diffs of each phase of the test.
 
-* Description, source code, expected target code, and expected output stored in one file.
-* Tests are executed from a single directory.
-* Project is _very_ immature, so many things are hard coded (have to compile, have to execute, have to
-  compare with +diff+), and other things are _very_ fluid (like the file format).
 
 == SYNOPSIS:
 
@@ -34,10 +34,10 @@ A sample +Rakefile+:
     CIAT::Executors::Parrot.new
   end
 
-This rakefile will find all of the <code>.ciat</code> files inside a +ciat+ directory, each one
-representing a test. Each test will be executed, and the results are put into a folder named
-+temp+. All of these settings can be tweaked; see the documentation for CIAT::Suite for more
-information.
+This rakefile will find all of the <code>.ciat</code> files inside a +ciat+
+directory, each one representing a test. Each test will be executed, and the
+results are put into a folder named +temp+. All of these settings can be
+tweaked; see the documentation for CIAT::Suite for more information.
 
 The requirements for the compiler and executor can also be found in the documentation for CIAT::Suite.
 
@@ -54,22 +54,25 @@ A sample input file (<code>simpleinteger5.ciat</code>):
   ====
   5
 
-By default, test files should be named with a <code>.ciat</code> extension. Contents must be
-ordered: description, source input, expected target code, expected execution output. For more
-information about test files, see the documentation for CIAT::Suite.
+By default, test files should be named with a <code>.ciat</code> extension.
+Contents must be ordered: description, source input, expected target code,
+expected execution output. For more information about test files, see the
+documentation for CIAT::Suite.
 
 
 == REQUIREMENTS:
 
 * Pronounce "CIAT" as "dog".
 * Must have +diff+ executable.
-* You have to provide your own target-code executors (e.g., +parrot+ for the Parrot Virtual
-  Machine, +spim+ for MIPS emulation, etc.)
+* You have to provide your own target-code executors (e.g., +parrot+ for the
+  Parrot Virtual Machine, +spim+ for MIPS emulation, etc.)
 
 
 == INSTALL:
 
 * Install +diff+.
+* Install Ruby and Ruby Gems.
+* <code>gem sources -a http://gems.github.com</code> (only needed once)
 * <code>sudo gem install jdfrens-ciat</code>
 
 

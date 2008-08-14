@@ -1,3 +1,9 @@
+== 0.1.0 2008-08-14
+
+* 2 major enhancements:
+  * Generates a very useful HTML report, complete with side-by-side diffs.
+  * Immediate feedback while tests are running ("."s, "F"s, and "E"s).
+
 == 0.0.4 2008-08-08
 
 * 2 major enhancements:

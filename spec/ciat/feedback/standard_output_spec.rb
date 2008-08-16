@@ -34,6 +34,12 @@ describe CIAT::Feedback::StandardOutput do
       
       @feedback.compilation(:yellow)
     end
+
+    it "should report an unset light" do
+      @feedback.should_receive(:putc).with("-")
+      
+      @feedback.compilation(:unset)
+    end
   end
 
   describe "reporting on an execution" do
@@ -53,6 +59,12 @@ describe CIAT::Feedback::StandardOutput do
       @feedback.should_receive(:putc).with("E")
       
       @feedback.execution(:yellow)
+    end
+
+    it "should report an unset light" do
+      @feedback.should_receive(:putc).with("-")
+      
+      @feedback.execution(:unset)
     end
   end
 end

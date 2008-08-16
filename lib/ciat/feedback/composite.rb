@@ -1,4 +1,6 @@
+# A feedback mechanism for compositing other feedbacks.
 class CIAT::Feedback::Composite
+  # Pass in instances of the feedbacks as arguments to the constructor.
   def initialize(*feedbacks)
     @feedbacks = feedbacks
   end

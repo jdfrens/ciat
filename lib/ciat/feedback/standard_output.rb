@@ -3,7 +3,7 @@ module CIAT
     # This feedback class sends some simple messages to the screen about the
     # progress of a CIAT::Suite run.
     class StandardOutput
-      LIGHT_OUTPUTS = { :green => ".", :red => "F", :yellow => "E" }
+      LIGHT_OUTPUTS = { :green => ".", :red => "F", :yellow => "E", :unset => "-" }
       
       def post_tests(suite)
         puts "\n#{suite.size} tests executed."

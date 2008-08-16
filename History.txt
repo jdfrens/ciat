@@ -1,3 +1,9 @@
+== 0.1.1 2008-08-16
+
+* 1 major bug fix
+  * If executor is not run (while compilation fails), its traffic light is
+    unset; the standard output feedback now handles this case.
+
 == 0.1.0 2008-08-14
 
 * 2 major enhancements:

@@ -1,10 +1,10 @@
 The contents of the input file will be ignored; the PIR output should work though.
-====
+==== source
 Ignore these contents!!!!
-====
+==== target
 .sub main
 	print 5
 	print "\n"
 .end
-====
+==== execution
 5

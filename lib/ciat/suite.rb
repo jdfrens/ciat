@@ -83,8 +83,8 @@ class CIAT::Suite
   
   # Constructs a suite of CIAT tests.  See the instructions above for possible
   # values for the +options+.
-  def initialize(compiler, executor, options = {})
-    @compiler, @executor = compiler, executor
+  def initialize(options = {})
+    @processors = options[:processors]
     @cargo = options[:cargo] || CIAT::Cargo.new(options)
     @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
   end
@@ -105,7 +105,7 @@ class CIAT::Suite
   end
   
   def run_test(crate) #:nodoc:
-    CIAT::Test.new(crate, @compiler, @executor, :feedback => @feedback).run
+    CIAT::Test.new(crate, :processors => @processors, :feedback => @feedback).run
   end
 
   def generate_report #:nodoc:

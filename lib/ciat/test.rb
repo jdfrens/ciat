@@ -1,16 +1,13 @@
 class CIAT::Test
   attr_reader :crate
-  attr_reader :description
-  attr_reader :source
-  attr_reader :compilation_expected
-  attr_reader :output_expected
+  attr_reader :elements
   attr_reader :compilation_light
   attr_reader :execution_light
-  
-  def initialize(crate, compiler, executor, options={}) #:nodoc:
+
+  def initialize(crate, options={}) #:nodoc:
     @crate = crate
-    @compiler = compiler
-    @executor = executor
+    @compiler = options[:processors][:compiler]
+    @executor = options[:processors][:executor]
     @compilation_light = options[:compilation_light] || CIAT::TrafficLight.new
     @execution_light = options[:execution_light] || CIAT::TrafficLight.new
     @feedback = options[:feedback]
@@ -30,9 +27,14 @@ class CIAT::Test
   end
   
   def split_test_file #:nodoc:
-    @description, @source, @compilation_expected, @output_expected = File.read(crate.test_file).split(/^====\s*$/).map do |s|
+    elements = File.read(crate.test_file).split(/^====.*$/).map do |s|
       s.gsub(/^\n/, '')
     end
+    @elements = {}
+    [:description, :source, :compilation_expected, :output_expected].zip(elements) do |name, element|
+      @elements[name] = element
+    end
+    @elements
   end
   
   def compilation_diff
@@ -44,10 +46,10 @@ class CIAT::Test
   end
   
   def write_output_files #:nodoc:
-    crate.write_file(crate.source, source)
-    crate.write_file(crate.compilation_expected, compilation_expected)
-    unless output_expected =~ /^\s*NONE\s*$/
-      crate.write_file(crate.output_expected, output_expected)
+    crate.write_file(crate.source, elements[:source])
+    crate.write_file(crate.compilation_expected, elements[:compilation_expected])
+    unless elements[:output_expected] =~ /^\s*NONE\s*$/
+      crate.write_file(crate.output_expected, elements[:output_expected])
     end
   end
 

@@ -7,7 +7,9 @@ describe CIAT::Test do
     @executor = mock("executor")
     @compilation_light = mock("compilation traffic light")
     @execution_light = mock("output traffic light")
-    @test = CIAT::Test.new(@crate, @compiler, @executor,
+    @elements = mock("elements")
+    @test = CIAT::Test.new(@crate,
+      :processors => { :compiler => @compiler, :executor => @executor },
       :compilation_light => @compilation_light, :execution_light => @execution_light)
   end
 
@@ -38,12 +40,23 @@ describe CIAT::Test do
   end
 
   describe "splitting a test file" do
-    it "should split the test file" do
+    before(:each) do
       filename = mock("filename")
       @crate.should_receive(:test_file).and_return(filename)
-      File.should_receive(:read).with(filename).and_return("d\n====\ns\n====\np\n====\no\n====\n")
-      
-      @test.split_test_file.should == ["d\n", "s\n", "p\n", "o\n"]
+      File.should_receive(:read).with(filename).and_return(
+        "d\n==== source\ns\n==== target\np\n==== execution\no\n"
+        )
+    end
+    
+    it "should split the test file" do
+      @test.split_test_file.should == { :description => "d\n",
+        :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
+    end
+    
+    it "should set elements" do
+      @test.split_test_file
+      @test.elements.should == { :description => "d\n",
+        :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
     end
   end
   
@@ -74,7 +87,7 @@ describe CIAT::Test do
       @test.write_output_files
     end
 
-    it "should write two files when compilation is supposed to fail" do
+    it "should write two files when compilation fails" do
       mock_and_expect_filename_and_contents(:source)
       mock_and_expect_filename_and_contents(:compilation_expected)
       mock_and_expect_filename_and_NO_contents(:output_expected)
@@ -173,12 +186,14 @@ describe CIAT::Test do
   def mock_and_expect_filename_and_contents(type)
     filename = mock_and_expect_filename(type)
     contents = mock(type.to_s + " contents")
-    @test.should_receive(type).at_least(:once).and_return(contents)
+    @test.should_receive(:elements).any_number_of_times.and_return(@elements)
+    @elements.should_receive(:[]).with(type).at_least(:once).and_return(contents)
     @crate.should_receive(:write_file).with(filename, contents)
   end
 
   def mock_and_expect_filename_and_NO_contents(type)
-    @test.should_receive(type).at_least(:once).and_return("   NONE\n\n")
+    @test.should_receive(:elements).any_number_of_times.and_return(@elements)
+    @elements.should_receive(:[]).with(type).at_least(:once).and_return("   NONE\n\n")
   end
 
   def mock_and_expect_filenames(*types)

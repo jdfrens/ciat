@@ -1,7 +1,7 @@
 Testing bar with Java compiler and cat executor.
-====
+==== source
 bar
-====
+==== target
 Hello, bar.
-====
+==== execution
 Hello, bar.

@@ -44,7 +44,7 @@ end
   		</tr>		
   		<% results.each do |result| %>
     		<tr>
-    			<td><a href="#" onclick="$(this).up('tr').next().toggle(); return false;"><%= result.description %></a></td>
+    			<td><a href="#" onclick="$(this).up('tr').next().toggle(); return false;"><%= result.elements[:description] %></a></td>
     			<td class="<%= result.compilation_light.color %>">
     				<%= color_to_word(result.compilation_light.color) %>
     			</td>
@@ -55,7 +55,7 @@ end
     		<tr class="result" style="display:none">
     		  <td colspan="3">
         		<h3>Source</h3>
-            <pre class="source"><%= replace_tabs(result.source) %></pre>
+            <pre class="source"><%= replace_tabs(result.elements[:source]) %></pre>
 
         		<h3>Target Code</h3>
             <table>

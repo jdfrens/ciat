@@ -101,7 +101,7 @@ describe CIAT::Test do
       source_filename, compilation_generated_filename =
         mock_and_expect_filenames(:source, :compilation_generated)
       @compiler.
-        should_receive(:compile).
+        should_receive(:process).
         with(source_filename, compilation_generated_filename).
         and_return(true)
       
@@ -112,7 +112,7 @@ describe CIAT::Test do
       source_filename, compilation_generated_filename =
         mock_and_expect_filenames(:source, :compilation_generated)
       @compiler.
-        should_receive(:compile).
+        should_receive(:process).
         with(source_filename, compilation_generated_filename).
         and_return(false)
       @compilation_light.should_receive(:yellow!)
@@ -125,7 +125,7 @@ describe CIAT::Test do
     it "should execute successfully" do
       compilation_generated_filename, output_generated_filename =
         mock_and_expect_filenames(:compilation_generated, :output_generated)
-      @executor.should_receive(:execute).with(compilation_generated_filename, output_generated_filename).and_return(true)
+      @executor.should_receive(:process).with(compilation_generated_filename, output_generated_filename).and_return(true)
       
       @test.execute
     end
@@ -133,7 +133,7 @@ describe CIAT::Test do
     it "should execute for a yellow light with an error" do
       compilation_generated_filename, output_generated_filename =
         mock_and_expect_filenames(:compilation_generated, :output_generated)
-      @executor.should_receive(:execute).with(compilation_generated_filename, output_generated_filename).and_return(false)
+      @executor.should_receive(:process).with(compilation_generated_filename, output_generated_filename).and_return(false)
       @execution_light.should_receive(:yellow!)
       
       @test.execute

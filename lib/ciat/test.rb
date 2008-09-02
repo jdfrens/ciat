@@ -53,13 +53,13 @@ class CIAT::Test
   end
 
   def compile #:nodoc:
-    unless @compiler.compile(crate.source, crate.compilation_generated)
+    unless @compiler.process(crate.source, crate.compilation_generated)
       @compilation_light.yellow!
     end
   end
   
   def execute #:nodoc:
-    unless @executor.execute(crate.compilation_generated, crate.output_generated)
+    unless @executor.process(crate.compilation_generated, crate.output_generated)
       @execution_light.yellow!
     end
   end

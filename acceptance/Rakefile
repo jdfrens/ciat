@@ -4,8 +4,7 @@ require 'fileutils'
 
 require 'ciat'
 require 'ciat/compilers/java'
-require 'ciat/compilers/copy'
-require 'ciat/executors/cat'
+require 'ciat/processors/copy'
 require 'ciat/executors/parrot'
 require 'ciat/feedback/composite'
 
@@ -27,17 +26,17 @@ task :clean_start do
 end
 
 task :simple do
-  puts "Copy compiler, cat executor"
+  puts "Copy compiler, copy executor"
   CIAT::Suite.new(
-    :processors => [copy_compiler, cat_executor],
+    :processors => [copy_compiler, copy_executor],
     :files => ['ciat/copy-cat.ciat'],
     :feedback => feedback(1, [:green, :green])).run
 end
     
 task :java_cat do
-  puts "Java compiler, cat executor, TWO tests, special folder"
+  puts "Java compiler, copy executor, TWO tests, special folder"
   CIAT::Suite.new(
-    :processors => [java_compiler("Hello"), cat_executor],
+    :processors => [java_compiler("Hello"), copy_executor],
     :folder => 'ciat/java-cat',
     :report_filename => 'java-cat.html',
     :feedback => feedback(2, [:green, :green, :green, :green])).run
@@ -73,7 +72,7 @@ task :failures do
     :feedback => feedback(1, [:green, :yellow])).run
   puts "Execution fails expectation"
   CIAT::Suite.new(
-    :processors => [copy_compiler, cat_executor],
+    :processors => [copy_compiler, copy_executor],
     :files => 'ciat/failures/execution-fail.ciat',
     :report_filename => 'execution-fail.html',
     :feedback => feedback(1, [:green, :red])).run
@@ -83,15 +82,15 @@ end
 # Compilers & Executors
 #
 def copy_compiler
-  CIAT::Compilers::Copy.new
+  CIAT::Processors::Copy.new
 end
 
 def java_compiler(type)
   CIAT::Compilers::Java.new('./java', type + 'Compiler')
 end
 
-def cat_executor
-  CIAT::Executors::Cat.new
+def copy_executor
+  CIAT::Processors::Copy.new
 end
 
 def parrot_executor
@@ -99,13 +98,13 @@ def parrot_executor
 end
 
 class ExceptionalExecutor
-  def execute(x,y)
+  def process(x,y)
     raise("**** should not run this executor!!!")
   end
 end
 
 class ErroringExecutor
-  def execute(x, output_file)
+  def process(x, output_file)
     system("echo this should be the error output > #{output_file}")
     false
   end

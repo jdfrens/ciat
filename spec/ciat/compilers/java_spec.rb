@@ -12,12 +12,12 @@ describe CIAT::Compilers::Java do
 
   it "should run the compiler successfully" do
     expect_compile(true)
-    @compiler.compile(@source_file, @generated_code_file).should == true
+    @compiler.process(@source_file, @generated_code_file).should == true
   end
 
   it "should run the compiler failurely" do
     expect_compile(false)
-    @compiler.compile(@source_file, @generated_code_file).should == false
+    @compiler.process(@source_file, @generated_code_file).should == false
   end
   
   def expect_compile(return_value)

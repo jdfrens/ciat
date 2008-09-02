@@ -9,7 +9,7 @@ describe CIAT::Test do
     @execution_light = mock("output traffic light")
     @elements = mock("elements")
     @test = CIAT::Test.new(@crate,
-      :processors => { :compiler => @compiler, :executor => @executor },
+      :processors => [@compiler, @executor],
       :compilation_light => @compilation_light, :execution_light => @execution_light)
   end
 

@@ -6,8 +6,7 @@ class CIAT::Test
 
   def initialize(crate, options={}) #:nodoc:
     @crate = crate
-    @compiler = options[:processors][:compiler]
-    @executor = options[:processors][:executor]
+    @compiler, @executor = options[:processors]
     @compilation_light = options[:compilation_light] || CIAT::TrafficLight.new
     @execution_light = options[:execution_light] || CIAT::TrafficLight.new
     @feedback = options[:feedback]

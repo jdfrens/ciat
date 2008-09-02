@@ -29,7 +29,7 @@ end
 task :simple do
   puts "Copy compiler, cat executor"
   CIAT::Suite.new(
-    :processors => { :compiler => copy_compiler, :executor => cat_executor },
+    :processors => [copy_compiler, cat_executor],
     :files => ['ciat/copy-cat.ciat'],
     :feedback => feedback(1, [:green, :green])).run
 end
@@ -37,7 +37,7 @@ end
 task :java_cat do
   puts "Java compiler, cat executor, TWO tests, special folder"
   CIAT::Suite.new(
-    :processors => { :compiler => java_compiler("Hello"), :executor => cat_executor },
+    :processors => [java_compiler("Hello"), cat_executor],
     :folder => 'ciat/java-cat',
     :report_filename => 'java-cat.html',
     :feedback => feedback(2, [:green, :green, :green, :green])).run
@@ -46,7 +46,7 @@ end
 task :java_parrot do
   puts "Java compiler, Parrot executor, special folder"
   CIAT::Suite.new(
-    :processors => { :compiler => java_compiler("Parrot5"), :executor => parrot_executor },
+    :processors => [java_compiler("Parrot5"), parrot_executor],
     :folder => 'ciat/java-parrot',
     :report_filename => 'java-parrot.html',
     :feedback => feedback(1, [:green, :green])).run  
@@ -55,25 +55,25 @@ end
 task :failures do
   puts "Error during compilation"
   CIAT::Suite.new(
-    :processors => { :compiler => java_compiler("Erroring"), :executor => ExceptionalExecutor.new },
+    :processors => [java_compiler("Erroring"), ExceptionalExecutor.new],
     :files => 'ciat/failures/compile-error.ciat',
     :report_filename => 'compile-error.html',
     :feedback => feedback(1, [:yellow, :unset])).run
   puts "Compilation fails expectation"
   CIAT::Suite.new(
-    :processors => { :compiler => copy_compiler, :executor => ExceptionalExecutor.new },
+    :processors => [copy_compiler, ExceptionalExecutor.new],
     :files => 'ciat/failures/compile-fail.ciat',
     :report_filename => 'compile-fail.html',
     :feedback => feedback(1, [:red, :unset])).run
   puts "Error during execution"
   CIAT::Suite.new(
-    :processors => { :compiler => copy_compiler, :executor => ErroringExecutor.new },
+    :processors => [copy_compiler, ErroringExecutor.new],
     :files => 'ciat/failures/execution-error.ciat',
     :report_filename => 'execution-error.html',
     :feedback => feedback(1, [:green, :yellow])).run
   puts "Execution fails expectation"
   CIAT::Suite.new(
-    :processors => { :compiler => copy_compiler, :executor => cat_executor },
+    :processors => [copy_compiler, cat_executor],
     :files => 'ciat/failures/execution-fail.ciat',
     :report_filename => 'execution-fail.html',
     :feedback => feedback(1, [:green, :red])).run

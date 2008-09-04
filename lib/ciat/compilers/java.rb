@@ -22,8 +22,8 @@ module CIAT
         @compiler_class = compiler_class
       end
     
-      def process(source, compilation_generated)
-        system "java -cp '#{@classpath}' #{@compiler_class} '#{source}' '#{compilation_generated}'"
+      def process(crate)
+        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.source}' '#{crate.compilation_generated}'"
       end
     end
   end

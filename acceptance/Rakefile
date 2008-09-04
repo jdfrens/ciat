@@ -52,25 +52,25 @@ task :java_parrot do
 end
 
 task :failures do
-  puts "Error during compilation"
+  puts "Should error during compilation"
   CIAT::Suite.new(
     :processors => [java_compiler("Erroring"), ExceptionalExecutor.new],
     :files => 'ciat/failures/compile-error.ciat',
     :report_filename => 'compile-error.html',
     :feedback => feedback(1, [:yellow, :unset])).run
-  puts "Compilation fails expectation"
+  puts "Should fail compilation expectation"
   CIAT::Suite.new(
     :processors => [copy_compiler, ExceptionalExecutor.new],
     :files => 'ciat/failures/compile-fail.ciat',
     :report_filename => 'compile-fail.html',
     :feedback => feedback(1, [:red, :unset])).run
-  puts "Error during execution"
+  puts "Should error during execution"
   CIAT::Suite.new(
     :processors => [copy_compiler, ErroringExecutor.new],
     :files => 'ciat/failures/execution-error.ciat',
     :report_filename => 'execution-error.html',
     :feedback => feedback(1, [:green, :yellow])).run
-  puts "Execution fails expectation"
+  puts "Should fails execution expectation"
   CIAT::Suite.new(
     :processors => [copy_compiler, copy_executor],
     :files => 'ciat/failures/execution-fail.ciat',
@@ -82,7 +82,7 @@ end
 # Compilers & Executors
 #
 def copy_compiler
-  CIAT::Processors::Copy.new
+  CIAT::Processors::Copy.new(:source, :compilation_generated)
 end
 
 def java_compiler(type)
@@ -90,7 +90,7 @@ def java_compiler(type)
 end
 
 def copy_executor
-  CIAT::Processors::Copy.new
+  CIAT::Processors::Copy.new(:compilation_generated, :output_generated)
 end
 
 def parrot_executor
@@ -98,14 +98,14 @@ def parrot_executor
 end
 
 class ExceptionalExecutor
-  def process(x,y)
+  def process(crate)
     raise("**** should not run this executor!!!")
   end
 end
 
 class ErroringExecutor
-  def process(x, output_file)
-    system("echo this should be the error output > #{output_file}")
+  def process(crate)
+    system("echo this should be the error output > #{crate.output_generated}")
     false
   end
 end

@@ -41,22 +41,36 @@ describe CIAT::Test do
 
   describe "splitting a test file" do
     before(:each) do
-      filename = mock("filename")
-      @crate.should_receive(:test_file).and_return(filename)
-      File.should_receive(:read).with(filename).and_return(
-        "d\n==== source\ns\n==== target\np\n==== execution\no\n"
-        )
+      @filename = mock("filename")
+      @crate.should_receive(:test_file).and_return(@filename)
+    end
+
+    it "should split just a description" do
+      expect_file_content("description only\n")
+      @test.split_test_file.should == { :description => "description only\n" }
+    end
+    
+    it "should split description and something else" do
+      expect_file_content("description\n==== tag\ncontent\n")
+      @test.split_test_file.should == { :description => "description\n", :tag => "content\n" }
     end
     
     it "should split the test file" do
+      expect_file_content("d\n==== source\ns\n==== compilation_expected \np\n==== output_expected\no\n")
       @test.split_test_file.should == { :description => "d\n",
         :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
     end
     
     it "should set elements" do
+      expect_file_content("d\n==== source\ns\n==== compilation_expected \np\n==== output_expected\no\n")
+  
       @test.split_test_file
       @test.elements.should == { :description => "d\n",
         :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
+    end
+    
+    def expect_file_content(content)
+      File.should_receive(:readlines).with(@filename).and_return(content.split("\n"))
     end
   end
   
@@ -98,23 +112,13 @@ describe CIAT::Test do
   
   describe "compiling" do
     it "should compile successfully" do
-      source_filename, compilation_generated_filename =
-        mock_and_expect_filenames(:source, :compilation_generated)
-      @compiler.
-        should_receive(:process).
-        with(source_filename, compilation_generated_filename).
-        and_return(true)
+      @compiler.should_receive(:process).with(@crate).and_return(true)
       
       @test.compile
     end
 
     it "should compile for a yellow light with a error" do
-      source_filename, compilation_generated_filename =
-        mock_and_expect_filenames(:source, :compilation_generated)
-      @compiler.
-        should_receive(:process).
-        with(source_filename, compilation_generated_filename).
-        and_return(false)
+      @compiler.should_receive(:process).with(@crate).and_return(false)
       @compilation_light.should_receive(:yellow!)
       
       @test.compile
@@ -123,17 +127,13 @@ describe CIAT::Test do
   
   describe "executing target code" do
     it "should execute successfully" do
-      compilation_generated_filename, output_generated_filename =
-        mock_and_expect_filenames(:compilation_generated, :output_generated)
-      @executor.should_receive(:process).with(compilation_generated_filename, output_generated_filename).and_return(true)
+      @executor.should_receive(:process).with(@crate).and_return(true)
       
       @test.execute
     end
     
     it "should execute for a yellow light with an error" do
-      compilation_generated_filename, output_generated_filename =
-        mock_and_expect_filenames(:compilation_generated, :output_generated)
-      @executor.should_receive(:process).with(compilation_generated_filename, output_generated_filename).and_return(false)
+      @executor.should_receive(:process).with(@crate).and_return(false)
       @execution_light.should_receive(:yellow!)
       
       @test.execute

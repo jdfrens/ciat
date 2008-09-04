@@ -26,13 +26,19 @@ class CIAT::Test
   end
   
   def split_test_file #:nodoc:
-    elements = File.read(crate.test_file).split(/^====.*$/).map do |s|
-      s.gsub(/^\n/, '')
-    end
     @elements = {}
-    [:description, :source, :compilation_expected, :output_expected].zip(elements) do |name, element|
-      @elements[name] = element
+    tag = :description
+    content = ""
+    File.readlines(crate.test_file).each do |line|
+      if line =~ /^==== (\w+)\W*$/
+        @elements[tag] = content
+        tag = $1.to_sym
+        content =""
+      else
+        content += line + "\n"
+      end
     end
+    @elements[tag] = content
     @elements
   end
   
@@ -53,13 +59,13 @@ class CIAT::Test
   end
 
   def compile #:nodoc:
-    unless @compiler.process(crate.source, crate.compilation_generated)
+    unless @compiler.process(crate)
       @compilation_light.yellow!
     end
   end
   
   def execute #:nodoc:
-    unless @executor.process(crate.compilation_generated, crate.output_generated)
+    unless @executor.process(crate)
       @execution_light.yellow!
     end
   end

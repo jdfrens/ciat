@@ -3,8 +3,13 @@ module CIAT
     # A simple processor that just simply copies the code from one file to the other
     # using the Unix +cp+ command.
     class Copy
-      def process(original, copy)
-        system "cp '#{original}' '#{copy}'"
+      def initialize(original, copy)
+        @original = original
+        @copy = copy
+      end
+      
+      def process(crate)
+        system "cp '#{crate.send(@original)}' '#{crate.send(@copy)}'"
       end
     end
   end

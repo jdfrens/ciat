@@ -16,19 +16,13 @@ describe CIAT::Feedback::Composite do
     @feedback.post_tests(suite)
   end
   
-  it "should report a compilation light" do
-    light = mock("traffic light")
+  it "should report a processor light" do
+    processor, light = mock("processor"), mock("traffic light")
     
-    @subfeedbacks.each { |feedback| feedback.should_receive(:compilation).with(light) }
+    @subfeedbacks.each do |feedback|
+      feedback.should_receive(:processor_result).with(processor, light)
+    end
 
-    @feedback.compilation(light)
-  end
-
-  it "should report an execution light" do
-    light = mock("traffic light")
-    
-    @subfeedbacks.each { |feedback| feedback.should_receive(:execution).with(light) }
-
-    @feedback.execution(light)
+    @feedback.processor_result(processor, light)
   end
 end

@@ -11,6 +11,12 @@ module CIAT
       def process(crate)
         system "cp '#{crate.filename(@original)}' '#{crate.filename(@copy)}'"
       end
+      
+      def checked_files(crate)
+        [
+          [crate.filename(@original), crate.filename(@copy), crate.filename(@original, :diff)]
+        ]
+      end
     end
   end
 end

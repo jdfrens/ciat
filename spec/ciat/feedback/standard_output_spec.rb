@@ -16,55 +16,33 @@ describe CIAT::Feedback::StandardOutput do
     @feedback.post_tests(suite)
   end
   
-  describe "reporting on a compilation" do
+  describe "reporting on a processor" do
+    before(:each) do
+      @processor = mock("processor")
+    end
+    
     it "should report a green light" do
       @feedback.should_receive(:putc).with(".")
       
-      @feedback.compilation(:green)
+      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:green))
     end
     
     it "should report a red light" do
       @feedback.should_receive(:putc).with("F")
       
-      @feedback.compilation(:red)
+      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:red))
     end
     
     it "should report a yellow light" do
       @feedback.should_receive(:putc).with("E")
       
-      @feedback.compilation(:yellow)
+      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:yellow))
     end
 
     it "should report an unset light" do
       @feedback.should_receive(:putc).with("-")
       
-      @feedback.compilation(:unset)
-    end
-  end
-
-  describe "reporting on an execution" do
-    it "should report a green light" do
-      @feedback.should_receive(:putc).with(".")
-      
-      @feedback.execution(:green)
-    end
-    
-    it "should report a red light" do
-      @feedback.should_receive(:putc).with("F")
-      
-      @feedback.execution(:red)
-    end
-    
-    it "should report a yellow light" do
-      @feedback.should_receive(:putc).with("E")
-      
-      @feedback.execution(:yellow)
-    end
-
-    it "should report an unset light" do
-      @feedback.should_receive(:putc).with("-")
-      
-      @feedback.execution(:unset)
+      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:unset))
     end
   end
 end

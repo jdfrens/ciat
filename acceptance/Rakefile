@@ -140,11 +140,7 @@ class FeedbackTester
     @lights = []
   end
   
-  def compilation(light)
-    @lights << light
-  end
-  
-  def execution(light)
+  def processor_result(processor, light)
     @lights << light
   end
   

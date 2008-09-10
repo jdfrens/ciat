@@ -44,7 +44,11 @@ end
   		</tr>		
   		<% results.each do |result| %>
     		<tr>
-    			<td><a href="#" onclick="$(this).up('tr').next().toggle(); return false;"><%= result.elements[:description] %></a></td>
+    			<td>
+					<a href="#" onclick="$(this).up('tr').next().toggle(); return false;">
+					<%= result.elements[:description] %>
+					</a>
+				</td>
     			<td class="<%= result.compilation_light.color %>">
     				<%= color_to_word(result.compilation_light.color) %>
     			</td>

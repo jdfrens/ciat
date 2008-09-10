@@ -3,206 +3,165 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 describe CIAT::Test do
   before(:each) do
     @crate = mock("crate")
-    @compiler = mock("compiler")
-    @executor = mock("executor")
-    @compilation_light = mock("compilation traffic light")
-    @execution_light = mock("output traffic light")
-    @elements = mock("elements")
+    @processors = [mock("p 1"), mock("p 2"), mock("p 3")]
+    @differ = mock("differ")
+    @lights = {
+      @processors[0] => mock("light 1"),
+      @processors[1] => mock("light 2"),
+      @processors[2] => mock("light 3"), 
+      }
+    @feedback = mock("feedback")
     @test = CIAT::Test.new(@crate,
-      :processors => [@compiler, @executor],
-      :compilation_light => @compilation_light, :execution_light => @execution_light)
+      :processors => @processors,
+      :differ => @differ,
+      :lights => @lights,
+      :feedback => @feedback)
+      
+    @elements = mock("elements")
   end
 
   describe "running a test" do
     it "should run a complete test" do
-      @test.should_receive(:split_test_file)
-      @test.should_receive(:write_output_files)
-      @test.should_receive(:compile)
-      @test.should_receive(:check).with(:compilation, @compilation_light)
-      @compilation_light.should_receive(:green?).and_return(true)
-      @test.should_receive(:execute)
-      @test.should_receive(:check).with(:output, @execution_light)
+      @test.should_receive(:process_test_file)
+      @test.should_receive(:run_processors)
       @test.should_receive(:report_lights)
       
       @test.run.should == @test
     end
+  end
 
-    it "should run a test up to red compilation" do
-      @test.should_receive(:split_test_file)
-      @test.should_receive(:write_output_files)
-      @test.should_receive(:compile)
-      @test.should_receive(:check).with(:compilation, @compilation_light)
-      @compilation_light.should_receive(:green?).and_return(false)
-      @test.should_receive(:report_lights)
+  describe "running processors" do
+    it "should run just the first processor" do
+      @test.should_receive(:process).with(@processors[0])
+      @lights[@processors[0]].should_receive(:green?).and_return(false)
+      
+      @test.run_processors
+    end
 
-      @test.run.should == @test
+    it "should run just the first two processors" do
+      @test.should_receive(:process).with(@processors[0])
+      @lights[@processors[0]].should_receive(:green?).and_return(true)
+      @test.should_receive(:process).with(@processors[1])
+      @lights[@processors[1]].should_receive(:green?).and_return(false)
+      
+      @test.run_processors
+    end
+
+    it "should run just all processors" do
+      @test.should_receive(:process).with(@processors[0])
+      @lights[@processors[0]].should_receive(:green?).and_return(true)
+      @test.should_receive(:process).with(@processors[1])
+      @lights[@processors[1]].should_receive(:green?).and_return(true)
+      @test.should_receive(:process).with(@processors[2])
+      @lights[@processors[2]].should_receive(:green?).and_return(true)
+      
+      @test.run_processors
+    end
+  end
+  
+  describe "initial setting" do
+    it "should have erroring element hash" do
+      lambda { @test.elements[:does_not_exist] }.should raise_error("does_not_exist not an expected element")
     end
   end
 
-  describe "splitting a test file" do
+  describe "processing a test file" do
+    it "should defer to crate and set elements" do
+      elements = mock("elements")
+      @crate.should_receive(:process_test_file).and_return(elements)
+      
+      @test.process_test_file
+      @test.elements.should == elements
+    end
+  end  
+  
+  describe "running a processor" do
     before(:each) do
-      @filename = mock("filename")
-      @crate.should_receive(:test_file).and_return(@filename)
-    end
-
-    it "should split just a description" do
-      expect_file_content("description only\n")
-      @test.split_test_file.should == { :description => "description only\n" }
+      @processor = @processors[1]
     end
     
-    it "should split description and something else" do
-      expect_file_content("description\n==== tag\ncontent\n")
-      @test.split_test_file.should == { :description => "description\n", :tag => "content\n" }
-    end
-    
-    it "should split the test file" do
-      expect_file_content("d\n==== source\ns\n==== compilation_expected \np\n==== output_expected\no\n")
-      @test.split_test_file.should == { :description => "d\n",
-        :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
-    end
-    
-    it "should set elements" do
-      expect_file_content("d\n==== source\ns\n==== compilation_expected \np\n==== output_expected\no\n")
-  
-      @test.split_test_file
-      @test.elements.should == { :description => "d\n",
-        :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
-    end
-    
-    def expect_file_content(content)
-      File.should_receive(:readlines).with(@filename).and_return(content.split("\n"))
-    end
-  end
-  
-  describe "reading diff information" do
-    it "should read compiled diff" do
-      filename, contents = mock("compilation diff filename"), mock("contents")
-      @crate.should_receive(:compilation_diff).and_return(filename)
-      @crate.should_receive(:read_file).with(filename).and_return(contents)
-      
-      @test.compilation_diff.should == contents
-    end
-    
-    it "should read output diff" do
-      filename, contents = mock("output diff filename"), mock("contents")
-      @crate.should_receive(:output_diff).and_return(filename)
-      @crate.should_receive(:read_file).with(filename).and_return(contents)
-      
-      @test.output_diff.should == contents
-    end
-  end
-  
-  describe "writing output files" do
-    it "should write three files" do
-      mock_and_expect_filename_and_contents(:source)
-      mock_and_expect_filename_and_contents(:compilation_expected)
-      mock_and_expect_filename_and_contents(:output_expected)
-      
-      @test.write_output_files
-    end
-
-    it "should write two files when compilation fails" do
-      mock_and_expect_filename_and_contents(:source)
-      mock_and_expect_filename_and_contents(:compilation_expected)
-      mock_and_expect_filename_and_NO_contents(:output_expected)
-      
-      @test.write_output_files
-    end
-  end
-  
-  describe "compiling" do
     it "should compile successfully" do
-      @compiler.should_receive(:process).with(@crate).and_return(true)
+      @processor.should_receive(:process).with(@crate).and_return(true)
+      @test.should_receive(:check).with(@processor)
       
-      @test.compile
+      @test.process(@processor)
     end
 
     it "should compile for a yellow light with a error" do
-      @compiler.should_receive(:process).with(@crate).and_return(false)
-      @compilation_light.should_receive(:yellow!)
+      @processor.should_receive(:process).with(@crate).and_return(false)
+      @lights[@processor].should_receive(:yellow!)
       
-      @test.compile
+      @test.process(@processor)
     end
   end
   
-  describe "executing target code" do
-    it "should execute successfully" do
-      @executor.should_receive(:process).with(@crate).and_return(true)
-      
-      @test.execute
-    end
-    
-    it "should execute for a yellow light with an error" do
-      @executor.should_receive(:process).with(@crate).and_return(false)
-      @execution_light.should_receive(:yellow!)
-      
-      @test.execute
-    end
-  end
-  
-  describe "doing a diff" do
+  describe "checking a processor's results" do
     before(:each) do
-      @expected, @generated, @diff = mock("expected"), mock("generated"), mock("diff")
-      @filenames = { :expected => @expected, :generated => @generated, :diff => @diff}
-      @which = :output
-      @filenames.keys.each do |type|
-        @crate.should_receive(:output_filename).
-          with(@which, type).and_return(@filenames[type])
-      end
-      @traffic_light = mock("traffic light")
-      @result = mock("result")
+      @processor = @processors[0]
     end
     
-    it "should be green for no difference" do
-      @test.should_receive(:diff).with(@expected, @generated, @diff).and_return(true)
-      @traffic_light.should_receive(:green!).and_return(@result)
+    it "should be green if no files to check" do
+      @processor.should_receive(:checked_files).with(@crate).and_return([])
+      @lights[@processor].should_receive(:red?).and_return(false)
+      @lights[@processor].should_receive(:green!)
       
-      @test.check(@which, @traffic_light).should == @result
+      @test.check(@processor).should == @lights[@processor]
     end
 
-    it "should be red for some difference" do
-      @test.should_receive(:diff).with(@expected, @generated, @diff).and_return(false)
-      @traffic_light.should_receive(:red!).and_return(@result)
+    it "should be green when diff succeeds" do
+      files = [[mock("e 1"), mock("g 1"), mock("d 1")], [mock("e 2"), mock("g 2"), mock("d 2")], [mock("e 3"), mock("g 3"), mock("d 3")]]
       
-      @test.check(@which, @traffic_light).should == @result
+      @processor.should_receive(:checked_files).with(@crate).and_return(files)
+      @differ.should_receive(:diff).with(*files[0]).and_return(true)
+      @differ.should_receive(:diff).with(*files[1]).and_return(true)
+      @differ.should_receive(:diff).with(*files[2]).and_return(true)
+      @lights[@processor].should_receive(:red?).and_return(false)
+      @lights[@processor].should_receive(:green!)
+      
+      @test.check(@processor).should == @lights[@processor]
+    end
+
+    it "should be red when last diff fails" do
+      files = [[mock("e 1"), mock("g 1"), mock("d 1")], [mock("e 2"), mock("g 2"), mock("d 2")], [mock("e 3"), mock("g 3"), mock("d 3")]]
+      
+      @processor.should_receive(:checked_files).with(@crate).and_return(files)
+      @differ.should_receive(:diff).with(*files[0]).and_return(true)
+      @differ.should_receive(:diff).with(*files[1]).and_return(true)
+      @differ.should_receive(:diff).with(*files[2]).and_return(false)
+      @lights[@processor].should_receive(:red!)
+      @lights[@processor].should_receive(:red?).and_return(true)
+      
+      @test.check(@processor).should == @lights[@processor]
+    end
+
+    it "should be red when first diff fails" do
+      files = [[mock("e 1"), mock("g 1"), mock("d 1")], [mock("e 2"), mock("g 2"), mock("d 2")], [mock("e 3"), mock("g 3"), mock("d 3")]]
+      
+      @processor.should_receive(:checked_files).with(@crate).and_return(files)
+      @differ.should_receive(:diff).with(*files[0]).and_return(false)
+      @lights[@processor].should_receive(:red!)
+      @differ.should_receive(:diff).with(*files[1]).and_return(true)
+      @differ.should_receive(:diff).with(*files[2]).and_return(true)
+      @lights[@processor].should_receive(:red?).and_return(true)
+      
+      @test.check(@processor).should == @lights[@processor]
     end
   end
   
   describe "reporting lights" do
-    it "should report both lights to feedback" do
-      setting1, setting2 = mock("setting 1"), mock("setting 2")
-      @compilation_light.should_receive(:setting).and_return(setting1)
-      @feedback.should_receive(:compilation).with(setting1)
-      @execution_light.should_receive(:setting).and_return(setting2)
-      @feedback.should_receive(:execution).with(setting2)
+    it "should report no lights when there are no processors" do
+      @test.should_receive(:processors).and_return([])
+      
+      @test.report_lights
+    end
+    
+    it "should report all lights of processors" do
+      @feedback.should_receive(:processor_result).with(@processors[0], @lights[@processors[0]])
+      @feedback.should_receive(:processor_result).with(@processors[1], @lights[@processors[1]])
+      @feedback.should_receive(:processor_result).with(@processors[2], @lights[@processors[2]])
       
       @test.report_lights
     end
   end
 
-  #
-  # Helpers
-  #
-  def mock_and_expect_filename_and_contents(type)
-    filename = mock_and_expect_filename(type)
-    contents = mock(type.to_s + " contents")
-    @test.should_receive(:elements).any_number_of_times.and_return(@elements)
-    @elements.should_receive(:[]).with(type).at_least(:once).and_return(contents)
-    @crate.should_receive(:write_file).with(filename, contents)
-  end
-
-  def mock_and_expect_filename_and_NO_contents(type)
-    @test.should_receive(:elements).any_number_of_times.and_return(@elements)
-    @elements.should_receive(:[]).with(type).at_least(:once).and_return("   NONE\n\n")
-  end
-
-  def mock_and_expect_filenames(*types)
-    types.map { |type| mock_and_expect_filename(type) }
-  end
-  
-  def mock_and_expect_filename(type)
-    filename = mock(type.to_s + " filename")
-    @crate.should_receive(type).and_return(filename)
-    filename
-  end
 end

@@ -9,39 +9,38 @@ class CIAT::Crate #:nodoc:all
     @cargo = cargo
   end
   
+  def process_test_file #:nodoc:
+    write_output_files(split_test_file)
+  end
+  
+  def split_test_file #:nodoc:
+    tag = :description
+    content = ""
+    elements = {}
+    File.readlines(test_file).each do |line|
+      if line =~ /^==== (\w+)\W*$/
+        elements[tag] = content
+        tag = $1.to_sym
+        content =""
+      else
+        content += line + "\n"
+      end
+    end
+    elements[tag] = content
+    elements
+  end
+  
+  def write_output_files(elements)
+    elements.each_pair do |key, element|
+      write_file(filename(key), element)
+    end
+  end
+    
   def test
     @test_file
   end
 
-  def source
-    output_filename("source")
-  end
-
-  def compilation_expected
-    output_filename("compilation", "expected")
-  end
-
-  def compilation_generated
-    output_filename("compilation", "generated")
-  end
-
-  def compilation_diff
-    output_filename("compilation", "diff")
-  end
-
-  def output_expected
-    output_filename("output", "expected")
-  end
-
-  def output_generated
-    output_filename("output", "generated")
-  end
-
-  def output_diff
-    output_filename("output", "diff")
-  end
-  
-  def output_filename(*modifiers)
+  def filename(*modifiers)
     File.join(cargo.output_folder, [stub, *modifiers].compact.join("_"))
   end
   

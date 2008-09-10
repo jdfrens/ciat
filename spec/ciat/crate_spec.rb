@@ -13,49 +13,83 @@ describe CIAT::Crate, "generating interesting names" do
   
   it "should have a stub" do
     @crate.stub.should == "ciat/filename"
-  end
-  
-  it "should have a source file" do
-    set_expected_output_modifiers("source")
-    @crate.source.should == @expected_filename
-  end
-  
-  it "should have a compilation_expected file" do
-    set_expected_output_modifiers("compilation", "expected")
-    @crate.compilation_expected.should == @expected_filename
-  end
-  
-  it "should have a compilation_generated file" do
-    set_expected_output_modifiers("compilation", "generated")
-    @crate.compilation_generated.should == @expected_filename
-  end
-  
-  it "should have a output_expected file" do
-    set_expected_output_modifiers("output", "expected")
-    @crate.output_expected.should == @expected_filename
-  end
-  
-  it "should have a output_generated file" do
-    set_expected_output_modifiers("output", "generated")
-    @crate.output_generated.should == @expected_filename    
-  end
-  
-  it "should have a compilation_diff file" do
-    set_expected_output_modifiers("compilation", "diff")
-    @crate.compilation_diff.should == @expected_filename    
-  end
-  
-  it "should have a output_diff file" do
-    set_expected_output_modifiers("output", "diff")
-    @crate.output_diff.should == @expected_filename    
-  end
+  end  
   
   it "should have a parent cargo" do
     @crate.cargo.should == @cargo
   end
   
   def set_expected_output_modifiers(*modifiers)
-    @crate.should_receive(:output_filename).with(*modifiers).and_return(@expected_filename)
+    @crate.should_receive(:filename).with(*modifiers).and_return(@expected_filename)
+  end
+  
+  describe "processing test file" do
+    it "should split and write" do
+      elements1, elements2 = mock("elements 1"), mock("elements 2")
+      @crate.should_receive(:split_test_file).and_return(elements1)
+      @crate.should_receive(:write_output_files).with(elements1).and_return(elements2)
+      
+      @crate.process_test_file.should == elements2
+    end
+  end
+
+  describe "splitting a test file" do
+    before(:each) do
+      @filename = mock("filename")
+      @crate.should_receive(:test_file).and_return(@filename)
+    end
+
+    it "should split just a description" do
+      expect_file_content("description only\n")
+      @crate.split_test_file.should == { :description => "description only\n" }
+    end
+    
+    it "should split description and something else" do
+      expect_file_content("description\n==== tag\ncontent\n")
+      @crate.split_test_file.should == { :description => "description\n", :tag => "content\n" }
+    end
+    
+    it "should split the test file" do
+      expect_file_content("d\n==== source\ns\n==== compilation_expected \np\n==== output_expected\no\n")
+      @crate.split_test_file.should == { :description => "d\n",
+        :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
+    end
+    
+    def expect_file_content(content)
+      File.should_receive(:readlines).with(@filename).and_return(content.split("\n"))
+    end
+  end
+
+  describe "writing output files" do
+    it "should write no files when no elements" do
+      @crate.write_output_files({}).should == {}
+    end
+    
+    it "should write three files for three elements" do
+      elements = {
+        :one => mock("element 1"), :two => mock("element 2"), :three => mock("element 3")
+        }
+      
+      mock_and_expect_filename_and_contents(:one, elements[:one])
+      mock_and_expect_filename_and_contents(:two, elements[:two])
+      mock_and_expect_filename_and_contents(:three, elements[:three])
+      
+      @crate.write_output_files(elements).should == elements
+    end
+  end
+
+  #
+  # Helpers
+  #
+  def mock_and_expect_filename_and_contents(type, content)
+    filename = mock_and_expect_filename(type)
+    @crate.should_receive(:write_file).with(filename, content)
+  end
+  
+  def mock_and_expect_filename(type)
+    filename = mock(type.to_s + " filename")
+    @crate.should_receive(:filename).with(type).and_return(filename)
+    filename
   end
 end
 
@@ -66,11 +100,11 @@ describe CIAT::Crate, "generating actual file names" do
   end
   
   it "should work with no modifiers" do
-    @crate.output_filename().should == "outie/ciat/phile"
+    @crate.filename().should == "outie/ciat/phile"
   end
   
   it "should work with multiple modifiers" do
-    @crate.output_filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
+    @crate.filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
   end
 end
 

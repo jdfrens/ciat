@@ -9,7 +9,7 @@ module CIAT
       end
       
       def process(crate)
-        system "cp '#{crate.send(@original)}' '#{crate.send(@copy)}'"
+        system "cp '#{crate.filename(@original)}' '#{crate.filename(@copy)}'"
       end
     end
   end

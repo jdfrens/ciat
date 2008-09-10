@@ -26,7 +26,7 @@ task :clean_start do
 end
 
 task :simple do
-  puts "Copy compiler, copy executor"
+  puts "Should copy all the time"
   CIAT::Suite.new(
     :processors => [copy_compiler, copy_executor],
     :files => ['ciat/copy-cat.ciat'],
@@ -129,7 +129,8 @@ end
 def feedback(size, expected_lights)
   CIAT::Feedback::Composite.new(
     CIAT::Feedback::StandardOutput.new,
-    FeedbackTester.new(size, expected_lights))
+    FeedbackTester.new(size, expected_lights)
+    )
 end
 
 class FeedbackTester

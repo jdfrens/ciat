@@ -1,99 +1,70 @@
 class CIAT::Test
   attr_reader :crate
+  attr_reader :processors
   attr_reader :elements
-  attr_reader :compilation_light
-  attr_reader :execution_light
+  attr_reader :lights
 
   def initialize(crate, options={}) #:nodoc:
     @crate = crate
-    @compiler, @executor = options[:processors]
-    @compilation_light = options[:compilation_light] || CIAT::TrafficLight.new
-    @execution_light = options[:execution_light] || CIAT::TrafficLight.new
+    @processors = options[:processors]
+    @differ = options[:differ] || CIAT::Differs::HtmlDiffer.new
+    @lights = get_lights(options[:lights])
     @feedback = options[:feedback]
+    @elements = Hash.new { |hash, key| raise "#{key} not an expected element"}
   end
   
   def run
-    split_test_file
-    write_output_files
-    compile
-    check(:compilation, @compilation_light)
-    if @compilation_light.green?
-      execute
-      check(:output, @execution_light)
-    end
+    process_test_file
+    run_processors
     report_lights
     self
   end
   
-  def split_test_file #:nodoc:
-    @elements = {}
-    tag = :description
-    content = ""
-    File.readlines(crate.test_file).each do |line|
-      if line =~ /^==== (\w+)\W*$/
-        @elements[tag] = content
-        tag = $1.to_sym
-        content =""
-      else
-        content += line + "\n"
-      end
-    end
-    @elements[tag] = content
-    @elements
-  end
-  
-  def compilation_diff
-    crate.read_file(crate.compilation_diff)
-  end
-  
-  def output_diff
-    crate.read_file(crate.output_diff)
-  end
-  
-  def write_output_files #:nodoc:
-    crate.write_file(crate.source, elements[:source])
-    crate.write_file(crate.compilation_expected, elements[:compilation_expected])
-    unless elements[:output_expected] =~ /^\s*NONE\s*$/
-      crate.write_file(crate.output_expected, elements[:output_expected])
-    end
+  def process_test_file
+    @elements = @crate.process_test_file
   end
 
-  def compile #:nodoc:
-    unless @compiler.process(crate)
-      @compilation_light.yellow!
+  def run_processors
+    @processors.each do |processor|
+      process(processor)
+      break unless @lights[processor].green?
     end
   end
   
-  def execute #:nodoc:
-    unless @executor.process(crate)
-      @execution_light.yellow!
-    end
-  end
-  
-  def check(which, traffic_light) #:nodoc:
-    expected = crate.output_filename(which, :expected)
-    generated = crate.output_filename(which, :generated)
-    diff = crate.output_filename(which, :diff)
-    if diff(expected, generated, diff)
-      traffic_light.green!
+  def process(processor) #:nodoc:
+    if processor.process(crate)
+      check(processor)
     else
-      traffic_light.red!
+      @lights[processor].yellow!
     end
   end
   
-  def diff(expected, generated, diff)
-    system("diff #{diff_options} '#{expected}' '#{generated}' > '#{diff}'")
-  end
-  
-  def diff_options
-    "--old-group-format='<tr><td class=\"red\"><pre>%<</pre></td><td></td></tr>' " + 
-    "--new-group-format='<tr><td></td><td class=\"red\"><pre>%></pre><td></tr>' " +
-    "--changed-group-format='<tr class=\"yellow\"><td><pre>%<</pre></td><td><pre>%></pre></td></tr>' " +
-    "--unchanged-group-format='<tr class=\"green\"><td><pre>%=</pre></td><td><pre>%=</pre></td></tr>'"
+  def check(processor) #:nodoc:
+    processor.checked_files(crate).each do |expected, generated, diff|
+      unless @differ.diff(expected, generated, diff)
+        @lights[processor].red!
+      end
+    end
+    unless @lights[processor].red?
+      @lights[processor].green!
+    end
+    @lights[processor]
   end
   
   def report_lights
-    @feedback.compilation(compilation_light.setting)
-    @feedback.execution(execution_light.setting)
+    processors.each do |processor|
+      @feedback.processor_result(processor, lights[processor])
+    end
   end
+  
+  private
+  
+  def get_lights(lights)
+    if lights.nil?
+      Hash[ *@processors.collect { |v| [ v, CIAT::TrafficLight.new ] }.flatten ]
+    else
+      lights
+    end
+  end
+  
 end

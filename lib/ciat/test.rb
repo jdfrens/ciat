@@ -61,7 +61,10 @@ class CIAT::Test
   
   def get_lights(lights)
     if lights.nil?
-      Hash[ *@processors.collect { |v| [ v, CIAT::TrafficLight.new ] }.flatten ]
+      processors.inject({}) do |hash, processor|
+        hash[processor] = CIAT::TrafficLight.new
+        hash
+      end
     else
       lights
     end

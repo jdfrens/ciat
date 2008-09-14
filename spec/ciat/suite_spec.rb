@@ -77,7 +77,7 @@ describe CIAT::Suite do
     erb_template, binding, result = mock("erb_template"), mock("binding"), mock("result")
     suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo)
     
-    ERB.should_receive(:new).with(suite.template).and_return(erb_template)
+    ERB.should_receive(:new).with(CIAT::Suite.template).and_return(erb_template)
     suite.should_receive(:binding).with().and_return(binding)
     erb_template.should_receive(:result).with(binding).and_return(result)
     

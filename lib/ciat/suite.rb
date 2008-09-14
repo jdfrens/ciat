@@ -1,4 +1,5 @@
 require 'erb'
+require 'ciat/erb_helpers'
 
 # = A Suite of Tests
 #
@@ -113,10 +114,13 @@ class CIAT::Suite
   end
   
   def generate_html #:nodoc:
-    ERB.new(template).result(binding)
+    b = binding
+    b.extend(CIAT::ERBHelpers)
+    ERB.new(CIAT::Suite.template).result(b)
   end
  
-  def template #:nodoc:
+  def self.template #:nodoc:
+    # TODO: is the gsub necessary here?  it is necessary in RDoc examples
     File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
   end
 end

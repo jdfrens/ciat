@@ -5,6 +5,10 @@ class CIAT::TrafficLight
     @setting = setting
   end
   
+  def unset?
+    @setting == :unset
+  end
+  
   def green?
     @setting == :green
   end

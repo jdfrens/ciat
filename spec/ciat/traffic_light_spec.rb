@@ -4,6 +4,12 @@ describe CIAT::TrafficLight do
   before(:each) do
     @traffic_light = CIAT::TrafficLight.new
   end
+  
+  it "should initially be unset" do
+    @traffic_light.unset?.should == true
+    @traffic_light.green!
+    @traffic_light.unset?.should == false
+  end
 
   it "should set and query green" do
     @traffic_light.green?.should == false

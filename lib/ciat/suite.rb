@@ -121,6 +121,6 @@ class CIAT::Suite
  
   def self.template #:nodoc:
     # TODO: is the gsub necessary here?  it is necessary in RDoc examples
-    File.read(File.dirname(__FILE__) + "/report.html.erb").gsub(/^  /, '')
+    File.read(File.join(File.dirname(__FILE__), "..", "templates", "report.html.erb")).gsub(/^  /, '')
   end
 end

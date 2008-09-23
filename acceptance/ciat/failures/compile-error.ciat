@@ -1,7 +1,7 @@
 To be run by the error compiler.
 ==== source
 Source is actually ignored.
-==== target
+==== compilation
 This compiler always quits with an error.
 ==== execution
 NONE

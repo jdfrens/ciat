@@ -21,9 +21,19 @@ module CIAT
         @classpath = classpath
         @compiler_class = compiler_class
       end
+      
+      def description
+        "compiler"
+      end
     
       def process(crate)
-        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.source}' '#{crate.compilation_generated}'"
+        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.filename(:source)}' '#{crate.filename(:compilation, :generated)}'"
+      end
+      
+      def checked_files(crate)
+        [
+          [crate.filename(:compilation), crate.filename(:compilation, :generated), crate.filename(:compilation, :diff)]
+          ]
       end
     end
   end

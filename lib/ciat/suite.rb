@@ -81,6 +81,9 @@ require 'ciat/erb_helpers'
 class CIAT::Suite
   attr_reader :cargo
   attr_reader :results
+  attr_reader :processors
+  
+  include CIAT::ERBHelpers
   
   # Constructs a suite of CIAT tests.  See the instructions above for possible
   # values for the +options+.
@@ -115,7 +118,6 @@ class CIAT::Suite
   
   def generate_html #:nodoc:
     b = binding
-    b.extend(CIAT::ERBHelpers)
     ERB.new(CIAT::Suite.template).result(b)
   end
  

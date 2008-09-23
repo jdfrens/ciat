@@ -1,23 +1,30 @@
 <tr class="details" style="display:none">
-  <td colspan="3">
+  <td colspan="<%= result.processors.size + 1 %>">
 	
 	<h3>Source</h3>
   <pre class="source"><%= replace_tabs(result.elements[:source]) %></pre>
 
-	<h3>Target Code</h3>
-  <table>
-    <tr><th>Expected</th><th>Generated</th></tr>
-    <%= replace_tabs(result.compilation_diff) %>
-  </table>
+	<% result.processors.each do |processor| %>
+	  <h3>Results from <%= processor.description %></h3>
+	  <% case result.lights[processor].setting  
+		   when :yellow %>
+		  <p class="yellow-result">
+		    <%= light_to_sentence(processor.description, result.lights[processor]) %>
+		  </p>
+		<% when :unset %>
+	  	<p class="unset-result">
+	    	<%= light_to_sentence(processor.description, result.lights[processor]) %>
+	  	</p>
+	  <% else %>
+	    <% processor.checked_files(result.crate).each do |expected, generated, diff| %>
 
-	<h3>Execution Output</h3>
-  <% if result.compilation_light.green? %>
-	<table>
-	  <tr><th>Expected</th><th>Generated</th></tr>
-    <%= replace_tabs(result.output_diff) %>
-  </table>
-  <% else %>
-  <p>No target code to execute...</p>
-  <% end %>
-  </td>
+        <table>
+          <tr><th>Expected</th><th>Generated</th></tr>
+          <%= replace_tabs(File.read(diff)) %>
+        </table>
+
+			<% end %>
+    <% end %>
+	<% end %>
+
 </tr>

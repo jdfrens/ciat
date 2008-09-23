@@ -20,11 +20,20 @@ describe CIAT::Compilers::Java do
     @compiler.process(@crate).should == false
   end
   
+  it "should have files to check" do
+    checked_files = [mock('expected'), mock('generated'), mock('diff')]
+    @crate.should_receive(:filename).with(:compilation).and_return(checked_files[0])
+    @crate.should_receive(:filename).with(:compilation, :generated).and_return(checked_files[1])
+    @crate.should_receive(:filename).with(:compilation, :diff).and_return(checked_files[2])
+    
+    @compiler.checked_files(@crate).should == [checked_files]
+  end
+  
   def expect_compile(return_value)
     source_file, generated_code_file = mock("source file"), mock("generated code file")
     
-    @crate.should_receive(:source).and_return(source_file)
-    @crate.should_receive(:compilation_generated).and_return(generated_code_file)
+    @crate.should_receive(:filename).with(:source).and_return(source_file)
+    @crate.should_receive(:filename).with(:compilation, :generated).and_return(generated_code_file)
     @compiler.should_receive(:system).
       with("java -cp '#{@classpath}' #{@compiler_class} '#{source_file}' '#{generated_code_file}'").
       and_return(return_value)

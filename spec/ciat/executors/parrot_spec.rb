@@ -18,11 +18,20 @@ describe CIAT::Executors::Parrot do
     @executor.process(@crate).should == false
   end
   
+  it "should have files to check" do
+    checked_files = [mock('expected'), mock('generated'), mock('diff')]
+    @crate.should_receive(:filename).with(:execution).and_return(checked_files[0])
+    @crate.should_receive(:filename).with(:execution, :generated).and_return(checked_files[1])
+    @crate.should_receive(:filename).with(:execution, :diff).and_return(checked_files[2])    
+    
+    @executor.checked_files(@crate).should == [checked_files]
+  end
+  
   def expect_run(return_value)
     generated_code_file, output_file = mock("generated code file"), mock("output file")
     
-    @crate.should_receive(:compilation_generated).and_return(generated_code_file)
-    @crate.should_receive(:output_generated).and_return(output_file)
+    @crate.should_receive(:filename).with(:compilation, :generated).and_return(generated_code_file)
+    @crate.should_receive(:filename).with(:execution, :generated).and_return(output_file)
     @executor.should_receive(:system).
       with("parrot '#{generated_code_file}' &> '#{output_file}'").
       and_return(return_value)

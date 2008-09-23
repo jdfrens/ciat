@@ -28,6 +28,6 @@ module CIAT::ERBHelpers
   end
   
   def render(file, result)
-    ERB.new(File.read(File.dirname(__FILE__) + "/" + file + ".html.erb")).result
+    ERB.new(File.read(File.join(File.dirname(__FILE__), '..', 'templates', file + ".html.erb"))).result(binding)
   end
 end

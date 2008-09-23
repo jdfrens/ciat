@@ -1,7 +1,7 @@
 Compiled by copying, executor errors.
 ==== source
 compile me!
-==== target
+==== compilation
 compile me!
 ==== execution
 this should be the error output

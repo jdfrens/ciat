@@ -54,13 +54,13 @@ end
 task :failures do
   puts "Should error during compilation"
   CIAT::Suite.new(
-    :processors => [java_compiler("Erroring"), ExceptionalExecutor.new],
+    :processors => [java_compiler("Erroring"), DoNotProcessExecutor.new],
     :files => 'ciat/failures/compile-error.ciat',
     :report_filename => 'compile-error.html',
     :feedback => feedback(1, [:yellow, :unset])).run
   puts "Should fail compilation expectation"
   CIAT::Suite.new(
-    :processors => [copy_compiler, ExceptionalExecutor.new],
+    :processors => [copy_compiler, DoNotProcessExecutor.new],
     :files => 'ciat/failures/compile-fail.ciat',
     :report_filename => 'compile-fail.html',
     :feedback => feedback(1, [:red, :unset])).run
@@ -82,7 +82,7 @@ end
 # Compilers & Executors
 #
 def copy_compiler
-  CIAT::Processors::Copy.new(:source, :compilation_generated)
+  CIAT::Processors::Copy.new(:source, :compilation)
 end
 
 def java_compiler(type)
@@ -90,23 +90,39 @@ def java_compiler(type)
 end
 
 def copy_executor
-  CIAT::Processors::Copy.new(:compilation_generated, :output_generated)
+  CIAT::Processors::Copy.new(:compilation_generated, :execution)
 end
 
 def parrot_executor
   CIAT::Executors::Parrot.new
 end
 
-class ExceptionalExecutor
+class DoNotProcessExecutor
+  def description
+    "Should not be executed!"
+  end
+  
   def process(crate)
     raise("**** should not run this executor!!!")
+  end
+  
+  def checked_files(crate)
+    []
   end
 end
 
 class ErroringExecutor
+  def description
+    "Failing Executor"
+  end
+  
   def process(crate)
-    system("echo this should be the error output > #{crate.output_generated}")
+    system("echo this should be the error output > #{crate.filename(:execution, :generated)}")
     false
+  end
+  
+  def checked_files(crate)
+    []
   end
 end
 
@@ -141,7 +157,7 @@ class FeedbackTester
   end
   
   def processor_result(processor, light)
-    @lights << light
+    @lights << light.setting
   end
   
   def post_tests(suite)

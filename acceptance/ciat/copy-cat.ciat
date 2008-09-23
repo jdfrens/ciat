@@ -1,7 +1,7 @@
-Copy compiler and cat executor.
+Copy compiler and executor.
 ==== source
 text
-==== target
+==== compilation
 text
 ==== execution
 text

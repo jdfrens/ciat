@@ -8,13 +8,17 @@ module CIAT
         @copy = copy
       end
       
+      def description
+        'copier'
+      end
+      
       def process(crate)
-        system "cp '#{crate.filename(@original)}' '#{crate.filename(@copy)}'"
+        system "cp '#{crate.filename(@original)}' '#{crate.filename(@copy, :generated)}'"
       end
       
       def checked_files(crate)
         [
-          [crate.filename(@original), crate.filename(@copy), crate.filename(@original, :diff)]
+          [crate.filename(@copy), crate.filename(@copy, :generated), crate.filename(@copy, :diff)]
         ]
       end
     end

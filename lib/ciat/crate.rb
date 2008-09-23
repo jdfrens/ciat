@@ -23,7 +23,7 @@ class CIAT::Crate #:nodoc:all
         tag = $1.to_sym
         content =""
       else
-        content += line + "\n"
+        content += line
       end
     end
     elements[tag] = content

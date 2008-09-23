@@ -45,18 +45,20 @@ describe CIAT::Crate, "generating interesting names" do
     end
     
     it "should split description and something else" do
-      expect_file_content("description\n==== tag\ncontent\n")
+      expect_file_content("description\n", "==== tag\n", "content\n")
       @crate.split_test_file.should == { :description => "description\n", :tag => "content\n" }
     end
     
     it "should split the test file" do
-      expect_file_content("d\n==== source\ns\n==== compilation_expected \np\n==== output_expected\no\n")
+      expect_file_content("d\n", "==== source\n", "s\n",
+        "==== compilation_expected \n", "p\n",
+        "==== output_expected\n", "o\n")
       @crate.split_test_file.should == { :description => "d\n",
         :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
     end
     
-    def expect_file_content(content)
-      File.should_receive(:readlines).with(@filename).and_return(content.split("\n"))
+    def expect_file_content(*content)
+      File.should_receive(:readlines).with(@filename).and_return(content)
     end
   end
 

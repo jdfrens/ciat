@@ -15,13 +15,13 @@
 <a href="#" onclick=
 "$$('.results .result').invoke('toggle'); return false;">Expand/Collapse
 All</a>
-<table border="1" summary="Test summary" class="results">
-<tr>
+<table border="1" summary="Table of tests" class="results">
+<tr id="header">
 <th>Description</th>
-<th>Compilation</th>
-<th>Execution</th>
+<th>compiler</th>
+<th>Parrot interpreter</th>
 </tr>
-<tr>
+<tr class="summary">
 <td><a href="#" onclick=
 "$(this).up('tr').next().toggle(); return false;">The contents of
 the input file will be ignored; the PIR output should work
@@ -29,13 +29,13 @@ though.</a></td>
 <td class="green">passed</td>
 <td class="green">passed</td>
 </tr>
-<tr class="result" style="display:none">
+<tr class="details" style="display:none">
 <td colspan="3">
 <h3>Source</h3>
 <pre class="source">
 Ignore these contents!!!!
 </pre>
-<h3>Target Code</h3>
+<h3>Results from compiler</h3>
 <table>
 <tr>
 <th>Expected</th>
@@ -58,7 +58,7 @@ Ignore these contents!!!!
 </pre></td>
 </tr>
 </table>
-<h3>Execution Output</h3>
+<h3>Results from Parrot interpreter</h3>
 <table>
 <tr>
 <th>Expected</th>

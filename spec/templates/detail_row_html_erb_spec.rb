@@ -16,7 +16,7 @@ module CustomDetailRowMatchers
     def failure_message
       "expected #{@target.inspect} to have colspan #{@expected}"
     end
-
+  
     def negative_failure_message
       "expected #{@target.inspect} not to have colspan #{@expected}"
     end
@@ -55,11 +55,19 @@ module CustomDetailRowMatchers
   end
   
   def have_yellow_result(expected)
-    have_inner_html("p.yellow-result", expected)
+    have_inner_html("p.yellow", expected)
   end
 
   def have_unset_result(expected)
-    have_inner_html("p.unset-result", expected)
+    have_inner_html("p.unset", expected)
+  end
+  
+  def have_checked_result(expected)
+    have_inner_html("table th:first", "Expected")
+  end
+  
+  def have_diff_table(n, expected)
+    have_inner_html("table:nth(#{n})", /Expected(.|\s)*Generated(.|\s)*#{expected}/)
   end
 end
 
@@ -92,9 +100,9 @@ describe "detail row of test report" do
     @result.should_receive(:processors).any_number_of_times.and_return(processors)
     @result.should_receive(:elements).and_return(@elements)
     @elements.should_receive(:[]).with(:source).and_return("source!!!")
-    expect_not_yellow(lights, processors[0], "p 0 description")
-    expect_not_yellow(lights, processors[1], "p 1 description")
-    expect_not_yellow(lights, processors[2], "p 2 description")
+    expect_red_or_green(lights, processors[0], "p 0 description")
+    expect_red_or_green(lights, processors[1], "p 1 description")
+    expect_red_or_green(lights, processors[2], "p 2 description")
     
     doc = process_erb
     doc.should have_colspan(4)
@@ -134,11 +142,39 @@ describe "detail row of test report" do
     doc.should have_source("source!!!")
     doc.should have_unset_result("description")    
   end
+  
+  it "should work with red or green light and multiple checked files" do
+    processor = mock('processor')
+    lights = { processor => mock('light') }
+    checked_files = [
+      [mock('expected 0'), mock('generated 0'), mock('diff 0')],
+      [mock('expected 1'), mock('generated 1'), mock('diff 1')],
+      [mock('expected 2'), mock('generated 2'), mock('diff 2')]
+      ]
+    crate = mock('crate')
+    
+    @result.should_receive(:crate).any_number_of_times.and_return(crate)
+    @result.should_receive(:lights).any_number_of_times.and_return(lights)
+    @result.should_receive(:processors).any_number_of_times.and_return([processor])
+    @result.should_receive(:elements).and_return(@elements)
+    @elements.should_receive(:[]).with(:source).and_return("source!!!")
+    expect_red_or_green(lights, processor, "description", checked_files)
+    File.should_receive(:read).with(checked_files[0][2]).and_return("diff contents 0")
+    File.should_receive(:read).with(checked_files[1][2]).and_return("diff contents 1")
+    File.should_receive(:read).with(checked_files[2][2]).and_return("diff contents 2")
+    
+    doc = process_erb
+    doc.should have_source("source!!!")
+    doc.should have_checked_result("description")
+    doc.should have_diff_table(0, "diff contents 0")
+    doc.should have_diff_table(1, "diff contents 1")
+    doc.should have_diff_table(2, "diff contents 2")
+  end
 
-  def expect_not_yellow(lights, processor, description)
+  def expect_red_or_green(lights, processor, description, checked_files=[])
     processor.should_receive(:description).and_return(description)
-    lights[processor].should_receive(:setting).and_return(:fake_non_yellow)
-    processor.should_receive(:checked_files).and_return([])
+    lights[processor].should_receive(:setting).and_return(:red_or_green)
+    processor.should_receive(:checked_files).and_return(checked_files)
   end
   
   def expect_yellow(lights, processor, description)

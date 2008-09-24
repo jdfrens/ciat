@@ -15,26 +15,26 @@
 <a href="#" onclick=
 "$$('.results .result').invoke('toggle'); return false;">Expand/Collapse
 All</a>
-<table border="1" summary="Test summary" class="results">
-<tr>
+<table border="1" summary="Table of tests" class="results">
+<tr id="header">
 <th>Description</th>
-<th>Compilation</th>
-<th>Execution</th>
+<th>copier</th>
+<th>copier</th>
 </tr>
-<tr>
+<tr class="summary">
 <td><a href="#" onclick=
 "$(this).up('tr').next().toggle(); return false;">Copy compiler and
-cat executor.</a></td>
+executor.</a></td>
 <td class="green">passed</td>
 <td class="green">passed</td>
 </tr>
-<tr class="result" style="display:none">
+<tr class="details" style="display:none">
 <td colspan="3">
 <h3>Source</h3>
 <pre class="source">
 text
 </pre>
-<h3>Target Code</h3>
+<h3>Results from copier</h3>
 <table>
 <tr>
 <th>Expected</th>
@@ -51,7 +51,7 @@ text
 </pre></td>
 </tr>
 </table>
-<h3>Execution Output</h3>
+<h3>Results from copier</h3>
 <table>
 <tr>
 <th>Expected</th>

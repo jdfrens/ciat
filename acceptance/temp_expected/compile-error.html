@@ -15,44 +15,30 @@
 <a href="#" onclick=
 "$$('.results .result').invoke('toggle'); return false;">Expand/Collapse
 All</a>
-<table border="1" summary="Test summary" class="results">
-<tr>
+<table border="1" summary="Table of tests" class="results">
+<tr id="header">
 <th>Description</th>
-<th>Compilation</th>
-<th>Execution</th>
+<th>compiler</th>
+<th>Should not be executed!</th>
 </tr>
-<tr>
+<tr class="summary">
 <td><a href="#" onclick=
 "$(this).up('tr').next().toggle(); return false;">To be run by the
 error compiler.</a></td>
 <td class="yellow">ERROR</td>
 <td class="unset">n/a</td>
 </tr>
-<tr class="result" style="display:none">
+<tr class="details" style="display:none">
 <td colspan="3">
 <h3>Source</h3>
 <pre class="source">
 Source is actually ignored.
 </pre>
-<h3>Target Code</h3>
-<table>
-<tr>
-<th>Expected</th>
-<th>Generated</th>
-</tr>
-<tr class="green">
-<td>
-<pre>
-This compiler always quits with an error.
-</pre></td>
-<td>
-<pre>
-This compiler always quits with an error.
-</pre></td>
-</tr>
-</table>
-<h3>Execution Output</h3>
-<p>No target code to execute...</p>
+<h3>Results from compiler</h3>
+<p class="yellow"><span class="yellow">compiler errored.</span></p>
+<h3>Results from Should not be executed!</h3>
+<p class="unset"><span class="unset">Should not be executed! not
+run.</span></p>
 </td>
 </tr>
 </table>

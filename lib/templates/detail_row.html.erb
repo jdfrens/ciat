@@ -8,11 +8,11 @@
 	  <h3>Results from <%= processor.description %></h3>
 	  <% case result.lights[processor].setting  
 		   when :yellow %>
-		  <p class="yellow-result">
+		  <p class="yellow">
 		    <%= light_to_sentence(processor.description, result.lights[processor]) %>
 		  </p>
 		<% when :unset %>
-	  	<p class="unset-result">
+	  	<p class="unset">
 	    	<%= light_to_sentence(processor.description, result.lights[processor]) %>
 	  	</p>
 	  <% else %>

@@ -109,7 +109,11 @@ class CIAT::Suite
   end
   
   def run_test(crate) #:nodoc:
-    CIAT::Test.new(crate, :processors => @processors, :feedback => @feedback).run
+    CIAT::Test.new(crate, :processors => test_processors, :feedback => @feedback).run
+  end
+  
+  def test_processors #:nodoc:
+    @processors.map { |p| CIAT::Processors::Magister.new(p) }
   end
 
   def generate_report #:nodoc:

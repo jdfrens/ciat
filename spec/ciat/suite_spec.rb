@@ -54,10 +54,17 @@ describe CIAT::Suite do
   end
 
   it "should run a single test" do
+    processors = [mock("p 0"), mock("p 1"), mock("p 2")]
+    test_processors = [mock("tp 0"), mock("tp 1"), mock("tp 2")]
     crate, test, result = mock("crate"), mock("test"), mock("result")
-    suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo, :feedback => @feedback)
+    suite = CIAT::Suite.new(:processors => processors, :cargo => @cargo, :feedback => @feedback)
 
-    CIAT::Test.should_receive(:new).with(crate, :processors => @processors, :feedback => @feedback).and_return(test)
+    CIAT::Processors::Magister.should_receive(:new).with(processors[0]).and_return(test_processors[0])
+    CIAT::Processors::Magister.should_receive(:new).with(processors[1]).and_return(test_processors[1])
+    CIAT::Processors::Magister.should_receive(:new).with(processors[2]).and_return(test_processors[2])
+    CIAT::Test.should_receive(:new).
+      with(crate, :processors => test_processors, :feedback => @feedback).
+      and_return(test)
     test.should_receive(:run).and_return(result)
     
     suite.run_test(crate).should == result

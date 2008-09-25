@@ -117,12 +117,10 @@ class CIAT::Suite
   end
   
   def generate_html #:nodoc:
-    b = binding
-    ERB.new(CIAT::Suite.template).result(b)
+    ERB.new(CIAT::Suite.template).result(binding)
   end
  
   def self.template #:nodoc:
-    # TODO: is the gsub necessary here?  it is necessary in RDoc examples
-    File.read(File.join(File.dirname(__FILE__), "..", "templates", "report.html.erb")).gsub(/^  /, '')
+    File.read(File.join(File.dirname(__FILE__), "..", "templates", "report.html.erb"))
   end
 end

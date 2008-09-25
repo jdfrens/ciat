@@ -18,13 +18,16 @@ describe CIAT::Executors::Parrot do
     @executor.process(@crate).should == false
   end
   
+  it "should required elements" do
+    @executor.required_elements.should == [:execution]
+  end
+  
   it "should have files to check" do
-    checked_files = [mock('expected'), mock('generated'), mock('diff')]
-    @crate.should_receive(:filename).with(:execution).and_return(checked_files[0])
-    @crate.should_receive(:filename).with(:execution, :generated).and_return(checked_files[1])
-    @crate.should_receive(:filename).with(:execution, :diff).and_return(checked_files[2])    
+    filenames = mock("filenames")
     
-    @executor.checked_files(@crate).should == [checked_files]
+    @crate.should_receive(:diff_filenames).with(:execution).and_return(filenames)    
+    
+    @executor.checked_files(@crate).should == [filenames]
   end
   
   def expect_run(return_value)

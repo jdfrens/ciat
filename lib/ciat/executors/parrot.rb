@@ -13,10 +13,12 @@ module CIAT
         system "parrot '#{crate.filename(:compilation, :generated)}' &> '#{crate.filename(:execution, :generated)}'"
       end
       
+      def required_elements
+        [:execution]
+      end
+      
       def checked_files(crate)
-        [
-          [crate.filename(:execution), crate.filename(:execution, :generated), crate.filename(:execution, :diff)]
-          ]
+        [crate.diff_filenames(:execution)]
       end
     end
   end

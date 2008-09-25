@@ -29,10 +29,12 @@ module CIAT
         system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.filename(:source)}' '#{crate.filename(:compilation, :generated)}'"
       end
       
+      def required_elements
+        [:source, :compilation]
+      end
+      
       def checked_files(crate)
-        [
-          [crate.filename(:compilation), crate.filename(:compilation, :generated), crate.filename(:compilation, :diff)]
-          ]
+        [crate.diff_filenames(:compilation)]
       end
     end
   end

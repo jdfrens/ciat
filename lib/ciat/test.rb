@@ -1,3 +1,5 @@
+require 'set'
+
 class CIAT::Test
   attr_reader :crate
   attr_reader :processors
@@ -18,11 +20,24 @@ class CIAT::Test
     self
   end
   
-  def process_test_file
+  def process_test_file #:nodoc:
     @elements = @crate.process_test_file
+    verify_required_elements
+  end
+  
+  def verify_required_elements
+    required = required_elements
+    provided = provided_elements
+    unless  required == provided
+      if (required - provided).empty?
+        raise "#{list_of_elements(provided - required)} from '#{@crate.test_file}' not used"
+      else
+        raise "#{list_of_elements(required - provided)} missing from '#{@crate.test_file}'"
+      end
+    end
   end
 
-  def run_processors
+  def run_processors #:nodoc:
     @processors.each do |processor|
       process(processor)
       break unless processor.light.green?
@@ -49,9 +64,23 @@ class CIAT::Test
     processor.light
   end
   
-  def report_lights
+  def report_lights #:nodoc:
     processors.each do |processor|
       @feedback.processor_result(processor)
     end
-  end  
+  end 
+  
+  def required_elements
+    processors.map { |processor| processor.required_elements }.flatten.to_set + [:description]
+  end
+  
+  def provided_elements
+    elements.keys.to_set
+  end
+  
+  private
+  
+  def list_of_elements(elements)
+    elements.map { |e| "'" + e.to_s + "'" }.join(", ")
+  end
 end

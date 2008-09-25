@@ -15,8 +15,6 @@ describe CIAT::Test do
     @processors[0].should_receive(:light).any_number_of_times.and_return(@lights[0])
     @processors[1].should_receive(:light).any_number_of_times.and_return(@lights[1])
     @processors[2].should_receive(:light).any_number_of_times.and_return(@lights[2])
-      
-    @elements = mock("elements")
   end
 
   describe "running a test" do
@@ -67,10 +65,64 @@ describe CIAT::Test do
   describe "processing a test file" do
     it "should defer to crate and set elements" do
       elements = mock("elements")
+      
       @crate.should_receive(:process_test_file).and_return(elements)
+      @test.should_receive(:verify_required_elements)
       
       @test.process_test_file
       @test.elements.should == elements
+    end
+  end
+
+  describe "verifying required elements" do
+    it "should verify required elements" do
+      elements = mock("elements")
+      requireds = [mock("r 0"), mock("r 1"), mock("r 2")]
+
+      @test.should_receive(:required_elements).and_return(requireds.to_set)
+      @test.should_receive(:elements).and_return(elements)
+      elements.should_receive(:keys).and_return(requireds.to_set)
+    
+      @test.verify_required_elements
+    end
+    
+    it "should raise complaint if extra required element" do
+      @test.should_receive(:required_elements).and_return([:one, :two, :extra1, :extra2].to_set)
+      @test.should_receive(:provided_elements).and_return([:one, :two].to_set)
+      @crate.should_receive(:test_file).and_return("testfile")
+      
+      lambda { @test.verify_required_elements }.
+        should raise_error(RuntimeError, "'extra1', 'extra2' missing from 'testfile'")
+    end
+
+    it "should raise complaint if extra required element, ignoring extra provided" do
+      @test.should_receive(:required_elements).and_return([:one, :two, :extra1, :extra2].to_set)
+      @test.should_receive(:provided_elements).and_return([:one, :two, :ignored].to_set)
+      @crate.should_receive(:test_file).and_return("testfile")
+      
+      lambda { @test.verify_required_elements }.
+        should raise_error(RuntimeError, "'extra1', 'extra2' missing from 'testfile'")
+    end
+
+    it "should raise complaint if extra provided" do
+      @test.should_receive(:required_elements).and_return([:one, :two].to_set)
+      @test.should_receive(:provided_elements).and_return([:one, :two, :extra1, :extra2].to_set)
+      @crate.should_receive(:test_file).and_return("testfile")
+      
+      lambda { @test.verify_required_elements }.
+        should raise_error(RuntimeError, "'extra1', 'extra2' from 'testfile' not used")
+    end
+  end
+  
+  describe "collecting required elements" do
+    it "should get required elements from processors" do
+      requireds = [mock("r 0"), mock("r 1"), mock("r 2"), :description]
+
+      @processors[0].should_receive(:required_elements).and_return(requireds[0])
+      @processors[1].should_receive(:required_elements).and_return(requireds[1])
+      @processors[2].should_receive(:required_elements).and_return(requireds[2])
+      
+      @test.required_elements.should == requireds.to_set
     end
   end
   

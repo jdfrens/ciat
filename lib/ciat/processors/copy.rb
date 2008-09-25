@@ -3,9 +3,10 @@ module CIAT
     # A simple processor that just simply copies the code from one file to the other
     # using the Unix +cp+ command.
     class Copy
-      def initialize(original, copy)
+      def initialize(original, copy, requireds)
         @original = original
         @copy = copy
+        @requireds = requireds
       end
       
       def description
@@ -16,10 +17,12 @@ module CIAT
         system "cp '#{crate.filename(@original)}' '#{crate.filename(@copy, :generated)}'"
       end
       
+      def required_elements
+        @requireds
+      end
+      
       def checked_files(crate)
-        [
-          [crate.filename(@copy), crate.filename(@copy, :generated), crate.filename(@copy, :diff)]
-        ]
+        [crate.diff_filenames(@copy)]
       end
     end
   end

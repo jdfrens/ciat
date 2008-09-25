@@ -22,6 +22,14 @@ describe CIAT::Processors::Magister do
     @magister.process(crate).should == result
   end
   
+  it "should defer required elements" do
+    requireds = mock("requireds")
+    
+    @processor.should_receive(:required_elements).and_return(requireds)
+    
+    @magister.required_elements.should == requireds
+  end
+  
   it "should defer checked files" do
     crate, files = mock("crate"), mock("files")
     

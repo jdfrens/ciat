@@ -108,6 +108,16 @@ describe CIAT::Crate, "generating actual file names" do
   it "should work with multiple modifiers" do
     @crate.filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
   end
+  
+  it "should generate expected-generated-diff triples" do
+    triple = [mock("expected"), mock("generated"), mock("diff")]
+    
+    @crate.should_receive(:filename).with(:foo).and_return(triple[0])
+    @crate.should_receive(:filename).with(:foo, :generated).and_return(triple[1])
+    @crate.should_receive(:filename).with(:foo, :diff).and_return(triple[2])
+    
+    @crate.diff_filenames(:foo).should == triple
+  end
 end
 
 describe CIAT::Crate, "file manipulation" do

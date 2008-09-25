@@ -95,7 +95,7 @@ end
 # Compilers & Executors
 #
 def copy_compiler
-  CIAT::Processors::Copy.new(:source, :compilation)
+  CIAT::Processors::Copy.new(:source, :compilation, [:source, :compilation])
 end
 
 def java_compiler(type)
@@ -103,7 +103,7 @@ def java_compiler(type)
 end
 
 def copy_executor
-  CIAT::Processors::Copy.new(:compilation_generated, :execution)
+  CIAT::Processors::Copy.new(:compilation_generated, :execution, [:execution])
 end
 
 def parrot_executor
@@ -119,6 +119,10 @@ class DoNotProcessExecutor
     raise("**** should not run this executor!!!")
   end
   
+  def required_elements
+    [:source, :compilation, :execution]
+  end
+  
   def checked_files(crate)
     []
   end
@@ -132,6 +136,10 @@ class ErroringExecutor
   def process(crate)
     system("echo this should be the error output > #{crate.filename(:execution, :generated)}")
     false
+  end
+  
+  def required_elements
+    [:source, :compilation, :execution]
   end
   
   def checked_files(crate)

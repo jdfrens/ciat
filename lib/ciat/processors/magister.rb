@@ -17,6 +17,10 @@ module CIAT
         @processor.process(crate)
       end
       
+      def required_elements
+        @processor.required_elements
+      end
+      
       def checked_files(crate)
         @processor.checked_files(crate)
       end

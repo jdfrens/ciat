@@ -21,12 +21,15 @@ describe CIAT::Compilers::Java do
   end
   
   it "should have files to check" do
-    checked_files = [mock('expected'), mock('generated'), mock('diff')]
-    @crate.should_receive(:filename).with(:compilation).and_return(checked_files[0])
-    @crate.should_receive(:filename).with(:compilation, :generated).and_return(checked_files[1])
-    @crate.should_receive(:filename).with(:compilation, :diff).and_return(checked_files[2])
+    filenames = mock("filenames")
     
-    @compiler.checked_files(@crate).should == [checked_files]
+    @crate.should_receive(:diff_filenames).with(:compilation).and_return(filenames)
+    
+    @compiler.checked_files(@crate).should == [filenames]
+  end
+  
+  it "should have required elements" do
+    @compiler.required_elements.should == [:source, :compilation]
   end
   
   def expect_compile(return_value)

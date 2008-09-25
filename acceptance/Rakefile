@@ -89,6 +89,15 @@ task :bad_input do
     raise "handled missing source without raising an exception!"
   rescue RuntimeError
   end
+  begin
+    CIAT::Suite.new(
+      :processors => [copy_compiler, copy_executor],
+      :files => 'ciat/bad-input/missing-execution.ciat',
+      :report_filename => 'missing-execution.html',
+      :feedback => blowup_feedback).run
+    raise "handled missing execution without raising an exception!"
+  rescue RuntimeError
+  end
 end
 
 #

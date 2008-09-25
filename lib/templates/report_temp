@@ -1,6 +1,0 @@
-<td class="<%= result.compilation_light.color %>">
-	<%= light_to_word(result.compilation_light) %>
-</td>
-<td class="<%= result.execution_light.color %>">
-	<%= light_to_word(result.execution_light) %>
-</td>

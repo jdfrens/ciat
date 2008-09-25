@@ -6,14 +6,14 @@
 
 	<% result.processors.each do |processor| %>
 	  <h3>Results from <%= processor.description %></h3>
-	  <% case result.lights[processor].setting  
+	  <% case processor.light.setting  
 		   when :yellow %>
 		  <p class="yellow">
-		    <%= light_to_sentence(processor.description, result.lights[processor]) %>
+		    <%= light_to_sentence(processor.description, processor.light) %>
 		  </p>
 		<% when :unset %>
 	  	<p class="unset">
-	    	<%= light_to_sentence(processor.description, result.lights[processor]) %>
+	    	<%= light_to_sentence(processor.description, processor.light) %>
 	  	</p>
 	  <% else %>
 	    <% processor.checked_files(result.crate).each do |expected, generated, diff| %>

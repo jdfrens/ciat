@@ -5,8 +5,8 @@
 	  </a>
   </td>
 	<% result.processors.each do |processor| %>
-	  <td class="<%= result.lights[processor].setting %>">
-	    <%= light_to_word(result.lights[processor]) %>
+	  <td class="<%= processor.light.setting %>">
+	    <%= light_to_word(processor.light) %>
 		</td>
 	<% end %>
 </tr>

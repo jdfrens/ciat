@@ -9,8 +9,8 @@ module CIAT
         puts "\n#{suite.size} tests executed."
       end
       
-      def processor_result(processor, light)
-        putc LIGHT_OUTPUTS[light.setting]
+      def processor_result(processor)
+        putc LIGHT_OUTPUTS[processor.light.setting]
       end
     end
   end

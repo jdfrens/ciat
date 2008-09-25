@@ -3,19 +3,18 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 describe CIAT::Test do
   before(:each) do
     @crate = mock("crate")
-    @processors = [mock("p 1"), mock("p 2"), mock("p 3")]
+    @processors = [mock("p 0"), mock("p 1"), mock("p 2")]
     @differ = mock("differ")
-    @lights = {
-      @processors[0] => mock("light 1"),
-      @processors[1] => mock("light 2"),
-      @processors[2] => mock("light 3"), 
-      }
+    @lights = [mock("light 0"), mock("light 1"), mock("light 2")]
     @feedback = mock("feedback")
     @test = CIAT::Test.new(@crate,
       :processors => @processors,
       :differ => @differ,
-      :lights => @lights,
       :feedback => @feedback)
+    # TODO: zap these and rework @lights
+    @processors[0].should_receive(:light).any_number_of_times.and_return(@lights[0])
+    @processors[1].should_receive(:light).any_number_of_times.and_return(@lights[1])
+    @processors[2].should_receive(:light).any_number_of_times.and_return(@lights[2])
       
     @elements = mock("elements")
   end
@@ -33,27 +32,27 @@ describe CIAT::Test do
   describe "running processors" do
     it "should run just the first processor" do
       @test.should_receive(:process).with(@processors[0])
-      @lights[@processors[0]].should_receive(:green?).and_return(false)
+      @lights[0].should_receive(:green?).and_return(false)
       
       @test.run_processors
     end
 
     it "should run just the first two processors" do
       @test.should_receive(:process).with(@processors[0])
-      @lights[@processors[0]].should_receive(:green?).and_return(true)
+      @lights[0].should_receive(:green?).and_return(true)
       @test.should_receive(:process).with(@processors[1])
-      @lights[@processors[1]].should_receive(:green?).and_return(false)
+      @lights[1].should_receive(:green?).and_return(false)
       
       @test.run_processors
     end
 
     it "should run just all processors" do
       @test.should_receive(:process).with(@processors[0])
-      @lights[@processors[0]].should_receive(:green?).and_return(true)
+      @lights[0].should_receive(:green?).and_return(true)
       @test.should_receive(:process).with(@processors[1])
-      @lights[@processors[1]].should_receive(:green?).and_return(true)
+      @lights[1].should_receive(:green?).and_return(true)
       @test.should_receive(:process).with(@processors[2])
-      @lights[@processors[2]].should_receive(:green?).and_return(true)
+      @lights[2].should_receive(:green?).and_return(true)
       
       @test.run_processors
     end
@@ -73,11 +72,12 @@ describe CIAT::Test do
       @test.process_test_file
       @test.elements.should == elements
     end
-  end  
+  end
   
   describe "running a processor" do
     before(:each) do
       @processor = @processors[1]
+      @light = @lights[1]
     end
     
     it "should compile successfully" do
@@ -89,7 +89,7 @@ describe CIAT::Test do
 
     it "should compile for a yellow light with a error" do
       @processor.should_receive(:process).with(@crate).and_return(false)
-      @lights[@processor].should_receive(:yellow!)
+      @light.should_receive(:yellow!)
       
       @test.process(@processor)
     end
@@ -98,14 +98,15 @@ describe CIAT::Test do
   describe "checking a processor's results" do
     before(:each) do
       @processor = @processors[0]
+      @light = @lights[0]
     end
     
     it "should be green if no files to check" do
       @processor.should_receive(:checked_files).with(@crate).and_return([])
-      @lights[@processor].should_receive(:red?).and_return(false)
-      @lights[@processor].should_receive(:green!)
+      @light.should_receive(:red?).and_return(false)
+      @light.should_receive(:green!)
       
-      @test.check(@processor).should == @lights[@processor]
+      @test.check(@processor).should == @light
     end
 
     it "should be green when diff succeeds" do
@@ -115,10 +116,10 @@ describe CIAT::Test do
       @differ.should_receive(:diff).with(*files[0]).and_return(true)
       @differ.should_receive(:diff).with(*files[1]).and_return(true)
       @differ.should_receive(:diff).with(*files[2]).and_return(true)
-      @lights[@processor].should_receive(:red?).and_return(false)
-      @lights[@processor].should_receive(:green!)
+      @light.should_receive(:red?).and_return(false)
+      @light.should_receive(:green!)
       
-      @test.check(@processor).should == @lights[@processor]
+      @test.check(@processor).should == @light
     end
 
     it "should be red when last diff fails" do
@@ -128,10 +129,10 @@ describe CIAT::Test do
       @differ.should_receive(:diff).with(*files[0]).and_return(true)
       @differ.should_receive(:diff).with(*files[1]).and_return(true)
       @differ.should_receive(:diff).with(*files[2]).and_return(false)
-      @lights[@processor].should_receive(:red!)
-      @lights[@processor].should_receive(:red?).and_return(true)
+      @light.should_receive(:red!)
+      @light.should_receive(:red?).and_return(true)
       
-      @test.check(@processor).should == @lights[@processor]
+      @test.check(@processor).should == @light
     end
 
     it "should be red when first diff fails" do
@@ -139,12 +140,12 @@ describe CIAT::Test do
       
       @processor.should_receive(:checked_files).with(@crate).and_return(files)
       @differ.should_receive(:diff).with(*files[0]).and_return(false)
-      @lights[@processor].should_receive(:red!)
+      @light.should_receive(:red!)
       @differ.should_receive(:diff).with(*files[1]).and_return(true)
       @differ.should_receive(:diff).with(*files[2]).and_return(true)
-      @lights[@processor].should_receive(:red?).and_return(true)
+      @light.should_receive(:red?).and_return(true)
       
-      @test.check(@processor).should == @lights[@processor]
+      @test.check(@processor).should == @light
     end
   end
   
@@ -156,9 +157,9 @@ describe CIAT::Test do
     end
     
     it "should report all lights of processors" do
-      @feedback.should_receive(:processor_result).with(@processors[0], @lights[@processors[0]])
-      @feedback.should_receive(:processor_result).with(@processors[1], @lights[@processors[1]])
-      @feedback.should_receive(:processor_result).with(@processors[2], @lights[@processors[2]])
+      @feedback.should_receive(:processor_result).with(@processors[0])
+      @feedback.should_receive(:processor_result).with(@processors[1])
+      @feedback.should_receive(:processor_result).with(@processors[2])
       
       @test.report_lights
     end

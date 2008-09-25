@@ -29,4 +29,8 @@ describe CIAT::Processors::Magister do
     
     @magister.checked_files(crate).should == files
   end
+  
+  it "should have a light" do
+    @magister.light.should be_kind_of(CIAT::TrafficLight)
+  end
 end

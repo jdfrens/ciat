@@ -9,7 +9,7 @@ class CIAT::Feedback::Composite
     @feedbacks.each { |feedback| feedback.post_tests(suite) }
   end
   
-  def processor_result(processor, light)
-    @feedbacks.each { |feedback| feedback.processor_result(processor, light) }
+  def processor_result(processor)
+    @feedbacks.each { |feedback| feedback.processor_result(processor) }
   end
 end

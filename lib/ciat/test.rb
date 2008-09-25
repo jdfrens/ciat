@@ -2,13 +2,11 @@ class CIAT::Test
   attr_reader :crate
   attr_reader :processors
   attr_reader :elements
-  attr_reader :lights
 
   def initialize(crate, options={}) #:nodoc:
     @crate = crate
     @processors = options[:processors]
     @differ = options[:differ] || CIAT::Differs::HtmlDiffer.new
-    @lights = get_lights(options[:lights])
     @feedback = options[:feedback]
     @elements = Hash.new { |hash, key| raise "#{key} not an expected element"}
   end
@@ -27,7 +25,7 @@ class CIAT::Test
   def run_processors
     @processors.each do |processor|
       process(processor)
-      break unless @lights[processor].green?
+      break unless processor.light.green?
     end
   end
   
@@ -35,39 +33,25 @@ class CIAT::Test
     if processor.process(crate)
       check(processor)
     else
-      @lights[processor].yellow!
+      processor.light.yellow!
     end
   end
   
   def check(processor) #:nodoc:
     processor.checked_files(crate).each do |expected, generated, diff|
       unless @differ.diff(expected, generated, diff)
-        @lights[processor].red!
+        processor.light.red!
       end
     end
-    unless @lights[processor].red?
-      @lights[processor].green!
+    unless processor.light.red?
+      processor.light.green!
     end
-    @lights[processor]
+    processor.light
   end
   
   def report_lights
     processors.each do |processor|
-      @feedback.processor_result(processor, lights[processor])
+      @feedback.processor_result(processor)
     end
-  end
-  
-  private
-  
-  def get_lights(lights)
-    if lights.nil?
-      processors.inject({}) do |hash, processor|
-        hash[processor] = CIAT::TrafficLight.new
-        hash
-      end
-    else
-      lights
-    end
-  end
-  
+  end  
 end

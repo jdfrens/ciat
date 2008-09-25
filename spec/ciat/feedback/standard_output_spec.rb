@@ -24,25 +24,33 @@ describe CIAT::Feedback::StandardOutput do
     it "should report a green light" do
       @feedback.should_receive(:putc).with(".")
       
-      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:green))
+      @processor.should_receive(:light).and_return(CIAT::TrafficLight.new(:green))
+      
+      @feedback.processor_result(@processor)
     end
     
     it "should report a red light" do
       @feedback.should_receive(:putc).with("F")
+
+      @processor.should_receive(:light).and_return(CIAT::TrafficLight.new(:red))
       
-      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:red))
+      @feedback.processor_result(@processor)
     end
     
     it "should report a yellow light" do
       @feedback.should_receive(:putc).with("E")
       
-      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:yellow))
+      @processor.should_receive(:light).and_return(CIAT::TrafficLight.new(:yellow))
+
+      @feedback.processor_result(@processor)
     end
 
     it "should report an unset light" do
       @feedback.should_receive(:putc).with("-")
       
-      @feedback.processor_result(@processor, CIAT::TrafficLight.new(:unset))
+      @processor.should_receive(:light).and_return(CIAT::TrafficLight.new(:unset))
+      
+      @feedback.processor_result(@processor)
     end
   end
 end

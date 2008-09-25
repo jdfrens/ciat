@@ -17,12 +17,12 @@ describe CIAT::Feedback::Composite do
   end
   
   it "should report a processor light" do
-    processor, light = mock("processor"), mock("traffic light")
+    processor = mock("processor")
     
     @subfeedbacks.each do |feedback|
-      feedback.should_receive(:processor_result).with(processor, light)
+      feedback.should_receive(:processor_result).with(processor)
     end
 
-    @feedback.processor_result(processor, light)
+    @feedback.processor_result(processor)
   end
 end

@@ -92,7 +92,7 @@ describe "detail row of test report" do
   
   it "should work with multiple processors and no checked files" do
     processors = [mock('p 0'), mock('p 1'), mock('p 2')]
-    lights = { processors[0] => mock('l 1'), processors[1] => mock('l 2'), processors[2] => mock('l 3')}
+    lights = [mock('l 1'), mock('l 2'), mock('l 3')]
     crate = mock('crate')
     
     @result.should_receive(:crate).any_number_of_times.and_return(crate)
@@ -100,9 +100,9 @@ describe "detail row of test report" do
     @result.should_receive(:processors).any_number_of_times.and_return(processors)
     @result.should_receive(:elements).and_return(@elements)
     @elements.should_receive(:[]).with(:source).and_return("source!!!")
-    expect_red_or_green(lights, processors[0], "p 0 description")
-    expect_red_or_green(lights, processors[1], "p 1 description")
-    expect_red_or_green(lights, processors[2], "p 2 description")
+    expect_red_or_green(processors[0], "p 0 description")
+    expect_red_or_green(processors[1], "p 1 description")
+    expect_red_or_green(processors[2], "p 2 description")
     
     doc = process_erb
     doc.should have_colspan(4)
@@ -111,15 +111,14 @@ describe "detail row of test report" do
   
   it "should work with yellow light" do
     processor = mock('processor')
-    lights = { processor => mock('light') }
+    light = mock('light')
     crate = mock('crate')
     
     @result.should_receive(:crate).any_number_of_times.and_return(crate)
-    @result.should_receive(:lights).any_number_of_times.and_return(lights)
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
     @result.should_receive(:elements).and_return(@elements)
     @elements.should_receive(:[]).with(:source).and_return("source!!!")
-    expect_yellow(lights, processor, "description")
+    expect_yellow(processor, "description")
     
     doc = process_erb
     doc.should have_source("source!!!")
@@ -128,15 +127,14 @@ describe "detail row of test report" do
   
   it "should work with unset light" do
     processor = mock('processor')
-    lights = { processor => mock('light') }
+    light = mock('light')
     crate = mock('crate')
     
     @result.should_receive(:crate).any_number_of_times.and_return(crate)
-    @result.should_receive(:lights).any_number_of_times.and_return(lights)
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
     @result.should_receive(:elements).and_return(@elements)
     @elements.should_receive(:[]).with(:source).and_return("source!!!")
-    expect_unset(lights, processor, "description")
+    expect_unset(processor, "description")
     
     doc = process_erb
     doc.should have_source("source!!!")
@@ -145,7 +143,7 @@ describe "detail row of test report" do
   
   it "should work with red or green light and multiple checked files" do
     processor = mock('processor')
-    lights = { processor => mock('light') }
+    light = mock('light')
     checked_files = [
       [mock('expected 0'), mock('generated 0'), mock('diff 0')],
       [mock('expected 1'), mock('generated 1'), mock('diff 1')],
@@ -154,11 +152,10 @@ describe "detail row of test report" do
     crate = mock('crate')
     
     @result.should_receive(:crate).any_number_of_times.and_return(crate)
-    @result.should_receive(:lights).any_number_of_times.and_return(lights)
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
     @result.should_receive(:elements).and_return(@elements)
     @elements.should_receive(:[]).with(:source).and_return("source!!!")
-    expect_red_or_green(lights, processor, "description", checked_files)
+    expect_red_or_green(processor, "description", checked_files)
     File.should_receive(:read).with(checked_files[0][2]).and_return("diff contents 0")
     File.should_receive(:read).with(checked_files[1][2]).and_return("diff contents 1")
     File.should_receive(:read).with(checked_files[2][2]).and_return("diff contents 2")
@@ -171,20 +168,26 @@ describe "detail row of test report" do
     doc.should have_diff_table(2, "diff contents 2")
   end
 
-  def expect_red_or_green(lights, processor, description, checked_files=[])
+  def expect_red_or_green(processor, description, checked_files=[])
+    light = mock('red or green light')
     processor.should_receive(:description).and_return(description)
-    lights[processor].should_receive(:setting).and_return(:red_or_green)
+    processor.should_receive(:light).at_least(:once).and_return(light)
+    light.should_receive(:setting).and_return(:red_or_green)
     processor.should_receive(:checked_files).and_return(checked_files)
   end
   
-  def expect_yellow(lights, processor, description)
+  def expect_yellow(processor, description)
+    light = mock('yellow')
     processor.should_receive(:description).at_least(:once).and_return(description)
-    lights[processor].should_receive(:setting).and_return(:yellow)
+    processor.should_receive(:light).at_least(:once).and_return(light)
+    light.should_receive(:setting).and_return(:yellow)
   end
   
-  def expect_unset(lights, processor, description)
+  def expect_unset(processor, description)
+    light = mock('unset')
     processor.should_receive(:description).at_least(:once).and_return(description)
-    lights[processor].should_receive(:setting).and_return(:unset)
+    processor.should_receive(:light).at_least(:once).and_return(light)
+    light.should_receive(:setting).and_return(:unset)
   end
   
   def process_erb

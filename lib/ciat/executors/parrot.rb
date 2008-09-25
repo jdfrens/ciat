@@ -3,8 +3,10 @@ module CIAT
     # Executor class for Parrot programs.  This will execute PIR or PASM code
     # using the +parrot+ executable.
     class Parrot
-      def description
-        "Parrot interpreter"
+      attr_reader :description
+      
+      def initialize(options={})
+        @description = options[:description] || "Parrot virtual machine"
       end
       
       def process(crate)

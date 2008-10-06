@@ -76,14 +76,15 @@ describe "detail row of test report" do
   
   before(:each) do
     @result = mock('result')
-    @elements = mock('elements')
+    @crate = mock('crate')
     @erb = ERB.new(File.read("lib/templates/detail_row.html.erb"))
+
+    @result.should_receive(:crate).any_number_of_times.and_return(@crate)
   end
   
   it "should work with no processors" do
     @result.should_receive(:processors).at_least(:once).and_return([])
-    @result.should_receive(:elements).and_return(@elements)
-    @elements.should_receive(:[]).with(:source).and_return("the source")
+    @crate.should_receive(:element).with(:source).and_return("the source")
     
     doc = process_erb
     doc.should have_colspan(1)
@@ -93,13 +94,10 @@ describe "detail row of test report" do
   it "should work with multiple processors and no checked files" do
     processors = [mock('p 0'), mock('p 1'), mock('p 2')]
     lights = [mock('l 1'), mock('l 2'), mock('l 3')]
-    crate = mock('crate')
     
-    @result.should_receive(:crate).any_number_of_times.and_return(crate)
     @result.should_receive(:lights).any_number_of_times.and_return(lights)
     @result.should_receive(:processors).any_number_of_times.and_return(processors)
-    @result.should_receive(:elements).and_return(@elements)
-    @elements.should_receive(:[]).with(:source).and_return("source!!!")
+    @crate.should_receive(:element).with(:source).and_return("source!!!")
     expect_red_or_green(processors[0], "p 0 description")
     expect_red_or_green(processors[1], "p 1 description")
     expect_red_or_green(processors[2], "p 2 description")
@@ -112,12 +110,9 @@ describe "detail row of test report" do
   it "should work with yellow light" do
     processor = mock('processor')
     light = mock('light')
-    crate = mock('crate')
     
-    @result.should_receive(:crate).any_number_of_times.and_return(crate)
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    @result.should_receive(:elements).and_return(@elements)
-    @elements.should_receive(:[]).with(:source).and_return("source!!!")
+    @crate.should_receive(:element).with(:source).and_return("source!!!")
     expect_yellow(processor, "description")
     
     doc = process_erb
@@ -128,12 +123,9 @@ describe "detail row of test report" do
   it "should work with unset light" do
     processor = mock('processor')
     light = mock('light')
-    crate = mock('crate')
     
-    @result.should_receive(:crate).any_number_of_times.and_return(crate)
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    @result.should_receive(:elements).and_return(@elements)
-    @elements.should_receive(:[]).with(:source).and_return("source!!!")
+    @crate.should_receive(:element).with(:source).and_return("source!!!")
     expect_unset(processor, "description")
     
     doc = process_erb
@@ -149,12 +141,9 @@ describe "detail row of test report" do
       [mock('expected 1'), mock('generated 1'), mock('diff 1')],
       [mock('expected 2'), mock('generated 2'), mock('diff 2')]
       ]
-    crate = mock('crate')
     
-    @result.should_receive(:crate).any_number_of_times.and_return(crate)
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    @result.should_receive(:elements).and_return(@elements)
-    @elements.should_receive(:[]).with(:source).and_return("source!!!")
+    @crate.should_receive(:element).with(:source).and_return("source!!!")
     expect_red_or_green(processor, "description", checked_files)
     File.should_receive(:read).with(checked_files[0][2]).and_return("diff contents 0")
     File.should_receive(:read).with(checked_files[1][2]).and_return("diff contents 1")

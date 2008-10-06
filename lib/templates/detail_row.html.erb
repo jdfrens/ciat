@@ -2,7 +2,7 @@
   <td colspan="<%= result.processors.size + 1 %>">
 	
 	<h3>Source</h3>
-  <pre class="source"><%= replace_tabs(result.elements[:source]) %></pre>
+<pre class="source"><%= replace_tabs(result.crate.element(:source)) %></pre>
 
 	<% result.processors.each do |processor| %>
 	  <h3>Results from <%= processor.description %></h3>

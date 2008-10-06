@@ -7,6 +7,7 @@ class CIAT::Crate #:nodoc:all
     @test_file = test_file
     @stub = test_file.gsub(File.extname(test_file), "")
     @cargo = cargo
+    @elements = {}
   end
   
   def process_test_file #:nodoc:
@@ -16,18 +17,26 @@ class CIAT::Crate #:nodoc:all
   def split_test_file #:nodoc:
     tag = :description
     content = ""
-    elements = {}
+    @elements = {}
     File.readlines(test_file).each do |line|
-      if line =~ /^==== (\w+)\W*$/
-        elements[tag] = content
-        tag = $1.to_sym
+      if line =~ /^==== ((\w|\s)+?)\W*$/
+        @elements[tag] = content
+        tag = $1.gsub(" ", "_").to_sym
         content =""
       else
         content += line
       end
     end
-    elements[tag] = content
-    elements
+    @elements[tag] = content
+    @elements
+  end
+  
+  def element(name)
+    @elements[name]
+  end
+  
+  def provided_elements
+    elements.keys.to_set
   end
   
   def write_output_files(elements)
@@ -54,5 +63,11 @@ class CIAT::Crate #:nodoc:all
 
   def read_file(filename)
     @cargo.read_file(filename)
+  end
+  
+  private
+  
+  def elements
+    @elements
   end
 end

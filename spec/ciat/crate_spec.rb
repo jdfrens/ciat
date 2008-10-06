@@ -19,8 +19,12 @@ describe CIAT::Crate, "generating interesting names" do
     @crate.cargo.should == @cargo
   end
   
-  def set_expected_output_modifiers(*modifiers)
-    @crate.should_receive(:filename).with(*modifiers).and_return(@expected_filename)
+  describe "provided elements" do
+    it "should consult the elements hash" do
+      @crate.should_receive(:elements).and_return({ :foo => "foo" })
+      
+      @crate.provided_elements.should == [:foo].to_set
+    end
   end
   
   describe "processing test file" do
@@ -55,6 +59,12 @@ describe CIAT::Crate, "generating interesting names" do
         "==== output_expected\n", "o\n")
       @crate.split_test_file.should == { :description => "d\n",
         :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
+    end
+    
+    it "should allow spaces in element name" do
+      expect_file_content("description\n" , "==== element name\n", "content\n")
+      @crate.split_test_file.should == {
+        :description => "description\n", :element_name => "content\n" }
     end
     
     def expect_file_content(*content)

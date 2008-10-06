@@ -12,7 +12,8 @@ desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
                   :simple,
                   :java_cat, :java_parrot,
-                  :failures, :bad_input] do
+                  :failures, :bad_input,
+                  :optional_elements] do
   check_output_files
 end
 
@@ -81,6 +82,7 @@ end
 
 task :bad_input do
   begin
+    puts "Should not like missing source element"
     CIAT::Suite.new(
       :processors => [copy_compiler, copy_executor],
       :files => 'ciat/bad-input/missing-source.ciat',
@@ -90,6 +92,7 @@ task :bad_input do
   rescue RuntimeError
   end
   begin
+    puts "Should not like missing execution element"
     CIAT::Suite.new(
       :processors => [copy_compiler, copy_executor],
       :files => 'ciat/bad-input/missing-execution.ciat',
@@ -99,6 +102,7 @@ task :bad_input do
   rescue RuntimeError
   end
   begin
+    puts "Should not like extra element"
     CIAT::Suite.new(
       :processors => [copy_compiler, copy_executor],
       :files => 'ciat/bad-input/extra-element.ciat',
@@ -107,6 +111,15 @@ task :bad_input do
     raise "handled extra element without raising an exception!"
   rescue RuntimeError
   end
+end
+
+task :optional_elements do
+  puts "Should allow optional 'command line' element with PIR virtual machine"
+  CIAT::Suite.new(
+    :processors => [copy_compiler, parrot_executor],
+    :folder => 'ciat/optional-elements',
+    :report_filename => 'optional-elements.html',
+    :feedback => feedback(1, [:green, :green])).run
 end
 
 #
@@ -141,6 +154,10 @@ class DoNotProcessExecutor
     [:source, :compilation, :execution]
   end
   
+  def optional_elements
+    []
+  end
+  
   def checked_files(crate)
     []
   end
@@ -158,6 +175,10 @@ class ErroringExecutor
   
   def required_elements
     [:source, :compilation, :execution]
+  end
+  
+  def optional_elements
+    []
   end
   
   def checked_files(crate)

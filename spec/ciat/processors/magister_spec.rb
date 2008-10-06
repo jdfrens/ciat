@@ -30,6 +30,14 @@ describe CIAT::Processors::Magister do
     @magister.required_elements.should == requireds
   end
   
+  it "should defer optional elements" do
+    optionals = mock("optionals")
+    
+    @processor.should_receive(:optional_elements).and_return(optionals)
+    
+    @magister.optional_elements.should == optionals
+  end
+  
   it "should defer checked files" do
     crate, files = mock("crate"), mock("files")
     

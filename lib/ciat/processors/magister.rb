@@ -21,6 +21,10 @@ module CIAT
         @processor.required_elements
       end
       
+      def optional_elements
+        @processor.optional_elements
+      end
+      
       def checked_files(crate)
         @processor.checked_files(crate)
       end

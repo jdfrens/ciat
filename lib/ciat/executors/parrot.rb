@@ -10,11 +10,16 @@ module CIAT
       end
       
       def process(crate)
-        system "parrot '#{crate.filename(:compilation, :generated)}' &> '#{crate.filename(:execution, :generated)}'"
+        args = crate.element(:command_line) || ''
+        system "parrot '#{crate.filename(:compilation, :generated)}' #{args.strip} &> '#{crate.filename(:execution, :generated)}'"
       end
       
       def required_elements
         [:execution]
+      end
+      
+      def optional_elements
+        [:command_line]
       end
       
       def checked_files(crate)

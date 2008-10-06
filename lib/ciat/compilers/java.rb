@@ -33,6 +33,10 @@ module CIAT
         [:source, :compilation]
       end
       
+      def optional_elements
+        []
+      end
+      
       def checked_files(crate)
         [crate.diff_filenames(:compilation)]
       end

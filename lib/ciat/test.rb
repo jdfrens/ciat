@@ -3,14 +3,12 @@ require 'set'
 class CIAT::Test
   attr_reader :crate
   attr_reader :processors
-  attr_reader :elements
 
   def initialize(crate, options={}) #:nodoc:
     @crate = crate
     @processors = options[:processors]
     @differ = options[:differ] || CIAT::Differs::HtmlDiffer.new
     @feedback = options[:feedback]
-    @elements = Hash.new { |hash, key| raise "#{key} not an expected element"}
   end
   
   def run
@@ -21,19 +19,23 @@ class CIAT::Test
   end
   
   def process_test_file #:nodoc:
-    @elements = @crate.process_test_file
+    @crate.process_test_file
     verify_required_elements
   end
   
   def verify_required_elements
     required = required_elements
+    optional = optional_elements
     provided = provided_elements
-    unless  required == provided
-      if (required - provided).empty?
-        raise "#{list_of_elements(provided - required)} from '#{@crate.test_file}' not used"
+    if required.subset? provided
+      if (provided - required).subset? optional
+        true
       else
-        raise "#{list_of_elements(required - provided)} missing from '#{@crate.test_file}'"
+        extras = provided - required - optional
+        raise "#{list_of_elements(extras)} from '#{@crate.test_file}' not used"
       end
+    else
+      raise "#{list_of_elements(required - provided)} missing from '#{@crate.test_file}'"
     end
   end
 
@@ -74,8 +76,12 @@ class CIAT::Test
     processors.map { |processor| processor.required_elements }.flatten.to_set + [:description]
   end
   
+  def optional_elements
+    processors.map { |processor| processor.optional_elements }.flatten.to_set
+  end
+  
   def provided_elements
-    elements.keys.to_set
+    crate.provided_elements
   end
   
   private

@@ -32,6 +32,10 @@ describe CIAT::Compilers::Java do
     @compiler.required_elements.should == [:source, :compilation]
   end
   
+  it "should not have an optional elements" do
+    @compiler.optional_elements.should == []
+  end
+  
   def expect_compile(return_value)
     source_file, generated_code_file = mock("source file"), mock("generated code file")
     

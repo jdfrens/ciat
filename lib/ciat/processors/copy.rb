@@ -7,6 +7,7 @@ module CIAT
         @original = original
         @copy = copy
         @requireds = requireds
+        @optionals = optionals
       end
       
       def description

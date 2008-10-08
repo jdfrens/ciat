@@ -157,11 +157,12 @@ describe "detail row of test report" do
     doc.should have_diff_table(2, "diff contents 2")
   end
 
-  def expect_red_or_green(processor, description, checked_files=[])
+  def expect_red_or_green(processor, description, checked_files=[], optional_elements=[])
     light = mock('red or green light')
     processor.should_receive(:description).and_return(description)
     processor.should_receive(:light).at_least(:once).and_return(light)
     light.should_receive(:setting).and_return(:red_or_green)
+    processor.should_receive(:optional_elements).and_return(optional_elements)
     processor.should_receive(:checked_files).and_return(checked_files)
   end
   

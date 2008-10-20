@@ -9,9 +9,17 @@ describe CIAT::Processors::Magister do
   it "should defer description" do
     description = mock("description")
     
-    @processor.should_receive(:description).and_return(description)
+    @processor.should_receive(:description).with(:description).and_return(description)
     
     @magister.description.should == description
+  end
+  
+  it "should defer description of optional element" do
+    description = mock("description")
+    
+    @processor.should_receive(:description).with(:optional).and_return(description)
+    
+    @magister.description(:optional).should == description
   end
   
   it "should defer processing" do

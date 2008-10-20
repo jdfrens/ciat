@@ -18,7 +18,7 @@
 	  <% else %>
 			<% processor.optional_elements.each do |element| %>
 				<% if result.crate.element(element) %>
-				<h3><%= element %></h3>
+				<h3><%= processor.description(element) %></h3>
 <pre class="source"><%= replace_tabs(result.crate.element(element)) %></pre>
 				<% end %>
 			<% end %>

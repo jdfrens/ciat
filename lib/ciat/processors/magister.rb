@@ -9,8 +9,8 @@ module CIAT
         @light = CIAT::TrafficLight.new
       end
       
-      def description
-        @processor.description
+      def description(element=:description)
+        @processor.description(element)
       end
       
       def process(crate)

@@ -9,6 +9,17 @@ describe CIAT::Compilers::Java do
     @compiler_class = mock("compiler class")
     @compiler = CIAT::Compilers::Java.new(@classpath, @compiler_class)
   end
+  
+  describe "describing things" do
+    it "should describe itself" do
+      @compiler.description.should == "compiler"
+    end
+    
+    it "should have a configurable description" do
+      CIAT::Compilers::Java.new(@classpath, @compiler_class, :description => "the description").
+        description.should == "the description"
+    end
+  end
 
   it "should run the compiler successfully" do
     expect_compile(true)

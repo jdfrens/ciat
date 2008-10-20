@@ -10,8 +10,15 @@ module CIAT
         @optionals = optionals
       end
       
-      def description
-        'copier'
+      def description(element=:description)
+        case
+        when element == :description
+          'copier'
+        when @optionals.includes?(element)
+          "optional: #{element}"
+        else
+          nil
+        end
       end
       
       def process(crate)

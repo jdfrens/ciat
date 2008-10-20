@@ -142,7 +142,7 @@ def parrot_executor
 end
 
 class DoNotProcessExecutor
-  def description
+  def description(element=nil)
     "Should not be executed!"
   end
   
@@ -164,7 +164,7 @@ class DoNotProcessExecutor
 end
 
 class ErroringExecutor
-  def description
+  def description(element=nil)
     "Failing Executor"
   end
   

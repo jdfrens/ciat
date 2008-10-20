@@ -12,8 +12,6 @@ module CIAT
     # You may find this classpath useful:
     #   Dir.glob('../lib/*.jar').join(':') + ":../bin"
     class Java
-      attr_reader :description
-      
       # Constructs a compiler object.  +classpath+ is the complete classpath
       # to execute the compiler.  +compiler_class+ is the fullname of the
       # class that executes the compiler; this driver should take two
@@ -22,7 +20,13 @@ module CIAT
       def initialize(classpath, compiler_class, options={})
         @classpath = classpath
         @compiler_class = compiler_class
-        @description = options[:description] || "compiler"
+        @descriptions = {
+          :description => (options[:description] || "compiler")
+          }
+      end
+      
+      def description(element=:description)
+        @descriptions[element]
       end
       
       def process(crate)

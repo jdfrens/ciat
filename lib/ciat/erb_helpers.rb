@@ -27,7 +27,31 @@ module CIAT::ERBHelpers
   	string.gsub("\t", "    ")
   end
   
-  def render(file, result)
-    ERB.new(File.read(File.join(File.dirname(__FILE__), '..', 'templates', file + ".html.erb"))).result(binding)
+  def render(file, locals)
+    ERB.new(read(file)).result(CIAT::TemplateBinder.new(locals).get_binding)
+  end
+  
+  private
+  
+  def read(file)
+    File.read(template_path(file))
+  end
+  
+  def template_path(file)
+    File.join(File.dirname(__FILE__), '..', 'templates', file + ".html.erb")
+  end
+end
+
+class CIAT::TemplateBinder
+  include CIAT::ERBHelpers
+  
+  def initialize(locals)
+    locals.each do |variable, value|
+      self.class.send(:define_method, variable, Proc.new {value})
+    end
+  end
+  
+  def get_binding
+    binding
   end
 end

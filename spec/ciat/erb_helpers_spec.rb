@@ -49,5 +49,22 @@ describe CIAT::ERBHelpers do
       @helper.light_to_sentence("prefix", @red).should ==
         "<span class=\"red\">prefix failed.</span>"
     end
-  end  
+  end
+  
+  it "should render another template" do
+    template = mock("template")
+    locals = mock("locals")
+    binder = mock("binder")
+    bindings = mock("bindings")
+    erb = mock("erb")
+    result = mock("result")
+
+    @helper.should_receive(:read).with("phile.html.erb").and_return(template)
+    ERB.should_receive(:new).with(template).and_return(erb)
+    CIAT::TemplateBinder.should_receive(:new).with(locals).and_return(binder)
+    binder.should_receive(:get_binding).and_return(bindings)
+    erb.should_receive(:result).with(bindings).and_return(result)
+    
+    @helper.render("phile.html.erb", locals).should == result
+  end
 end

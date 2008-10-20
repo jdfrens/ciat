@@ -34,12 +34,12 @@ describe "report" do
     it "should write summary rows" do
       @results = [mock("r 0"), mock("r 1"), mock("r 2")]
       
-      @recursion.should_receive(:render).with("summary_row", @results[0])
-      @recursion.should_receive(:render).with("summary_row", @results[1])
-      @recursion.should_receive(:render).with("summary_row", @results[2])
-      @recursion.should_receive(:render).with("detail_row", @results[0])
-      @recursion.should_receive(:render).with("detail_row", @results[1])
-      @recursion.should_receive(:render).with("detail_row", @results[2])
+      @recursion.should_receive(:render).with("summary_row", :result => @results[0])
+      @recursion.should_receive(:render).with("summary_row", :result => @results[1])
+      @recursion.should_receive(:render).with("summary_row", :result => @results[2])
+      @recursion.should_receive(:render).with("detail_row", :result => @results[0])
+      @recursion.should_receive(:render).with("detail_row", :result => @results[1])
+      @recursion.should_receive(:render).with("detail_row", :result => @results[2])
       
       process_erb
     end

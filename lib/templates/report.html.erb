@@ -23,8 +23,8 @@
   		</tr>
 
   		<% results.each do |result| %>
-				<%= render "summary_row", result %>
-				<%= render "detail_row", result %>
+				<%= render "summary_row", :result => result %>
+				<%= render "detail_row", :result => result %>
   		<% end %>
   	</table>
 	</body>

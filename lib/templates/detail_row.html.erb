@@ -18,8 +18,10 @@
 	  <% else %>
 			<% processor.optional_elements.each do |element| %>
 				<% if result.crate.element(element) %>
-				<h3><%= processor.description(element) %></h3>
+				  <div class="<%= element %>">
+				    <h3><%= processor.description(element) %></h3>
 <pre class="source"><%= replace_tabs(result.crate.element(element)) %></pre>
+					</div>
 				<% end %>
 			<% end %>
 	    <% processor.checked_files(result.crate).each do |expected, generated, diff| %>

@@ -66,6 +66,10 @@ module CustomDetailRowMatchers
     have_inner_html("table th:first", "Expected")
   end
   
+  def have_optional_element(element, expected_description, expected_content)
+    have_inner_html("div##{element} h3", expected_description)
+  end
+  
   def have_diff_table(n, expected)
     have_inner_html("table:nth(#{n})", /Expected(.|\s)*Generated(.|\s)*#{expected}/)
   end
@@ -171,6 +175,8 @@ describe "detail row of test report" do
   
     doc = process_erb
     doc.should have_source("source!!!")
+    doc.should have_optional_element(:optional0, "description of optional 0", "content of optional 0")
+    doc.should have_optional_element(:optional1, "description of optional 1", "content of optional 1")
     doc.should have_checked_result("description")
     doc.should have_diff_table(0, "diff contents")
   end

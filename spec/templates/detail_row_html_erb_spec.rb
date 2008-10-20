@@ -156,6 +156,8 @@ describe "detail row of test report" do
     doc.should have_diff_table(1, "diff contents 1")
     doc.should have_diff_table(2, "diff contents 2")
   end
+  
+  it "should work with red or green light and optional elements"
 
   def expect_red_or_green(processor, description, checked_files=[], optional_elements=[])
     light = mock('red or green light')

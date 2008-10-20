@@ -22,7 +22,7 @@ class CIAT::Crate #:nodoc:all
       if line =~ /^==== ((\w|\s)+?)\W*$/
         @elements[tag] = content
         tag = $1.gsub(" ", "_").to_sym
-        content =""
+        content = ""
       else
         content += line
       end

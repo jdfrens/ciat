@@ -87,6 +87,6 @@ class CIAT::Test
   private
   
   def list_of_elements(elements)
-    elements.map { |e| "'" + e.to_s + "'" }.join(", ")
+    elements.map { |s| "'" + s.to_s + "'" }.sort.join(", ")
   end
 end

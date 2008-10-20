@@ -64,4 +64,18 @@ describe CIAT::Executors::Parrot do
     
     @executor.checked_files(@crate).should == [filenames]
   end
+  
+  describe "providing descriptions" do
+    it "should have a default description" do
+      @executor.description.should == "Parrot virtual machine"
+    end
+    
+    it "should have a settable description" do
+      CIAT::Executors::Parrot.new(:description => 'new description').description.should == 'new description'
+    end
+    
+    it "should have a description for command-line arguments" do
+      @executor.description(:command_line).should == "Command-line arguments"
+    end
+  end
 end

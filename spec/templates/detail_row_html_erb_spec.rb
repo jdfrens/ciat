@@ -67,11 +67,6 @@ describe "detail row of test report" do
     doc.should have_fake(:source, "source!!!")
     doc.should have_fake(:optional_elements, "fake optional elements")
     doc.should have_fake(:checked_files, "fake checked files")
-
-    # TODO: these should be moved to checked_files spec
-    # doc.should have_diff_table(0, "diff contents 0")
-    # doc.should have_diff_table(1, "diff contents 1")
-    # doc.should have_diff_table(2, "diff contents 2")
   end
   
   def expect_red_or_green(processor, description)

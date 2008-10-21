@@ -1,9 +1,8 @@
 <tr class="details" style="display:none">
   <td colspan="<%= result.processors.size + 1 %>">
 	
-	<h3>Source</h3>
-<pre class="source"><%= replace_tabs(result.crate.element(:source)) %></pre>
-
+	<%= render "detail_row/source", :source => result.crate.element(:source) %>
+	
 	<% result.processors.each do |processor| %>
 	  <h3>Results from <%= processor.description %></h3>
 	  <% case processor.light.setting  

@@ -2,85 +2,17 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 require 'hpricot'
 
-module CustomDetailRowMatchers
-  class HaveColSpan
-    def initialize(expected)
-      @expected = expected
-    end
-
-    def matches?(target)
-      @target = target
-      (@target/"//td").attr('colspan').eql?(@expected.to_s)
-    end
-
-    def failure_message
-      "expected #{@target.inspect} to have colspan #{@expected}"
-    end
-  
-    def negative_failure_message
-      "expected #{@target.inspect} not to have colspan #{@expected}"
-    end
-  end
-  
-  class HaveInnerHtml
-    def initialize(xpath, expected)
-      @xpath = xpath
-      @expected = expected
-    end
-    
-    def matches?(target)
-      @target = target
-      (@target/@xpath).inner_html.match(@expected)
-    end
-    
-    def failure_message
-      "expected #{@target.inspect} to have '#{@expected}' at #{@xpath}"
-    end
-    
-    def negative_failure_message
-      "expected #{@target.inspect} not to have source '#{@expected}' at #{@xpath}"
-    end
-  end
-  
-  def have_colspan(expected)
-    HaveColSpan.new(expected)
-  end
-  
-  def have_inner_html(xpath, expected)
-    HaveInnerHtml.new(xpath, expected)
-  end
-  
-  def have_source(expected)
-    have_inner_html("//pre[@class=source]", expected)
-  end
-  
-  def have_yellow_result(expected)
-    have_inner_html("p.yellow", expected)
-  end
-
-  def have_unset_result(expected)
-    have_inner_html("p.unset", expected)
-  end
-  
-  def have_checked_result(expected)
-    have_inner_html("table th:first", "Expected")
-  end
-  
-  def have_optional_element(element, expected_description, expected_content)
-    have_inner_html("div##{element} h3", expected_description)
-  end
-  
-  def have_diff_table(n, expected)
-    have_inner_html("table:nth(#{n})", /Expected(.|\s)*Generated(.|\s)*#{expected}/)
-  end
-end
-
 describe "detail row of test report" do
+  include ERBHelpers
   include CustomDetailRowMatchers
+  
+  attr_reader :erb
+  attr_reader :recursion
   
   before(:each) do
     @result = mock('result')
     @crate = mock('crate')
+    @recursion = mock('recursion')
     @erb = ERB.new(File.read("lib/templates/detail_row.html.erb"))
 
     @result.should_receive(:crate).any_number_of_times.and_return(@crate)
@@ -88,11 +20,11 @@ describe "detail row of test report" do
   
   it "should work with no processors" do
     @result.should_receive(:processors).at_least(:once).and_return([])
-    @crate.should_receive(:element).with(:source).and_return("the source")
+    fake_source("the source")
     
     doc = process_erb
     doc.should have_colspan(1)
-    doc.should have_source("the source")
+    doc.should have_fake(:source, "the source")
   end
   
   it "should work with multiple processors and no checked files" do
@@ -101,14 +33,14 @@ describe "detail row of test report" do
     
     @result.should_receive(:lights).any_number_of_times.and_return(lights)
     @result.should_receive(:processors).any_number_of_times.and_return(processors)
-    @crate.should_receive(:element).with(:source).and_return("source!!!")
+    fake_source("source!!!")
     expect_red_or_green(processors[0], "p 0 description")
     expect_red_or_green(processors[1], "p 1 description")
     expect_red_or_green(processors[2], "p 2 description")
     
     doc = process_erb
     doc.should have_colspan(4)
-    doc.should have_source("source!!!")
+    doc.should have_fake(:source, "source!!!")
   end
   
   it "should work with yellow light" do
@@ -116,11 +48,11 @@ describe "detail row of test report" do
     light = mock('light')
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    @crate.should_receive(:element).with(:source).and_return("source!!!")
+    fake_source("source!!!")
     expect_yellow(processor, "description")
     
     doc = process_erb
-    doc.should have_source("source!!!")
+    doc.should have_fake(:source, "source!!!")
     doc.should have_yellow_result("description")
   end
   
@@ -129,11 +61,11 @@ describe "detail row of test report" do
     light = mock('light')
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    @crate.should_receive(:element).with(:source).and_return("source!!!")
+    fake_source("source!!!")
     expect_unset(processor, "description")
     
     doc = process_erb
-    doc.should have_source("source!!!")
+    doc.should have_fake(:source, "source!!!")
     doc.should have_unset_result("description")    
   end
   
@@ -147,14 +79,14 @@ describe "detail row of test report" do
       ]
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    @crate.should_receive(:element).with(:source).and_return("source!!!")
+    fake_source("source!!!")
     expect_red_or_green(processor, "description", checked_files)
     File.should_receive(:read).with(checked_files[0][2]).and_return("diff contents 0")
     File.should_receive(:read).with(checked_files[1][2]).and_return("diff contents 1")
     File.should_receive(:read).with(checked_files[2][2]).and_return("diff contents 2")
     
     doc = process_erb
-    doc.should have_source("source!!!")
+    doc.should have_fake(:source, "source!!!")
     doc.should have_checked_result("description")
     doc.should have_diff_table(0, "diff contents 0")
     doc.should have_diff_table(1, "diff contents 1")
@@ -167,14 +99,14 @@ describe "detail row of test report" do
     checked_files = [[mock('expected'), mock('generated'), mock('diff')]]
   
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    @crate.should_receive(:element).with(:source).and_return("source!!!")
+    fake_source("source!!!")
     expect_red_or_green(processor, "description", checked_files, [:optional0, :optional1])
     expect_optional_element(processor, :optional0, "description of optional 0", "content of optional 0")
     expect_optional_element(processor, :optional1, "description of optional 1", "content of optional 1")
     File.should_receive(:read).with(checked_files[0][2]).and_return("diff contents")
   
     doc = process_erb
-    doc.should have_source("source!!!")
+    doc.should have_fake(:source, "source!!!")
     doc.should have_optional_element(:optional0, "description of optional 0", "content of optional 0")
     doc.should have_optional_element(:optional1, "description of optional 1", "content of optional 1")
     doc.should have_checked_result("description")
@@ -209,8 +141,10 @@ describe "detail row of test report" do
     light.should_receive(:setting).and_return(:unset)
   end
   
-  def process_erb
-    Hpricot(@erb.result(binding))
+  def fake_source(source)
+    @crate.should_receive(:element).with(:source).and_return(source)
+    @recursion.should_receive(:render).with("detail_row/source", :source => source).
+      and_return("<div class=\"fake\"><div id=\"source\">#{source}</div></div>")
   end
   
   def result
@@ -219,13 +153,5 @@ describe "detail row of test report" do
   
   def elements
     @elements
-  end
-  
-  def replace_tabs(string)
-    string
-  end
-  
-  def light_to_sentence(prefix, light)
-    prefix
   end
 end

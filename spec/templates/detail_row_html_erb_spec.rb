@@ -49,11 +49,12 @@ describe "detail row of test report" do
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
     fake_source("source!!!")
-    expect_yellow(processor, "description")
+    expect_yellow(processor, "processor description", "yellow result")
     
     doc = process_erb
     doc.should have_fake(:source, "source!!!")
-    doc.should have_yellow_result("description")
+    doc.should have_description("processor description")
+    doc.should have_fake(:yellow, "yellow result")
   end
   
   it "should work with unset light" do
@@ -62,11 +63,12 @@ describe "detail row of test report" do
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
     fake_source("source!!!")
-    expect_unset(processor, "description")
+    expect_unset(processor, "processor description", "unset result")
     
     doc = process_erb
     doc.should have_fake(:source, "source!!!")
-    doc.should have_unset_result("description")    
+    doc.should have_description("processor description")
+    doc.should have_fake(:unset, "unset result")
   end
   
   it "should work with red or green light and multiple checked files" do
@@ -122,29 +124,40 @@ describe "detail row of test report" do
     light = mock('red or green light')
     processor.should_receive(:description).with().and_return(description)
     processor.should_receive(:light).at_least(:once).and_return(light)
-    light.should_receive(:setting).and_return(:red_or_green)
+    light.should_receive(:yellow?).at_least(:once).and_return(false)
+    light.should_receive(:unset?).at_least(:once).and_return(false)
     processor.should_receive(:optional_elements).and_return(optional_elements)
     processor.should_receive(:checked_files).and_return(checked_files)
   end
   
-  def expect_yellow(processor, description)
+  def expect_yellow(processor, description, result)
     light = mock('yellow')
     processor.should_receive(:description).at_least(:once).and_return(description)
     processor.should_receive(:light).at_least(:once).and_return(light)
-    light.should_receive(:setting).and_return(:yellow)
+    light.should_receive(:yellow?).at_least(:once).and_return(true)
+    light.should_receive(:unset?).any_number_of_times.and_return(false)
+    @recursion.should_receive(:render).with("detail_row/no_diff", :processor => processor).
+      and_return(fake(:yellow, result))
   end
   
-  def expect_unset(processor, description)
+  def expect_unset(processor, description, result)
     light = mock('unset')
     processor.should_receive(:description).at_least(:once).and_return(description)
     processor.should_receive(:light).at_least(:once).and_return(light)
-    light.should_receive(:setting).and_return(:unset)
+    light.should_receive(:yellow?).any_number_of_times.and_return(false)
+    light.should_receive(:unset?).at_least(:once).and_return(true)
+    @recursion.should_receive(:render).with("detail_row/no_diff", :processor => processor).
+      and_return(fake(:unset, result))
   end
   
   def fake_source(source)
     @crate.should_receive(:element).with(:source).and_return(source)
     @recursion.should_receive(:render).with("detail_row/source", :source => source).
-      and_return("<div class=\"fake\"><div id=\"source\">#{source}</div></div>")
+      and_return(fake(:source, source))
+  end
+  
+  def fake(what, content)
+    "<div class=\"fake\"><div id=\"#{what}\">#{content}</div></div>"
   end
   
   def result

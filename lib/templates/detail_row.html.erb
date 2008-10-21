@@ -5,15 +5,8 @@
 	
 	<% result.processors.each do |processor| %>
 	  <h3>Results from <%= processor.description %></h3>
-	  <% case processor.light.setting  
-		   when :yellow %>
-		  <p class="yellow">
-		    <%= light_to_sentence(processor.description, processor.light) %>
-		  </p>
-		<% when :unset %>
-	  	<p class="unset">
-	    	<%= light_to_sentence(processor.description, processor.light) %>
-	  	</p>
+	  <% if processor.light.yellow? || processor.light.unset? %>
+			<%= render "detail_row/no_diff", :processor => processor %>
 	  <% else %>
 			<% processor.optional_elements.each do |element| %>
 				<% if result.crate.element(element) %>

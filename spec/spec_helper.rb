@@ -79,18 +79,14 @@ module CustomDetailRowMatchers
     have_inner_html("//pre[@class=source]", expected)
   end
   
+  def have_description(expected)
+    have_inner_html("//h3", expected)
+  end
+  
   def have_fake(type, expected)
     have_inner_html("//div[@class=\"fake\"]/div[@id=\"#{type}\"]", expected)
   end
-  
-  def have_yellow_result(expected)
-    have_inner_html("p.yellow", expected)
-  end
-
-  def have_unset_result(expected)
-    have_inner_html("p.unset", expected)
-  end
-  
+    
   def have_checked_result(expected)
     have_inner_html("table th:first", "Expected")
   end

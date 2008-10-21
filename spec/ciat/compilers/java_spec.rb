@@ -32,11 +32,11 @@ describe CIAT::Compilers::Java do
   end
   
   it "should have files to check" do
-    filenames = mock("filenames")
+    files = mock("filenames")
     
-    @crate.should_receive(:diff_filenames).with(:compilation).and_return(filenames)
+    CIAT::CheckedFile.should_receive(:create).with(@crate, :compilation).and_return(files)
     
-    @compiler.checked_files(@crate).should == [filenames]
+    @compiler.checked_files(@crate).should == files
   end
   
   it "should have required elements" do

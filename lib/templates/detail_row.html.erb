@@ -11,14 +11,8 @@
 			<%= render "detail_row/optional_elements", :processor => processor,
 						:crate => result.crate, 
 						:optional_elements => processor.optional_elements %>
-	    <% processor.checked_files(result.crate).each do |expected, generated, diff| %>
-
-        <table>
-          <tr><th>Expected</th><th>Generated</th></tr>
-          <%= replace_tabs(File.read(diff)) %>
-        </table>
-
-			<% end %>
+			<%= render "detail_row/checked_files",
+			      :checked_files => processor.checked_files(result.crate) %>
     <% end %>
 	<% end %>
 

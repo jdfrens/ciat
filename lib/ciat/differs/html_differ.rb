@@ -2,8 +2,8 @@ module CIAT
   module Differs
     # A differ that produces HTML output.
     class HtmlDiffer
-      def diff(expected, generated, diff)
-        system("diff #{diff_options} '#{expected}' '#{generated}' > '#{diff}'")
+      def diff(checked_file)
+        system("diff #{diff_options} '#{checked_file.expected}' '#{checked_file.generated}' > '#{checked_file.diff}'")
       end
 
       def diff_options

@@ -55,8 +55,8 @@ class CIAT::Test
   end
   
   def check(processor) #:nodoc:
-    processor.checked_files(crate).each do |expected, generated, diff|
-      unless @differ.diff(expected, generated, diff)
+    processor.checked_files(crate).each do |checked_file|
+      unless @differ.diff(checked_file)
         processor.light.red!
       end
     end

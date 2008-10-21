@@ -26,23 +26,7 @@ describe "detail row of test report" do
     doc.should have_colspan(1)
     doc.should have_fake(:source, "the source")
   end
-  
-  it "should work with multiple processors and no checked files" do
-    processors = [mock('p 0'), mock('p 1'), mock('p 2')]
-    lights = [mock('l 1'), mock('l 2'), mock('l 3')]
-    
-    @result.should_receive(:lights).any_number_of_times.and_return(lights)
-    @result.should_receive(:processors).any_number_of_times.and_return(processors)
-    fake_source("source!!!")
-    expect_red_or_green(processors[0], "p 0 description")
-    expect_red_or_green(processors[1], "p 1 description")
-    expect_red_or_green(processors[2], "p 2 description")
-    
-    doc = process_erb
-    doc.should have_colspan(4)
-    doc.should have_fake(:source, "source!!!")
-  end
-  
+
   it "should work with yellow light" do
     processor = mock('processor')
     light = mock('light')
@@ -71,33 +55,30 @@ describe "detail row of test report" do
     doc.should have_fake(:unset, "unset result")
   end
   
-  it "should work with red or green light and multiple checked files" do
+  it "should work with red or green light" do
     processor = mock('processor')
     light = mock('light')
-    checked_files = [
-      [mock('expected 0'), mock('generated 0'), mock('diff 0')],
-      [mock('expected 1'), mock('generated 1'), mock('diff 1')],
-      [mock('expected 2'), mock('generated 2'), mock('diff 2')]
-      ]
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
     fake_source("source!!!")
-    expect_red_or_green(processor, "description", checked_files)
-    File.should_receive(:read).with(checked_files[0][2]).and_return("diff contents 0")
-    File.should_receive(:read).with(checked_files[1][2]).and_return("diff contents 1")
-    File.should_receive(:read).with(checked_files[2][2]).and_return("diff contents 2")
-    
+    expect_red_or_green(processor, "description")
+
     doc = process_erb
     doc.should have_fake(:source, "source!!!")
-    doc.should have_checked_result("description")
-    doc.should have_diff_table(0, "diff contents 0")
-    doc.should have_diff_table(1, "diff contents 1")
-    doc.should have_diff_table(2, "diff contents 2")
+    doc.should have_fake(:optional_elements, "fake optional elements")
+    doc.should have_fake(:checked_files, "fake checked files")
+
+    # TODO: these should be moved to checked_files spec
+    # doc.should have_diff_table(0, "diff contents 0")
+    # doc.should have_diff_table(1, "diff contents 1")
+    # doc.should have_diff_table(2, "diff contents 2")
   end
   
-  def expect_red_or_green(processor, description, checked_files=[], optional_elements=[])
+  def expect_red_or_green(processor, description)
     light = mock('red or green light')
     optional_elements = mock('optional elements')
+    checked_files = mock('checked files')
+
     processor.should_receive(:description).with().and_return(description)
     processor.should_receive(:light).at_least(:once).and_return(light)
     light.should_receive(:yellow?).at_least(:once).and_return(false)
@@ -106,8 +87,11 @@ describe "detail row of test report" do
     @recursion.should_receive(:render).
       with("detail_row/optional_elements",
        :optional_elements => optional_elements, :processor => processor, :crate => @crate).
-      and_return("something!")  # TODO: something better than "something!"!!
+      and_return(fake(:optional_elements, "fake optional elements"))
     processor.should_receive(:checked_files).and_return(checked_files)
+    @recursion.should_receive(:render).
+      with("detail_row/checked_files", :checked_files => checked_files).
+      and_return(fake(:checked_files, "fake checked files"))
   end
   
   def expect_yellow(processor, description, result)

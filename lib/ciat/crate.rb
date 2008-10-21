@@ -53,10 +53,6 @@ class CIAT::Crate #:nodoc:all
     File.join(cargo.output_folder, [stub, *modifiers].compact.join("_"))
   end
   
-  def diff_filenames(modifier)
-    [filename(modifier), filename(modifier, :generated), filename(modifier, :diff)]
-  end
-  
   def write_file(filename, contents)
     @cargo.write_file(filename, contents)
   end

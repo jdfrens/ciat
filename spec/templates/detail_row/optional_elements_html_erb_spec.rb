@@ -2,7 +2,7 @@ require File.dirname(__FILE__) + '/../../spec_helper.rb'
 
 require 'hpricot'
 
-describe "source output in detail row" do
+describe "optional-element output in detail row" do
   include ERBHelpers
   include CustomDetailRowMatchers
   

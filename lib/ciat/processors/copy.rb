@@ -34,7 +34,7 @@ module CIAT
       end
       
       def checked_files(crate)
-        [crate.diff_filenames(@copy)]
+        CIAT::CheckedFile.create(crate, @copy)
       end
     end
   end

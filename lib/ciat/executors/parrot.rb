@@ -28,7 +28,7 @@ module CIAT
       end
       
       def checked_files(crate)
-        [crate.diff_filenames(:execution)]
+        CIAT::CheckedFile.create(crate, :execution)
       end
     end
   end

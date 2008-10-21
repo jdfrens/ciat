@@ -226,7 +226,7 @@ describe CIAT::Test do
     end
 
     it "should be green when diff succeeds" do
-      files = [[mock("e 1"), mock("g 1"), mock("d 1")], [mock("e 2"), mock("g 2"), mock("d 2")], [mock("e 3"), mock("g 3"), mock("d 3")]]
+      files = [mock("checked 0"), mock("checked 1"), mock("checked 2")]
       
       @processor.should_receive(:checked_files).with(@crate).and_return(files)
       @differ.should_receive(:diff).with(*files[0]).and_return(true)
@@ -239,7 +239,7 @@ describe CIAT::Test do
     end
 
     it "should be red when last diff fails" do
-      files = [[mock("e 1"), mock("g 1"), mock("d 1")], [mock("e 2"), mock("g 2"), mock("d 2")], [mock("e 3"), mock("g 3"), mock("d 3")]]
+      files = [mock("checked 0"), mock("checked 1"), mock("checked 2")]
       
       @processor.should_receive(:checked_files).with(@crate).and_return(files)
       @differ.should_receive(:diff).with(*files[0]).and_return(true)
@@ -252,7 +252,7 @@ describe CIAT::Test do
     end
 
     it "should be red when first diff fails" do
-      files = [[mock("e 1"), mock("g 1"), mock("d 1")], [mock("e 2"), mock("g 2"), mock("d 2")], [mock("e 3"), mock("g 3"), mock("d 3")]]
+      files = [mock("checked 0"), mock("checked 1"), mock("checked 2")]
       
       @processor.should_receive(:checked_files).with(@crate).and_return(files)
       @differ.should_receive(:diff).with(*files[0]).and_return(false)

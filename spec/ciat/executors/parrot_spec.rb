@@ -58,11 +58,11 @@ describe CIAT::Executors::Parrot do
   end
   
   it "should have files to check" do
-    filenames = mock("filenames")
+    files = mock("filenames")
     
-    @crate.should_receive(:diff_filenames).with(:execution).and_return(filenames)    
+    CIAT::CheckedFile.should_receive(:create).with(@crate, :execution).and_return(files)
     
-    @executor.checked_files(@crate).should == [filenames]
+    @executor.checked_files(@crate).should == files
   end
   
   describe "providing descriptions" do

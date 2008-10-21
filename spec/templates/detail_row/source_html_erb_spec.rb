@@ -7,10 +7,8 @@ describe "source output in detail row" do
   include CustomDetailRowMatchers
   
   attr_reader :erb
-  attr_reader :recursion
   
   before(:each) do
-    @recursion = mock('recursion')
     @erb = ERB.new(File.read("lib/templates/detail_row/source.html.erb"))
   end
   

@@ -67,6 +67,25 @@ module CustomDetailRowMatchers
     end
   end
   
+  class HaveNone
+    def initialize(xpath)
+      @xpath = xpath
+    end
+    
+    def matches?(target)
+      @target = target
+      (@target/@xpath).size == 0
+    end
+    
+    def failure_message
+      "expected #{@target.inspect} to have nothing with #{@xpath}"
+    end
+    
+    def negative_failure_message
+      "expected #{@target.inspect} to have something with #{@xpath}"
+    end
+  end
+  
   def have_colspan(expected)
     HaveColSpan.new(expected)
   end
@@ -91,8 +110,15 @@ module CustomDetailRowMatchers
     have_inner_html("table th:first", "Expected")
   end
   
-  def have_optional_element(element, expected_description, expected_content)
+  def have_no_optional_element(element)
+  end
+  
+  def have_optional_element_description(element, expected_description)
     have_inner_html("div.#{element} h3", expected_description)
+  end
+  
+  def have_optional_element_content(element, expected_content)
+    have_inner_html("div.#{element} pre", expected_content)
   end
   
   def have_diff_table(n, expected)

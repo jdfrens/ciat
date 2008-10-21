@@ -8,14 +8,9 @@
 	  <% if processor.light.yellow? || processor.light.unset? %>
 			<%= render "detail_row/no_diff", :processor => processor %>
 	  <% else %>
-			<% processor.optional_elements.each do |element| %>
-				<% if result.crate.element(element) %>
-				  <div class="<%= element %>">
-				    <h3><%= processor.description(element) %></h3>
-<pre class="source"><%= replace_tabs(result.crate.element(element)) %></pre>
-					</div>
-				<% end %>
-			<% end %>
+			<%= render "detail_row/optional_elements", :processor => processor,
+						:crate => result.crate, 
+						:optional_elements => processor.optional_elements %>
 	    <% processor.checked_files(result.crate).each do |expected, generated, diff| %>
 
         <table>

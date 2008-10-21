@@ -1,0 +1,8 @@
+<% optional_elements.each do |element| %>
+	<% if crate.element(element) %>
+	  <div class="<%= element %>">
+	    <h3><%= processor.description(element) %></h3>
+<pre class="source"><%= replace_tabs(crate.element(element)) %></pre>
+		</div>
+	<% end %>
+<% end %>

@@ -95,11 +95,6 @@ describe "detail row of test report" do
     doc.should have_diff_table(2, "diff contents 2")
   end
   
-  def expect_optional_element(processor, element, description, contents)
-    processor.should_receive(:description).with(element).and_return(description)
-    @crate.should_receive(:element).with(element).at_least(:once).and_return(contents)
-  end
-  
   def expect_red_or_green(processor, description, checked_files=[], optional_elements=[])
     light = mock('red or green light')
     optional_elements = mock('optional elements')
@@ -147,9 +142,5 @@ describe "detail row of test report" do
   
   def result
     @result
-  end
-  
-  def elements
-    @elements
   end
 end

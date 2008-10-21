@@ -111,6 +111,7 @@ module CustomDetailRowMatchers
   end
   
   def have_no_optional_element(element)
+    HaveNone.new("div.#{element}")
   end
   
   def have_optional_element_description(element, expected_description)

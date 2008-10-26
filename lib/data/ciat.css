@@ -17,14 +17,14 @@
   width: 100%;
 }
 
-.result td {
+.details td {
   padding: 1em;
 }
 
-.result td pre {
+.details pre {
   margin: 0;
 }
 
-pre.source {
+.source {
     background-color: #FFC929;
 }

@@ -11,9 +11,9 @@
 </script>
 </head>
 <body>
-<h1>Summary Table</h1>
+<h1>CIAT Report</h1>
 <a href="#" onclick=
-"$$('.results .result').invoke('toggle'); return false;">Expand/Collapse
+"$$('.results .details').invoke('toggle'); return false;">Expand/Collapse
 All</a>
 <table border="1" summary="Table of tests" class="results">
 <tr id="header">
@@ -31,9 +31,14 @@ executor.</a></td>
 <tr class="details" style="display:none">
 <td colspan="3">
 <h3>Source</h3>
-<pre class="source">
+<table>
+<tr>
+<td class="source">
+<pre>
 text
-</pre>
+</pre></td>
+</tr>
+</table>
 <h3>Results from copier</h3>
 <table>
 <tr>

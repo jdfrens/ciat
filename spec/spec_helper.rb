@@ -94,10 +94,6 @@ module CustomDetailRowMatchers
     HaveInnerHtml.new(xpath, expected)
   end
   
-  def have_source(expected)
-    have_inner_html("//pre[@class=source]", expected)
-  end
-  
   def have_description(expected)
     have_inner_html("//h3", expected)
   end

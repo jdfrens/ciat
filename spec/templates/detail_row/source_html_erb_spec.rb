@@ -29,4 +29,8 @@ describe "source output in detail row" do
   def source
     @source
   end
+
+  def have_source(expected)
+    have_inner_html("//td[@class=source]/pre", expected)
+  end
 end

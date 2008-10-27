@@ -1,4 +1,10 @@
+# If it were easy for you to write your own HTML templates, then the methods
+# in this module would be useful.
+#
+# <em>I don't know if it's easy to write your own HTML template!</em>
 module CIAT::ERBHelpers
+  # Turns a traffic light into a more "testing" word: "FAILURE",
+  # "ERROR", "passed", "n/a".
   def light_to_word(light)
   	case
   	when light.red? then "FAILURE"
@@ -9,7 +15,8 @@ module CIAT::ERBHelpers
 	    raise "cannot turn #{light} into word"
   	end
   end
-  
+
+  # Turns a traffic light in a sentence wrapped in a classed +span+.
   def light_to_sentence(prefix, light)
   	"<span class=\"#{light.setting}\">#{prefix} " +
   	case
@@ -23,10 +30,14 @@ module CIAT::ERBHelpers
   	".</span>"
   end
   
+  # Replaces tabs with spaces because Firefox does _really_ wacky things with
+  # tabs in a +pre+ in a +table+.
   def replace_tabs(string)
   	string.gsub("\t", "    ")
   end
   
+  # Recursively renders another template.  If it's possible to write your own
+  # templates for reports, this will probably play a key role.
   def render(file, locals)
     ERB.new(read(file)).result(CIAT::TemplateBinder.new(locals).get_binding)
   end
@@ -42,6 +53,7 @@ module CIAT::ERBHelpers
   end
 end
 
+# Assists in binding local variables for a recursive render.
 class CIAT::TemplateBinder
   include CIAT::ERBHelpers
   

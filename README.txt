@@ -4,25 +4,76 @@
 
 CIAT (pronounced "dog") provides a system for writing high-level acceptance
 tests for compilers and interpreters. Each acceptance test is entered into a
-single file, including the test's description, source code, expected target
-code, and even expected result when executed. The test files can be organized
-into subdirectories for organizational convenience.
-
-Output includes immediate feedback indicating which phases are passing,
-erring, and failing. The output also includes an HTML report which provides
-side-by-side diffs of each phase of the test.
+single file, and that file identifies the elements of a test.
 
 
 == SYNOPSIS:
 
-A sample +Rakefile+:
+Suppose you have a compiler written in Java that compiles a language named
+Hobbes. Your compiler targets the Parrot Virtual Machine. So you want to
+provide <em>source code</em> which is <em>compiled with a Java program</em>
+and that result is <em>interpreted by Parrot</em>.
+
+=== Input File
+
+Input files should be named with a <code>.ciat</code> extension and saved in a
+<code>ciat</code> folder.
+
+A sample input file (<code>simpleinteger5.ciat</code>) for this scenario
+described above might look like this:
+
+  Compiles a simple integer.
+  ==== source
+  5
+  ==== compilation
+  .sub main
+    print 5
+    print "\n"
+  .end
+  ==== execution
+  5
+
+This file specifies <em>four</em> elements: description, <b>source</b>,
+<b>compilation</b>, and <b>execution</b>. The description is always the first
+element, always unlabeled, and used prominently in the HTML report. All of the
+other elements are dependent on the processors that you use.
+
+In this example, we're using a "Java compiler" (a compiler <em>written in</em>
+Java) and a "Parrot executor". CIAT's "Java compiler" runs your compiler over
+the <b>source</b>, and that output is compared to the <b>compilation</b>
+element. Then the "Parrot executor" is executed with the <em>generated</em>
+compilation, and that output is compare to the <b>execution</b> element.
+
+If any processor fails, either due to an error while running or a failure
+during checking the output, the remaining processors are not executed.
+
+Some processors will use optional elements in a test file.  For example, the "Parrot executor" knows about command-line arguments:
+
+	Compiles a simple integer and ignores the command-line arguments.
+	==== source
+	5
+	==== compilation
+	.sub main
+	  print 5
+	  print "\n"
+	.end
+	==== command line
+	89 pqp
+	==== execution
+	5
+	
+When the "Parrot executor" is run on the compilation, it'll also pass in <code>89 pqp</code> as command-line arguments.
+
+=== The Rakefile
+
+This sample +Rakefile+ will pull everything together:
 
   require 'ciat'
   require 'ciat/compilers/java'
   require 'ciat/executors/parrot'
 
   task :ciat do
-    CIAT::Suite.new(compiler, executor).run
+    CIAT::Suite.new(:processors => [compiler, executor]).run
   end
 
   def compiler
@@ -36,28 +87,9 @@ A sample +Rakefile+:
 
 This rakefile will find all of the <code>.ciat</code> files inside a +ciat+
 directory, each one representing a test. Each test will be executed, and the
-results are put into a folder named +temp+. All of these settings can be
-tweaked; see the documentation for CIAT::Suite for more information.
-
-The requirements for the compiler and executor can also be found in the documentation for CIAT::Suite.
-
-A sample input file (<code>simpleinteger5.ciat</code>):
-
-  Compiles a simple integer.
-  ====
-  5
-  ====
-  .sub main
-    print 5
-    print "\n"
-  .end
-  ====
-  5
-
-By default, test files should be named with a <code>.ciat</code> extension.
-Contents must be ordered: description, source input, expected target code,
-expected execution output. For more information about test files, see the
-documentation for CIAT::Suite.
+results are put into a folder named +temp+, including the HTML report
+<code>report.html</code>. All of these settings can be tweaked; see the
+documentation for CIAT::Suite for more information.
 
 
 == REQUIREMENTS:

@@ -7,11 +7,11 @@ require 'ciat/erb_helpers'
 # this:
 #
 #   task :ciat do
-#     CIAT::Suite.new(compiler, executor).run
+#     CIAT::Suite.new(:processors => [compiler, executor]).run
 #   end
 #
 # Define +compiler+ and +executor+ in the +Rakefile+ to return a compiler and
-# executor, respectively.  See the "Compilers and Executors" section below.
+# executor, respectively.
 #
 # == Specifying Test and Output Files and Folders
 #
@@ -20,9 +20,11 @@ require 'ciat/erb_helpers'
 #   <code>ciat</code>,
 # * use simple standard-output feedback,
 # * put all output files into a folder named <code>temp</code>,
-# * produce a report in <code>temp/report.html</code>.
+# * produce an HTML report in <code>temp/report.html</code>.
 #
 # Each of these settings can be overridden with these options:
+# * <code>:processors</code> is <em>required</em> and specifies the processors
+#   to be executed; order matters!
 # * <code>:folder</code> specifies folders to search for test files (default:
 #   <code>ciat/**</code>).
 # * <code>:pattern</code> specifies a pattern for matching test files
@@ -38,45 +40,16 @@ require 'ciat/erb_helpers'
 # <code>:files</code> overrides both <code>:folder</code> and
 # <code>:pattern</code>.
 #
-# == Compilers and Executors
+# == Processors
 #
-# You can create your own compiler and executor.  The compiler needs a
-# <code>compile(source, compilation_generated)</code> which receives filenames
-# and compiles your code; the executor needs an
-# <code>execute(compilation_generated, output_generated)</code> which also
-# receives filenames and execute the generated target code.  See
-# CIAT::Compilers::Java and CIAT::Executors::Parrot (to learn how to use them
-# and how to write others).
+# You can create your own processors.  Each processor needs to specify which
+# test elements it wants or will accept, which files it wants checked, and how
+# it should be executed.    See CIAT::Compilers::Java and
+# CIAT::Executors::Parrot (to learn how to use them and how to write others).
 #
 # == Test File
 #
-# A test file consists of a description, source code, expected target code,
-# and expected output.
-# * The description is used in feedback and reports.
-# * The source code is the code you want compiled by your compiler.
-# * The expected target code is the code you expect your compiler to spit out.
-# * The expected output is the output you expect when <em>your</em> target
-#   code is executed.
-#
-# For example:
-#         
-#   Compiles a simple integer.
-#   ====
-#   2 + 3
-#   ====
-#   .sub main
-#     I0 = 2
-#     I1 = 3
-#     I0 = I0 + I1
-#     print I0
-#     print "\n"
-#   .end
-#   ====
-#   5
-#
-# This example turns the source code <code>2+3</code> into the equivalent PIR
-# code (with output).  When the generated PIR code is executed, we expect
-# <code>5</code> as a result.
+# See the README for details on the format of a test file.
 #
 class CIAT::Suite
   attr_reader :cargo

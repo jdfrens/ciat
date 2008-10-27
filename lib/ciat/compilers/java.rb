@@ -40,7 +40,7 @@ module CIAT
       
       # Runs the compiler-implemented-in-Java.
       def process(crate)
-        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.filename(:source)}' '#{crate.filename(:compilation, :generated)}'"
+        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.filename(:source)}' '#{crate.filename(:compilation, :generated)}' 2> '#{crate.filename(:compilation, :error)}'"
       end
 
       def required_elements

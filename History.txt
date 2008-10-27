@@ -1,3 +1,15 @@
+== 0.2.0 2008-10-26
+
+* 3 major enhancements:
+  * Elements of a test files are now labeled for greater flexibility; error 
+    checking is done on the elements (missing, unused, etc.).
+  * A test file can specify optional elements for a processor.  Parrot
+    executor uses "command line" for command-line arguments; it provides
+    a default if not specified.
+  * Formatting improvements to the HTML report.
+* 1 minor enhancement:
+  * Java compiler redirects standard error to a file.
+
 == 0.1.1 2008-08-16
 
 * 1 major bug fix

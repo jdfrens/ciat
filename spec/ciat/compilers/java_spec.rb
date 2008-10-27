@@ -48,12 +48,14 @@ describe CIAT::Compilers::Java do
   end
   
   def expect_compile(return_value)
-    source_file, generated_code_file = mock("source file"), mock("generated code file")
+    source_file, generated_code_file, error_file = 
+      mock("source file"), mock("generated code file"), mock("error file")
     
     @crate.should_receive(:filename).with(:source).and_return(source_file)
     @crate.should_receive(:filename).with(:compilation, :generated).and_return(generated_code_file)
+    @crate.should_receive(:filename).with(:compilation, :error).and_return(error_file)
     @compiler.should_receive(:system).
-      with("java -cp '#{@classpath}' #{@compiler_class} '#{source_file}' '#{generated_code_file}'").
+      with("java -cp '#{@classpath}' #{@compiler_class} '#{source_file}' '#{generated_code_file}' 2> '#{error_file}'").
       and_return(return_value)
   end    
 end

@@ -1,7 +1,7 @@
+require 'rubygems'
 begin
   require 'spec'
 rescue LoadError
-  require 'rubygems'
   gem 'rspec'
   require 'spec'
 end
@@ -94,6 +94,10 @@ module CustomDetailRowMatchers
     HaveInnerHtml.new(xpath, expected)
   end
   
+  def have_none(xpath)
+    HaveNone.new(xpath)
+  end
+  
   def have_description(expected)
     have_inner_html("//h3", expected)
   end
@@ -104,18 +108,6 @@ module CustomDetailRowMatchers
     
   def have_checked_result(expected)
     have_inner_html("table th:first", "Expected")
-  end
-  
-  def have_no_optional_element(element)
-    HaveNone.new("div.#{element}")
-  end
-  
-  def have_optional_element_description(element, expected_description)
-    have_inner_html("div.#{element} h3", expected_description)
-  end
-  
-  def have_optional_element_content(element, expected_content)
-    have_inner_html("div.#{element} pre", expected_content)
   end
   
   def have_diff_table(n, expected)

@@ -12,9 +12,18 @@
     background-color: #CCCCCC;
 }
 
+.source {
+    background-color: #FFC929;
+}
+
+
 .results {
   clear: both;
   width: 100%;
+}
+
+.details table {
+  padding-bottom: 1em;
 }
 
 .details td {
@@ -23,8 +32,4 @@
 
 .details pre {
   margin: 0;
-}
-
-.source {
-    background-color: #FFC929;
 }

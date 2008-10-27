@@ -21,7 +21,7 @@ describe "source output in detail row" do
     @processor.should_receive(:description).and_return("the sentence")
     
     doc = process_erb
-    doc.should have_inner_html("p.the_setting", "\n  the sentence\n")
+    doc.should have_inner_html("td.the_setting", "\n  the sentence\n")
   end
     
   def processor

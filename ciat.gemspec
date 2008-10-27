@@ -12,6 +12,7 @@ Gem::Specification.new do |s|
       "lib/ciat/version.rb"                 ,
       "lib/ciat.rb"                         ,
       "lib/ciat/cargo.rb"                   ,
+      "lib/ciat/checked_file.rb",
       "lib/ciat/crate.rb"                   ,
       "lib/ciat/suite.rb"                   ,
       "lib/ciat/test.rb"                    ,
@@ -29,6 +30,10 @@ Gem::Specification.new do |s|
       "lib/templates/report.html.erb"            ,
       "lib/templates/summary_row.html.erb"            ,
       "lib/templates/detail_row.html.erb"            ,
+      "lib/templates/detail_row/checked_files.html.erb",
+      "lib/templates/detail_row/no_diff.html.erb",
+      "lib/templates/detail_row/optional_elements.html.erb",
+      "lib/templates/detail_row/source.html.erb",
       ]
   s.extra_rdoc_files = ["README.txt", "History.txt"]
   s.rdoc_options << '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<

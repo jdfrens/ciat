@@ -2,7 +2,13 @@ require 'rake'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
 
-task :default => :specs_with_rcov
+task :default => :specs
+
+desc "Run all examples"
+Spec::Rake::SpecTask.new(:specs) do |t|
+  t.spec_opts = ['--options', "spec/spec.opts"]
+  t.spec_files = FileList['spec/**/*_spec.rb']
+end
 
 desc "Run all examples with rcov"
 Spec::Rake::SpecTask.new(:specs_with_rcov) do |t|

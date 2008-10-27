@@ -81,4 +81,16 @@ describe "optional-element output in detail row" do
     @crate.should_receive(:element).with(element).at_least(:once).and_return(content)
     @processor.should_receive(:description).with(element).and_return(description)
   end
+  
+  def have_no_optional_element(element)
+    have_none("div.#{element}")
+  end
+  
+  def have_optional_element_description(element, expected_description)
+    have_inner_html("div.#{element} th", expected_description)
+  end
+  
+  def have_optional_element_content(element, expected_content)
+    have_inner_html("div.#{element} pre", expected_content)
+  end
 end

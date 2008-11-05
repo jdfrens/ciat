@@ -13,6 +13,11 @@ module CIAT
     # specifies the command-line arguments when the <code>compilation</code> is executed.
     # If none is provided, no command-line arguments are used.
     class Parrot
+      include CIAT::Differs::HtmlDiffer
+
+      # Description of the Parrot VM.  Used in reports.
+      attr_reader :description
+
       # Creates a Parrot executor.
       #
       # Possible options:
@@ -21,36 +26,26 @@ module CIAT
       # * <code>:command_line</code> is the description used in the HTML report
       #   for the command-line arguments (if any) (default: "Command-line arguments").
       def initialize(options={})
-        @descriptions = { 
-          :description => (options[:description] || "Parrot virtual machine"),
-          :command_line => "Command-line arguments"
-          }
+        @description = options[:description] || "Parrot virtual machine"
       end
 
-      def description(element = :description)
-        @descriptions[element]
-      end
-      
       def process(crate)
-        system "parrot '#{crate.filename(:compilation, :generated)}' #{args(crate)} &> '#{crate.filename(:execution, :generated)}'"
+        if execute(crate)
+          diff(crate)
+        end
+        crate
       end
       
-      def required_elements
-        [:execution]
+      def execute(crate)        
+        system "parrot '#{crate.element(:compilation, :generated).as_file}' #{args(crate)} &> '#{crate.element(:execution, :generated).as_file}'"
       end
       
-      def optional_elements
-        [:command_line]
+      def diff(crate)
+        html_diff(crate.element(:execution).as_file, crate.element(:execution, :generated).as_file, crate.element(:execution, :diff).as_file)
       end
-      
-      def checked_files(crate)
-        CIAT::CheckedFile.create(crate, :execution)
-      end
-      
-      private
-      
+
       def args(crate)
-        (crate.element(:command_line) || '').strip
+        (crate.element(:command_line).content || '').strip
       end
     end
   end

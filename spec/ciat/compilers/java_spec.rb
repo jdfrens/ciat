@@ -10,52 +10,39 @@ describe CIAT::Compilers::Java do
     @compiler = CIAT::Compilers::Java.new(@classpath, @compiler_class)
   end
   
-  describe "describing things" do
-    it "should describe itself" do
-      @compiler.description.should == "compiler"
-    end
+  it "should process without error" do
+    @compiler.should_receive(:compile).with(@crate).and_return(true)
+    @compiler.should_receive(:diff).with(@crate).and_return(true)
     
-    it "should have a configurable description" do
-      CIAT::Compilers::Java.new(@classpath, @compiler_class, :description => "the description").
-        description.should == "the description"
-    end
-  end
-
-  it "should run the compiler successfully" do
-    expect_compile(true)
-    @compiler.process(@crate).should == true
-  end
-
-  it "should run the compiler failurely" do
-    expect_compile(false)
-    @compiler.process(@crate).should == false
+    @compiler.process(@crate).should == @crate
   end
   
-  it "should have files to check" do
-    files = mock("filenames")
+  it "should process with compilation error" do
+    @compiler.should_receive(:compile).with(@crate).and_return(false)
     
-    CIAT::CheckedFile.should_receive(:create).with(@crate, :compilation).and_return(files)
-    
-    @compiler.checked_files(@crate).should == files
+    @compiler.process(@crate).should == @crate
   end
   
-  it "should have required elements" do
-    @compiler.required_elements.should == [:source, :compilation]
-  end
-  
-  it "should not have an optional elements" do
-    @compiler.optional_elements.should == []
-  end
-  
-  def expect_compile(return_value)
-    source_file, generated_code_file, error_file = 
-      mock("source file"), mock("generated code file"), mock("error file")
+  it "should process with diff failure" do
+    @compiler.should_receive(:compile).with(@crate).and_return(true)
+    @compiler.should_receive(:diff).with(@crate).and_return(true)
     
-    @crate.should_receive(:filename).with(:source).and_return(source_file)
-    @crate.should_receive(:filename).with(:compilation, :generated).and_return(generated_code_file)
-    @crate.should_receive(:filename).with(:compilation, :error).and_return(error_file)
+    @compiler.process(@crate).should == @crate
+  end
+  
+  it "should compile" do
+    source, compilation, error = mock("source"), mock("compilation"), mock("error")
+    
+    @crate.should_receive(:element).with(:source).at_least(:once).and_return(source)
+    source.should_receive(:as_file).and_return("source filename")
+    @crate.should_receive(:element).with(:compilation, :generated).at_least(:once).and_return(compilation)
+    compilation.should_receive(:as_file).and_return("compilation filename")
+    @crate.should_receive(:element).with(:compilation, :error).at_least(:once).and_return(error)
+    error.should_receive(:as_file).and_return("error filename")
     @compiler.should_receive(:system).
-      with("java -cp '#{@classpath}' #{@compiler_class} '#{source_file}' '#{generated_code_file}' 2> '#{error_file}'").
-      and_return(return_value)
-  end    
+      with("java -cp '#{@classpath}' #{@compiler_class} 'source filename' 'compilation filename' 2> 'error filename'").
+      and_return(true)    
+    
+    @compiler.compile(@crate).should == true
+  end
 end

@@ -16,6 +16,11 @@ module CIAT
     # You may find this classpath useful:
     #   Dir.glob('../lib/*.jar').join(':') + ":../bin"
     class Java
+      include CIAT::Differs::HtmlDiffer
+
+      # Description of the compiler-written-in-Java.  Used in reports.
+      attr_reader :description
+      
       # Constructs a "Java compiler" object.  +classpath+ is the complete
       # classpath to execute the compiler.  +compiler_class+ is the fully
       # qualified name of the class that executes your compiler; this driver
@@ -28,31 +33,22 @@ module CIAT
       def initialize(classpath, compiler_class, options={})
         @classpath = classpath
         @compiler_class = compiler_class
-        @descriptions = {
-          :description => (options[:description] || "compiler")
-          }
+        @description = options[:description] || "compiler (implemented in Java)"
       end
       
-      # Description of the compiler-implemented-in-Java.
-      def description(element=:description)
-        @descriptions[element]
-      end
-      
-      # Runs the compiler-implemented-in-Java.
       def process(crate)
-        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.filename(:source)}' '#{crate.filename(:compilation, :generated)}' 2> '#{crate.filename(:compilation, :error)}'"
-      end
-
-      def required_elements
-        [:source, :compilation]
-      end
-      
-      def optional_elements
-        []
+        if compile(crate)
+          diff(crate)
+        end
+        crate
       end
       
-      def checked_files(crate)
-        CIAT::CheckedFile.create(crate, :compilation)
+      def compile(crate)        
+        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.element(:source).as_file}' '#{crate.element(:compilation, :generated).as_file}' 2> '#{crate.element(:compilation, :error).as_file}'"
+      end
+      
+      def diff(crate)
+        html_diff(crate.element(:compilation).as_file, crate.element(:compilation, :generated).as_file, crate.element(:compilation, :diff).as_file)
       end
     end
   end

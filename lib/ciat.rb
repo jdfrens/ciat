@@ -9,6 +9,7 @@ module CIAT; end
 require 'ciat/traffic_light'
 require 'ciat/suite'
 require 'ciat/test'
+require 'ciat/test_element'
 require 'ciat/cargo'
 require 'ciat/crate'
 require 'ciat/checked_file'

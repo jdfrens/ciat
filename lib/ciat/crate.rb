@@ -11,24 +11,28 @@ class CIAT::Crate #:nodoc:all
   end
   
   def process_test_file #:nodoc:
-    write_output_files(split_test_file)
+    @elements = {}
+    split_test_file.each do |name, contents|
+      @elements[name] = CIAT::TestElement.new(filename(name), contents)
+    end
+    @elements
   end
   
   def split_test_file #:nodoc:
     tag = :description
     content = ""
-    @elements = {}
+    raw_elements = {}
     File.readlines(test_file).each do |line|
       if line =~ /^==== ((\w|\s)+?)\W*$/
-        @elements[tag] = content
+        raw_elements[tag] = content
         tag = $1.gsub(" ", "_").to_sym
         content = ""
       else
         content += line
       end
     end
-    @elements[tag] = content
-    @elements
+    raw_elements[tag] = content
+    raw_elements
   end
   
   def element(name)
@@ -39,12 +43,6 @@ class CIAT::Crate #:nodoc:all
     elements.keys.to_set
   end
   
-  def write_output_files(elements)
-    elements.each_pair do |key, element|
-      write_file(filename(key), element)
-    end
-  end
-    
   def test
     @test_file
   end

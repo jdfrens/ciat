@@ -37,6 +37,7 @@ module CIAT
       end
       
       def process(crate)
+        # TODO: verify required elements
         if compile(crate)
           diff(crate)
         end

@@ -3,38 +3,17 @@ module CIAT
     # A simple processor that just simply copies the code from one file to the other
     # using the Unix +cp+ command.
     class Copy
-      def initialize(original, copy, requireds, optionals=[])
+      def initialize(original, copy)
         @original = original
         @copy = copy
-        @requireds = requireds
-        @optionals = optionals
       end
       
-      def description(element=:description)
-        case
-        when element == :description
-          'copier'
-        when @optionals.includes?(element)
-          "optional: #{element}"
-        else
-          nil
-        end
+      def description
+        "copy processor"
       end
       
       def process(crate)
-        system "cp '#{crate.filename(@original)}' '#{crate.filename(@copy, :generated)}'"
-      end
-      
-      def required_elements
-        @requireds
-      end
-      
-      def optional_elements
-        @optionals
-      end
-      
-      def checked_files(crate)
-        CIAT::CheckedFile.create(crate, @copy)
+        system "cp '#{crate.element(@original).as_file}' '#{crate.element(@copy).as_file}'"
       end
     end
   end

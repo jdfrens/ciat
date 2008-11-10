@@ -30,6 +30,8 @@ module CIAT
       end
 
       def process(crate)
+        # TODO: verify required elements
+        # TODO: handle optional element
         if execute(crate)
           diff(crate)
         end

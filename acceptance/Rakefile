@@ -126,7 +126,7 @@ end
 # Compilers & Executors
 #
 def copy_compiler
-  CIAT::Processors::Copy.new(:source, :compilation, [:source, :compilation])
+  CIAT::Processors::Copy.new(:source, :compilation)
 end
 
 def java_compiler(type)
@@ -134,7 +134,7 @@ def java_compiler(type)
 end
 
 def copy_executor
-  CIAT::Processors::Copy.new(:compilation_generated, :execution, [:execution])
+  CIAT::Processors::Copy.new(:compilation_generated, :execution)
 end
 
 def parrot_executor

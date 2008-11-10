@@ -9,24 +9,12 @@ module CIAT
         @light = CIAT::TrafficLight.new
       end
       
-      def description(element=:description)
-        @processor.description(element)
+      def description
+        @processor.description
       end
       
       def process(crate)
         @processor.process(crate)
-      end
-      
-      def required_elements
-        @processor.required_elements
-      end
-      
-      def optional_elements
-        @processor.optional_elements
-      end
-      
-      def checked_files(crate)
-        @processor.checked_files(crate)
       end
     end
   end

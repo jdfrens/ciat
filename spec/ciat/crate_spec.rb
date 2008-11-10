@@ -29,11 +29,19 @@ describe CIAT::Crate, "generating interesting names" do
   
   describe "processing test file" do
     it "should split and write" do
-      elements1, elements2 = mock("elements 1"), mock("elements 2")
-      @crate.should_receive(:split_test_file).and_return(elements1)
-      @crate.should_receive(:write_output_files).with(elements1).and_return(elements2)
+      raw_elements = { :e0 => mock("raw element 0"), :e1 => mock("raw element 1"), :e2 => mock("raw element 2")}
+      filenames = [mock("filename 0"), mock("filename 1"), mock("filename 2")]
+      elements = { :e0 => mock("element 0"), :e1 => mock("element 1"), :e2 => mock("element 2")}
+
+      @crate.should_receive(:split_test_file).and_return(raw_elements)
+      @crate.should_receive(:filename).with(:e0).and_return(filenames[0])
+      @crate.should_receive(:filename).with(:e1).and_return(filenames[1])
+      @crate.should_receive(:filename).with(:e2).and_return(filenames[2])
+      CIAT::TestElement.should_receive(:new).with(filenames[0], raw_elements[:e0]).and_return(elements[:e0])
+      CIAT::TestElement.should_receive(:new).with(filenames[1], raw_elements[:e1]).and_return(elements[:e1])
+      CIAT::TestElement.should_receive(:new).with(filenames[2], raw_elements[:e2]).and_return(elements[:e2])
       
-      @crate.process_test_file.should == elements2
+      @crate.process_test_file.should == elements
     end
   end
 
@@ -69,24 +77,6 @@ describe CIAT::Crate, "generating interesting names" do
     
     def expect_file_content(*content)
       File.should_receive(:readlines).with(@filename).and_return(content)
-    end
-  end
-
-  describe "writing output files" do
-    it "should write no files when no elements" do
-      @crate.write_output_files({}).should == {}
-    end
-    
-    it "should write three files for three elements" do
-      elements = {
-        :one => mock("element 1"), :two => mock("element 2"), :three => mock("element 3")
-        }
-      
-      mock_and_expect_filename_and_contents(:one, elements[:one])
-      mock_and_expect_filename_and_contents(:two, elements[:two])
-      mock_and_expect_filename_and_contents(:three, elements[:three])
-      
-      @crate.write_output_files(elements).should == elements
     end
   end
 

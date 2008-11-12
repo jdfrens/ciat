@@ -2,6 +2,7 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::Crate, "generating interesting names" do
   before(:each) do
+    # @name = mock("name")
     @cargo = mock("cargo")
     @crate = CIAT::Crate.new("ciat/filename.ciat", @cargo)
     @expected_filename = mock("expected filename")
@@ -18,15 +19,7 @@ describe CIAT::Crate, "generating interesting names" do
   it "should have a parent cargo" do
     @crate.cargo.should == @cargo
   end
-  
-  describe "provided elements" do
-    it "should consult the elements hash" do
-      @crate.should_receive(:elements).and_return({ :foo => "foo" })
-      
-      @crate.provided_elements.should == [:foo].to_set
-    end
-  end
-  
+    
   describe "processing test file" do
     it "should split and write" do
       raw_elements = { :e0 => mock("raw element 0"), :e1 => mock("raw element 1"), :e2 => mock("raw element 2")}
@@ -37,9 +30,9 @@ describe CIAT::Crate, "generating interesting names" do
       @crate.should_receive(:filename).with(:e0).and_return(filenames[0])
       @crate.should_receive(:filename).with(:e1).and_return(filenames[1])
       @crate.should_receive(:filename).with(:e2).and_return(filenames[2])
-      CIAT::TestElement.should_receive(:new).with(filenames[0], raw_elements[:e0]).and_return(elements[:e0])
-      CIAT::TestElement.should_receive(:new).with(filenames[1], raw_elements[:e1]).and_return(elements[:e1])
-      CIAT::TestElement.should_receive(:new).with(filenames[2], raw_elements[:e2]).and_return(elements[:e2])
+      CIAT::TestElement.should_receive(:new).with(:e0, filenames[0], raw_elements[:e0]).and_return(elements[:e0])
+      CIAT::TestElement.should_receive(:new).with(:e1, filenames[1], raw_elements[:e1]).and_return(elements[:e1])
+      CIAT::TestElement.should_receive(:new).with(:e2, filenames[2], raw_elements[:e2]).and_return(elements[:e2])
       
       @crate.process_test_file.should == elements
     end

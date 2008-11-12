@@ -20,11 +20,9 @@ describe "detail row of test report" do
   
   it "should work with no processors" do
     @result.should_receive(:processors).at_least(:once).and_return([])
-    fake_source("the source")
     
     doc = process_erb
     doc.should have_colspan(1)
-    doc.should have_fake(:source, "the source")
   end
 
   it "should work with yellow light" do
@@ -32,11 +30,9 @@ describe "detail row of test report" do
     light = mock('light')
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    fake_source("source!!!")
     expect_yellow(processor, "processor description", "yellow result")
     
     doc = process_erb
-    doc.should have_fake(:source, "source!!!")
     doc.should have_description("processor description")
     doc.should have_fake(:yellow, "yellow result")
   end
@@ -46,11 +42,9 @@ describe "detail row of test report" do
     light = mock('light')
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    fake_source("source!!!")
     expect_unset(processor, "processor description", "unset result")
     
     doc = process_erb
-    doc.should have_fake(:source, "source!!!")
     doc.should have_description("processor description")
     doc.should have_fake(:unset, "unset result")
   end
@@ -60,11 +54,9 @@ describe "detail row of test report" do
     light = mock('light')
     
     @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    fake_source("source!!!")
     expect_red_or_green(processor, "description")
 
     doc = process_erb
-    doc.should have_fake(:source, "source!!!")
     doc.should have_fake(:optional_elements, "fake optional elements")
     doc.should have_fake(:checked_files, "fake checked files")
   end
@@ -107,12 +99,6 @@ describe "detail row of test report" do
     light.should_receive(:unset?).at_least(:once).and_return(true)
     @recursion.should_receive(:render).with("detail_row/no_diff", :processor => processor).
       and_return(fake(:unset, result))
-  end
-  
-  def fake_source(source)
-    @crate.should_receive(:element).with(:source).and_return(source)
-    @recursion.should_receive(:render).with("detail_row/source", :source => source).
-      and_return(fake(:source, source))
   end
   
   def fake(what, content)

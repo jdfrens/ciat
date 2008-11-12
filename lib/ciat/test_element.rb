@@ -1,5 +1,8 @@
 class CIAT::TestElement
-  def initialize(filename, content)
+  attr_reader :name
+  attr_reader :content
+  
+  def initialize(name, filename, content)
     @filename = filename
     @content = content
   end

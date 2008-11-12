@@ -13,7 +13,7 @@ class CIAT::Crate #:nodoc:all
   def process_test_file #:nodoc:
     @elements = {}
     split_test_file.each do |name, contents|
-      @elements[name] = CIAT::TestElement.new(filename(name), contents)
+      @elements[name] = CIAT::TestElement.new(name, filename(name), contents)
     end
     @elements
   end
@@ -37,10 +37,6 @@ class CIAT::Crate #:nodoc:all
   
   def element(name)
     @elements[name]
-  end
-  
-  def provided_elements
-    elements.keys.to_set
   end
   
   def test

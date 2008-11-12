@@ -1,8 +1,6 @@
 <tr class="details" style="display:none">
   <td colspan="<%= result.processors.size + 1 %>">
 	
-	<%= render "detail_row/source", :source => result.crate.element(:source) %>
-	
 	<% result.processors.each do |processor| %>
 	  <h3>Results from <%= processor.description %></h3>
 	  <% if processor.light.yellow? || processor.light.unset? %>

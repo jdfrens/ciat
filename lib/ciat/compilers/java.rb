@@ -18,6 +18,8 @@ module CIAT
     class Java
       include CIAT::Differs::HtmlDiffer
 
+      attr_reader :light
+      
       # Constructs a "Java compiler" object.  +classpath+ is the complete
       # classpath to execute the compiler.  +compiler_class+ is the fully
       # qualified name of the class that executes your compiler; this driver
@@ -32,6 +34,7 @@ module CIAT
         @compiler_class = compiler_class
         @descriptions = {}
         @descriptions[:self] = options[:description] || "compiler (implemented in Java)"
+        @light = options[:light] || TrafficLight.new
       end
       
       def describe(what=:self)
@@ -41,7 +44,13 @@ module CIAT
       def process(crate)
         # TODO: verify required elements
         if compile(crate)
-          diff(crate)
+          if diff(crate)
+            light.green!
+          else
+            light.red!
+          end
+        else
+          light.yellow!
         end
         crate
       end
@@ -52,6 +61,23 @@ module CIAT
       
       def diff(crate)
         html_diff(crate.element(:compilation).as_file, crate.element(:compilation, :generated).as_file, crate.element(:compilation, :diff).as_file)
+      end
+      
+      def elements(crate)
+        case light.setting
+        when :green
+          lookup_elements crate, [:source, :compilation]
+        when :yellow
+          lookup_elements crate, [:source, :compilation_error]
+        when :red
+          lookup_elements crate, [:source, :compilation_diff]
+        else
+          raise "unexpected setting #{light.setting}"
+        end
+      end
+      
+      def lookup_elements(crate, element_names)
+        element_names.map { |name| crate.element(name) }
       end
     end
   end

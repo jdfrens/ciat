@@ -13,21 +13,24 @@ describe CIAT::Compilers::Java do
   it "should process without error" do
     @compiler.should_receive(:compile).with(@crate).and_return(true)
     @compiler.should_receive(:diff).with(@crate).and_return(true)
-    
+
     @compiler.process(@crate).should == @crate
+    @compiler.light.should be_green
   end
   
   it "should process with compilation error" do
     @compiler.should_receive(:compile).with(@crate).and_return(false)
     
     @compiler.process(@crate).should == @crate
+    @compiler.light.should be_yellow
   end
   
   it "should process with diff failure" do
     @compiler.should_receive(:compile).with(@crate).and_return(true)
-    @compiler.should_receive(:diff).with(@crate).and_return(true)
+    @compiler.should_receive(:diff).with(@crate).and_return(false)
     
     @compiler.process(@crate).should == @crate
+    @compiler.light.should be_red
   end
   
   it "should compile" do
@@ -44,5 +47,54 @@ describe CIAT::Compilers::Java do
       and_return(true)    
     
     @compiler.compile(@crate).should == true
+  end
+end
+
+describe "returning the relevant elements" do
+  before(:each) do
+    @light = CIAT::TrafficLight.new
+    @compiler = CIAT::Compilers::Java.new(@classpath, @compiler_class, :light => @light)
+  end
+  
+  it "should return source and compilation on a green light" do
+    crate, elements = mock("crate"), mock("elements")
+
+    @light.green!
+    @compiler.should_receive(:lookup_elements).
+      with(crate, [:source, :compilation]).and_return(elements)
+
+    @compiler.elements(crate).should == elements
+  end
+
+  it "should return source and error output on a yellow light" do
+    crate, elements = mock("crate"), mock("elements")
+
+    @light.yellow!
+    @compiler.should_receive(:lookup_elements).
+      with(crate, [:source, :compilation_error]).and_return(elements)
+
+    @compiler.elements(crate).should == elements
+  end
+  
+  it "should return source and diff on a red light" do
+    crate, elements = mock("crate"), mock("elements")
+
+    @light.red!
+    @compiler.should_receive(:lookup_elements).
+      with(crate, [:source, :compilation_diff]).and_return(elements)
+
+    @compiler.elements(crate).should == elements
+  end
+  
+  it "should lookup elements" do
+    crate = mock("crate")
+    names = [mock("name 0"), mock("name 1"), mock("name 2")]
+    elements = [mock("element 0"), mock("element 1"), mock("element 2")]
+    
+    crate.should_receive(:element).with(names[0]).and_return(elements[0])
+    crate.should_receive(:element).with(names[1]).and_return(elements[1])
+    crate.should_receive(:element).with(names[2]).and_return(elements[2])
+    
+    @compiler.lookup_elements(crate, names).should == elements
   end
 end

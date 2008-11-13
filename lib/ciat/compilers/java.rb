@@ -18,9 +18,6 @@ module CIAT
     class Java
       include CIAT::Differs::HtmlDiffer
 
-      # Description of the compiler-written-in-Java.  Used in reports.
-      attr_reader :description
-      
       # Constructs a "Java compiler" object.  +classpath+ is the complete
       # classpath to execute the compiler.  +compiler_class+ is the fully
       # qualified name of the class that executes your compiler; this driver
@@ -33,7 +30,12 @@ module CIAT
       def initialize(classpath, compiler_class, options={})
         @classpath = classpath
         @compiler_class = compiler_class
-        @description = options[:description] || "compiler (implemented in Java)"
+        @descriptions = {}
+        @descriptions[:self] = options[:description] || "compiler (implemented in Java)"
+      end
+      
+      def describe(what=:self)
+        @descriptions[what]
       end
       
       def process(crate)

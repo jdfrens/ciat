@@ -59,9 +59,9 @@ describe CIAT::Suite do
     crate, test, result = mock("crate"), mock("test"), mock("result")
     suite = CIAT::Suite.new(:processors => processors, :cargo => @cargo, :feedback => @feedback)
 
-    CIAT::Processors::Magister.should_receive(:new).with(processors[0]).and_return(test_processors[0])
-    CIAT::Processors::Magister.should_receive(:new).with(processors[1]).and_return(test_processors[1])
-    CIAT::Processors::Magister.should_receive(:new).with(processors[2]).and_return(test_processors[2])
+    processors[0].should_receive(:clone).and_return(test_processors[0])
+    processors[1].should_receive(:clone).and_return(test_processors[1])
+    processors[2].should_receive(:clone).and_return(test_processors[2])
     CIAT::Test.should_receive(:new).
       with(crate, :processors => test_processors, :feedback => @feedback).
       and_return(test)

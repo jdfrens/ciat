@@ -14,8 +14,17 @@ describe CIAT::TestElement do
     @element.as_file.should == @filename
   end
   
-  it "should have content" do
-    @element.content.should == @content
+  describe "having content" do
+    it "should have cached content" do
+      @element.content.should == @content
+    end
     
+    it "should read when content is empty" do
+      filename, read_content = mock("filename"), mock("read content")
+      
+      CIAT::Cargo.should_receive(:read_file).with(filename).and_return(read_content)
+      
+      CIAT::TestElement.new(:some_name, filename, nil).content.should == read_content
+    end
   end
 end

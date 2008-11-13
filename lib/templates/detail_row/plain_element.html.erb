@@ -1,0 +1,8 @@
+<div class="<%= element.name %>">
+	<table>
+		<tr><th><%= processor.describe(element.name) %></th></tr>
+		<tr><td class="source">
+			<pre class="source"><%= replace_tabs(element.content) %></pre>
+		</td></tr>
+	</table>
+</div>

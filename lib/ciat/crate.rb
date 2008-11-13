@@ -11,7 +11,7 @@ class CIAT::Crate #:nodoc:all
   end
   
   def process_test_file #:nodoc:
-    @elements = {}
+    @elements = Hash.new { |hash, name| hash[name] = CIAT::TestElement.new(name, filename(name), nil) }
     split_test_file.each do |name, contents|
       @elements[name] = CIAT::TestElement.new(name, filename(name), contents)
     end
@@ -35,8 +35,8 @@ class CIAT::Crate #:nodoc:all
     raw_elements
   end
   
-  def element(name)
-    @elements[name]
+  def element(*names)
+    @elements[names.compact.join("_").to_sym]
   end
   
   def test

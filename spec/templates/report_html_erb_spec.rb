@@ -22,9 +22,9 @@ describe "report" do
     it "should work with several processors" do
       @processors = [mock("p 0"), mock("p 1"), mock("p 2")]
       
-      @processors[0].should_receive(:description).and_return("d0")
-      @processors[1].should_receive(:description).and_return("d1")
-      @processors[2].should_receive(:description).and_return("d2")
+      @processors[0].should_receive(:describe).and_return("d0")
+      @processors[1].should_receive(:describe).and_return("d1")
+      @processors[2].should_receive(:describe).and_return("d2")
     
       (process_erb/"tr#header th").inner_text.should == "Description" + "d0" + "d1" + "d2"
     end

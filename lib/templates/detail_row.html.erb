@@ -2,16 +2,10 @@
   <td colspan="<%= result.processors.size + 1 %>">
 	
 	<% result.processors.each do |processor| %>
-	  <h3>Results from <%= processor.description %></h3>
-	  <% if processor.light.yellow? || processor.light.unset? %>
-			<%= render "detail_row/no_diff", :processor => processor %>
-	  <% else %>
-			<%= render "detail_row/optional_elements", :processor => processor,
-						:crate => result.crate, 
-						:optional_elements => processor.optional_elements %>
-			<%= render "detail_row/checked_files",
-			      :checked_files => processor.checked_files(result.crate) %>
-    <% end %>
+	  <h3>Results from <%= processor.describe %></h3>
+		<%= render "detail_row/elements", :processor => processor,
+					:crate => result.crate, 
+					:elements => processor.elements(result.crate) %>
 	<% end %>
 
 </tr>

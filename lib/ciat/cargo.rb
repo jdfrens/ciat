@@ -37,6 +37,11 @@ class CIAT::Cargo #:nodoc:all
     end
   end
   
+  # TODO: get rid of this in favor of the class method
+  def read_file(filename)
+    File.read(filename)
+  end
+
   def self.write_file(filename, content)
     FileUtils.mkdir_p(File.dirname(filename))
     File.open(filename, "w") do |file|
@@ -44,7 +49,7 @@ class CIAT::Cargo #:nodoc:all
     end
   end
   
-  def read_file(filename)
+  def self.read_file(filename)
     File.read(filename)
   end
 end

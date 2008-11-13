@@ -86,7 +86,7 @@ class CIAT::Suite
   end
   
   def test_processors #:nodoc:
-    @processors.map { |p| CIAT::Processors::Magister.new(p) }
+    @processors.map { |p| p.clone }
   end
 
   def generate_report #:nodoc:

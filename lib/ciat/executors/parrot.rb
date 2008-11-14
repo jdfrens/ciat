@@ -15,8 +15,8 @@ module CIAT
     class Parrot
       include CIAT::Differs::HtmlDiffer
 
-      # Description of the Parrot VM.  Used in reports.
-      attr_reader :description
+      # Traffic light
+      attr_reader :light
 
       # Creates a Parrot executor.
       #
@@ -27,13 +27,24 @@ module CIAT
       #   for the command-line arguments (if any) (default: "Command-line arguments").
       def initialize(options={})
         @description = options[:description] || "Parrot virtual machine"
+        @light = CIAT::TrafficLight.new
+      end
+      
+      def describe
+        @description
       end
 
       def process(crate)
         # TODO: verify required elements
         # TODO: handle optional element
         if execute(crate)
-          diff(crate)
+          if diff(crate)
+            light.green!
+          else
+            light.red!
+          end
+        else
+          light.yellow!
         end
         crate
       end
@@ -47,7 +58,7 @@ module CIAT
       end
 
       def args(crate)
-        (crate.element(:command_line).content || '').strip
+        (crate.element?(:command_line) ? crate.element(:command_line).content : '').strip
       end
     end
   end

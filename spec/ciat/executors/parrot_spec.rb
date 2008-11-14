@@ -15,12 +15,14 @@ describe CIAT::Executors::Parrot do
       @executor.should_receive(:diff).with(@crate).and_return(true)
       
       @executor.process(@crate).should == @crate
+      @executor.light.should be_green
     end
 
     it "should execute with an error" do
       @executor.should_receive(:execute).with(@crate).and_return(false)
       
       @executor.process(@crate).should == @crate
+      @executor.light.should be_yellow
     end
 
     it "should execute normally and diff with a failure" do
@@ -28,11 +30,11 @@ describe CIAT::Executors::Parrot do
       @executor.should_receive(:diff).with(@crate).and_return(false)
       
       @executor.process(@crate).should == @crate
+      @executor.light.should be_red
     end
   end
 
   it "should execute generated code" do
-    # expect_run(:command_line => nil, :result => true)
     compilation, command_line, execution, result =
       mock("compilation"), mock("command line"), mock("execution"), mock("resut")
     
@@ -51,6 +53,7 @@ describe CIAT::Executors::Parrot do
   it "should strip command-line arguments" do
     command_line = mock("command_line")
     
+    @crate.should_receive(:element?).with(:command_line).and_return(true)
     @crate.should_receive(:element).with(:command_line).and_return(command_line)
     command_line.should_receive(:content).and_return("   argument1 \t argument2  \n\n")
     

@@ -39,6 +39,10 @@ class CIAT::Crate #:nodoc:all
     @elements[names.compact.join("_").to_sym]
   end
   
+  def element?(*names)
+    @elements.has_key?(names.compact.join("_").to_sym)
+  end
+  
   def test
     @test_file
   end

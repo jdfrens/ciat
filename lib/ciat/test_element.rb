@@ -12,7 +12,9 @@ class CIAT::TestElement
   end
   
   def as_file
-    CIAT::Cargo.write_file(@filename, @content)
+    if @content
+      CIAT::Cargo.write_file(@filename, @content)
+    end
     @filename
   end
 end

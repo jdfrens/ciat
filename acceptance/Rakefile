@@ -8,6 +8,12 @@ require 'ciat/processors/copy'
 require 'ciat/executors/parrot'
 require 'ciat/feedback/composite'
 
+require 'do_not_process_executor'
+require 'do_nothing_processor'
+require 'feedback_tester'
+require 'blowup_feedback'
+require 'helpers'
+
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
                   :simple,
@@ -56,25 +62,25 @@ end
 task :failures do
   puts "Should error during compilation"
   CIAT::Suite.new(
-    :processors => [java_compiler("Erroring"), DoNotProcessExecutor.new],
+    :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
     :files => 'ciat/failures/compile-error.ciat',
     :report_filename => 'compile-error.html',
     :feedback => feedback(1, [:yellow, :unset])).run
   puts "Should fail compilation expectation"
   CIAT::Suite.new(
-    :processors => [copy_compiler, DoNotProcessExecutor.new],
+    :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
     :files => 'ciat/failures/compile-fail.ciat',
     :report_filename => 'compile-fail.html',
     :feedback => feedback(1, [:red, :unset])).run
   puts "Should error during execution"
   CIAT::Suite.new(
-    :processors => [copy_compiler, ErroringExecutor.new],
+    :processors => [copy_compiler, DoNothingProcessor.new(:yellow)],
     :files => 'ciat/failures/execution-error.ciat',
     :report_filename => 'execution-error.html',
     :feedback => feedback(1, [:green, :yellow])).run
   puts "Should fails execution expectation"
   CIAT::Suite.new(
-    :processors => [copy_compiler, copy_executor],
+    :processors => [copy_compiler, DoNothingProcessor.new(:red)],
     :files => 'ciat/failures/execution-fail.ciat',
     :report_filename => 'execution-fail.html',
     :feedback => feedback(1, [:green, :red])).run
@@ -87,7 +93,7 @@ task :bad_input do
       :processors => [copy_compiler, copy_executor],
       :files => 'ciat/bad-input/missing-source.ciat',
       :report_filename => 'missing-source.html',
-      :feedback => blowup_feedback).run
+      :feedback => BlowupFeedback.new).run
     raise "handled missing source without raising an exception!"
   rescue RuntimeError
   end
@@ -97,7 +103,7 @@ task :bad_input do
       :processors => [copy_compiler, copy_executor],
       :files => 'ciat/bad-input/missing-execution.ciat',
       :report_filename => 'missing-execution.html',
-      :feedback => blowup_feedback).run
+      :feedback => BlowupFeedback.new).run
     raise "handled missing execution without raising an exception!"
   rescue RuntimeError
   end
@@ -107,7 +113,7 @@ task :bad_input do
       :processors => [copy_compiler, copy_executor],
       :files => 'ciat/bad-input/extra-element.ciat',
       :report_filename => 'extra-element.html',
-      :feedback => blowup_feedback).run
+      :feedback => BlowupFeedback.new).run
     raise "handled extra element without raising an exception!"
   rescue RuntimeError
   end
@@ -122,124 +128,3 @@ task :optional_elements do
     :feedback => feedback(1, [:green, :green])).run
 end
 
-#
-# Compilers & Executors
-#
-def copy_compiler
-  CIAT::Processors::Copy.new(:source, :compilation)
-end
-
-def java_compiler(type)
-  CIAT::Compilers::Java.new('./java', type + 'Compiler')
-end
-
-def copy_executor
-  CIAT::Processors::Copy.new(:compilation_generated, :execution)
-end
-
-def parrot_executor
-  CIAT::Executors::Parrot.new
-end
-
-class DoNotProcessExecutor
-  def description(element=nil)
-    "Should not be executed!"
-  end
-  
-  def process(crate)
-    raise("**** should not run this executor!!!")
-  end
-  
-  def required_elements
-    [:source, :compilation, :execution]
-  end
-  
-  def optional_elements
-    []
-  end
-  
-  def checked_files(crate)
-    []
-  end
-end
-
-class ErroringExecutor
-  def description(element=nil)
-    "Failing Executor"
-  end
-  
-  def process(crate)
-    system("echo this should be the error output > #{crate.filename(:execution, :generated)}")
-    false
-  end
-  
-  def required_elements
-    [:source, :compilation, :execution]
-  end
-  
-  def optional_elements
-    []
-  end
-  
-  def checked_files(crate)
-    []
-  end
-end
-
-#
-# Output file checking
-#
-def check_output_files
-  puts "Checking output files."
-  Dir["**/*.html"].each do |file|
-    system "tidy -mq #{file} 2> /dev/null"
-  end
-  unless system("diff -r temp_expected/ temp/")
-    raise("**** diff failed!")
-  end
-end
-
-#
-# Feedback
-#
-def feedback(size, expected_lights)
-  CIAT::Feedback::Composite.new(
-    CIAT::Feedback::StandardOutput.new,
-    FeedbackTester.new(size, expected_lights)
-    )
-end
-
-def blowup_feedback
-  BlowupFeedback.new
-end
-
-class FeedbackTester
-  def initialize(size, expected_lights)
-    @size = size
-    @expected_lights = expected_lights
-    @lights = []
-  end
-  
-  def processor_result(processor)
-    @lights << processor.light.setting
-  end
-  
-  def post_tests(suite)
-    unless @expected_lights == @lights
-      raise "Wrong lights: [#{@expected_lights.join(',')}] expected, got [#{@lights.join(',')}]"
-    end
-    unless suite.size == @size
-      raise "Wrong number of tests: #{@size} expected, got #{suite.size}"
-    end
-  end
-end
-
-class BlowupFeedback
-  def processor_result(processor)
-    raise "don't call me!"
-  end
-  
-  def post_tests(suite)
-    raise "don't call me!"
-  end
-end

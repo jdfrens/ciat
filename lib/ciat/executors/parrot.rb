@@ -56,6 +56,10 @@ module CIAT
       def diff(crate)
         html_diff(crate.element(:execution).as_file, crate.element(:execution, :generated).as_file, crate.element(:execution, :diff).as_file)
       end
+      
+      def elements(crate)
+        [:compilation_generated, :execution_generated].map { |name| crate.element(name) }
+      end
 
       def args(crate)
         (crate.element?(:command_line) ? crate.element(:command_line).content : '').strip

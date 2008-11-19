@@ -28,11 +28,11 @@ task :clean_start do
 end
 
 task :simple do
-  puts "Should copy all the time"
+  puts "Should copy the source as a compilation"
   CIAT::Suite.new(
-    :processors => [copy_compiler, copy_executor],
+    :processors => [copy_compiler],
     :files => ['ciat/copy-cat.ciat'],
-    :feedback => feedback(1, [:green, :green])).run
+    :feedback => feedback(1, [:green])).run
 end
     
 task :java_cat do

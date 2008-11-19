@@ -66,18 +66,14 @@ module CIAT
       def elements(crate)
         case light.setting
         when :green
-          lookup_elements crate, [:source, :compilation]
+          crate.elements(:source, :compilation)
         when :yellow
-          lookup_elements crate, [:source, :compilation_error]
+          crate.elements(:source, :compilation_error)
         when :red
-          lookup_elements crate, [:source, :compilation_diff]
+          crate.elements(:source, :compilation_diff)
         else
           raise "unexpected setting #{light.setting}"
         end
-      end
-      
-      def lookup_elements(crate, element_names)
-        element_names.map { |name| crate.element(name) }
       end
     end
   end

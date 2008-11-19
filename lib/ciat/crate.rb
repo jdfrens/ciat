@@ -3,11 +3,11 @@ class CIAT::Crate #:nodoc:all
   attr_reader :stub
   attr_reader :cargo
     
-  def initialize(test_file, cargo)
+  def initialize(test_file, cargo, elements={})
     @test_file = test_file
     @stub = test_file.gsub(File.extname(test_file), "")
     @cargo = cargo
-    @elements = {}
+    @elements = elements
   end
   
   def process_test_file #:nodoc:
@@ -43,6 +43,10 @@ class CIAT::Crate #:nodoc:all
     @elements.has_key?(names.compact.join("_").to_sym)
   end
   
+  def elements(*names)
+    names.map { |name| element(name) }
+  end
+  
   def test
     @test_file
   end
@@ -57,11 +61,5 @@ class CIAT::Crate #:nodoc:all
 
   def read_file(filename)
     @cargo.read_file(filename)
-  end
-  
-  private
-  
-  def elements
-    @elements
   end
 end

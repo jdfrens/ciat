@@ -8,7 +8,7 @@ module CIAT
       def initialize(original, copy)
         @original = original
         @copy = copy
-        @light = CIAT::TrafficLight.new(:green)
+        @light = CIAT::TrafficLight.new
       end
       
       def describe(what=:self)
@@ -25,7 +25,11 @@ module CIAT
       end
       
       def process(crate)
-        system "cp '#{crate.element(@original).as_file}' '#{crate.element(@copy).as_file}'"
+        if system( "cp '#{crate.element(@original).as_file}' '#{crate.element(@copy).as_file}'")
+          light.green!
+        else
+          light.red!
+        end
       end
       
       def elements(crate)

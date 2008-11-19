@@ -60,8 +60,7 @@ describe "returning the relevant elements" do
     crate, elements = mock("crate"), mock("elements")
 
     @light.green!
-    @compiler.should_receive(:lookup_elements).
-      with(crate, [:source, :compilation]).and_return(elements)
+    crate.should_receive(:elements).with(:source, :compilation).and_return(elements)
 
     @compiler.elements(crate).should == elements
   end
@@ -70,8 +69,7 @@ describe "returning the relevant elements" do
     crate, elements = mock("crate"), mock("elements")
 
     @light.yellow!
-    @compiler.should_receive(:lookup_elements).
-      with(crate, [:source, :compilation_error]).and_return(elements)
+    crate.should_receive(:elements).with(:source, :compilation_error).and_return(elements)
 
     @compiler.elements(crate).should == elements
   end
@@ -80,21 +78,8 @@ describe "returning the relevant elements" do
     crate, elements = mock("crate"), mock("elements")
 
     @light.red!
-    @compiler.should_receive(:lookup_elements).
-      with(crate, [:source, :compilation_diff]).and_return(elements)
+    crate.should_receive(:elements).with(:source, :compilation_diff).and_return(elements)
 
     @compiler.elements(crate).should == elements
-  end
-  
-  it "should lookup elements" do
-    crate = mock("crate")
-    names = [mock("name 0"), mock("name 1"), mock("name 2")]
-    elements = [mock("element 0"), mock("element 1"), mock("element 2")]
-    
-    crate.should_receive(:element).with(names[0]).and_return(elements[0])
-    crate.should_receive(:element).with(names[1]).and_return(elements[1])
-    crate.should_receive(:element).with(names[2]).and_return(elements[2])
-    
-    @compiler.lookup_elements(crate, names).should == elements
   end
 end

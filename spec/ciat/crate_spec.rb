@@ -120,3 +120,45 @@ describe CIAT::Crate, "file manipulation" do
     crate.read_file("phile.txt").should == contents
   end
 end
+
+describe CIAT::Crate, "handling elements" do
+  before(:each) do
+    @cargo = mock("cargo")
+    @elements = mock("elements")
+    @crate = CIAT::Crate.new("filename.ciat", @cargo, @elements)
+  end
+
+  it "should return specified element" do
+    element = mock("element")
+    
+    @elements.should_receive(:[]).with(:foo).and_return(element)
+    
+    @crate.element(:foo).should == element
+  end
+
+  it "should return specified element with multi-word name" do
+    element = mock("element")
+    
+    @elements.should_receive(:[]).with(:foo_bar_joe).and_return(element)
+    
+    @crate.element(:foo, :bar, :joe).should == element
+  end
+  
+  it "should check to see if element exists" do
+    exists = mock("a boolean")
+    
+    @elements.should_receive(:has_key?).with(:foo_bar_joe).and_return(exists)
+    
+    @crate.element?(:foo, :bar, :joe).should == exists
+  end
+
+  it "should get multiple elements" do
+    elements = [mock("element 0"), mock("element 1"), mock("element 2")]
+    
+    @elements.should_receive(:[]).with(:foo).and_return(elements[0])
+    @elements.should_receive(:[]).with(:bar).and_return(elements[1])
+    @elements.should_receive(:[]).with(:joe).and_return(elements[2])
+    
+    @crate.elements(:foo, :bar, :joe).should == elements
+  end
+end

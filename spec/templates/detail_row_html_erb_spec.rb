@@ -64,10 +64,6 @@ describe "detail row of test report" do
       and_return(fake(:elements, rendered_elements))
   end
     
-  def fake(what, content)
-    "<div class=\"fake\"><div id=\"#{what}\">#{content}</div></div>"
-  end
-  
   def result
     @result
   end

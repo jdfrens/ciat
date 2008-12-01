@@ -23,9 +23,10 @@ end
 def check_output_files
   puts "Checking output files."
   Dir["**/*.html"].each do |file|
-    system "tidy -mq #{file} 2> /dev/null"
+    puts "tidy -mq #{file}"
+    system "tidy -mq #{file}"
   end
-  unless system("diff -r temp_expected/ temp/")
+  unless system("diff -r temp_expected/ temp/ > acceptance.diff")
     raise("**** diff failed!")
   end
 end

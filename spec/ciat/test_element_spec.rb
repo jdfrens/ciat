@@ -35,4 +35,10 @@ describe CIAT::TestElement do
       CIAT::TestElement.new(:some_name, @filename, nil).content.should == read_content
     end
   end
+  
+  it "should have a template file based on the name" do
+    @name.should_receive(:to_s).and_return("name")
+    
+    @element.template.should == File.join("elements", "name")
+  end
 end

@@ -7,6 +7,15 @@ class CIAT::TestElement
     @content = content
   end
   
+  def template
+    File.join("elements", name.to_s)
+  end
+  
+  def describe
+    # TODO: a better definition!
+    "Element named #{name}"
+  end
+  
   def content
     @content ||= CIAT::Cargo.read_file(@filename)
   end

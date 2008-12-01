@@ -1,7 +1,7 @@
 <tr class="summary">
 	<td>
 	  <a href="#" onclick="$(this).up('tr').next().toggle(); return false;">
-	  <%= result.crate.element(:description) %>
+	  <%= result.element(:description).content %>
 	  </a>
   </td>
 	<% result.processors.each do |processor| %>

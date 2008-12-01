@@ -1,6 +1,6 @@
 <div class="<%= element.name %>">
-	<table summary="table for <%= processor.describe(element.name) %>">
-		<tr><th><%= processor.describe(element.name) %></th></tr>
+	<table summary="table for <%= element.describe %>">
+		<tr><th><%= element.describe %></th></tr>
 		<tr><td class="source">
 			<pre class="source"><%= replace_tabs(element.content) %></pre>
 		</td></tr>

@@ -18,7 +18,7 @@ desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
                   :simple,
                   :java_cat, :java_parrot,
-                  :failures, :bad_input,
+                  :failures,
                   :optional_elements] do
   check_output_files
 end
@@ -86,45 +86,12 @@ task :failures do
     :feedback => feedback(1, [:green, :red])).run
 end
 
-task :bad_input do
-  begin
-    puts "Should not like missing source element"
-    CIAT::Suite.new(
-      :processors => [copy_compiler, copy_executor],
-      :files => 'ciat/bad-input/missing-source.ciat',
-      :report_filename => 'missing-source.html',
-      :feedback => BlowupFeedback.new).run
-    raise "handled missing source without raising an exception!"
-  rescue RuntimeError
-  end
-  begin
-    puts "Should not like missing execution element"
-    CIAT::Suite.new(
-      :processors => [copy_compiler, copy_executor],
-      :files => 'ciat/bad-input/missing-execution.ciat',
-      :report_filename => 'missing-execution.html',
-      :feedback => BlowupFeedback.new).run
-    raise "handled missing execution without raising an exception!"
-  rescue RuntimeError
-  end
-  begin
-    puts "Should not like extra element"
-    CIAT::Suite.new(
-      :processors => [copy_compiler, copy_executor],
-      :files => 'ciat/bad-input/extra-element.ciat',
-      :report_filename => 'extra-element.html',
-      :feedback => BlowupFeedback.new).run
-    raise "handled extra element without raising an exception!"
-  rescue RuntimeError
-  end
-end
-
 task :optional_elements do
   puts "Should allow optional 'command line' element with PIR virtual machine"
   CIAT::Suite.new(
-    :processors => [copy_compiler, parrot_executor],
+    :processors => [parrot_executor],
     :folder => 'ciat/optional-elements',
     :report_filename => 'optional-elements.html',
-    :feedback => feedback(1, [:green, :green])).run
+    :feedback => feedback(1, [:green])).run
 end
 

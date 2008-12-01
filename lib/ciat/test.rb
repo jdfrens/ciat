@@ -17,6 +17,11 @@ class CIAT::Test
     self
   end
   
+  # TODO: part of the unification of Crate and Test
+  def element(*names)
+    crate.element(*names)
+  end
+  
   def process_test_file #:nodoc:
     @crate.process_test_file
   end

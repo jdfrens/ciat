@@ -25,6 +25,10 @@ module ERBHelpers
   def render(file, locals)
     @recursion.render(file, locals)
   end
+
+  def fake(what, content)
+    "<div class=\"fake\"><div id=\"#{what}\">#{content}</div></div>"
+  end  
 end
 
 module CustomDetailRowMatchers

@@ -1,16 +1,5 @@
 Copies source for PIR execution with a command line.
-==== source
-.sub main
-	.param pmc argv
-	$S0 = argv[3]
-	print $S0
-	$S0 = argv[2]
-	print $S0
-	$S0 = argv[1]
-	print $S0
-	print "\n"
-.end
-==== compilation
+==== compilation generated
 .sub main
 	.param pmc argv
 	$S0 = argv[3]

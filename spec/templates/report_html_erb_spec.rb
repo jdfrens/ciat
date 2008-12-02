@@ -3,6 +3,8 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 require 'hpricot'
 
 describe "report" do
+  include ERBHelpers
+  
   before(:each) do
     @elements = mock("elements")
     @recursion = mock("recursion")
@@ -57,7 +59,7 @@ describe "report" do
     @results
   end
   
-  def render(file, result)
-    @recursion.render(file, result)
-  end
+  # def render(file, result)
+  #   @recursion.render(file, result)
+  # end
 end

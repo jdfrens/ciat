@@ -29,6 +29,11 @@ module CIAT::ERBHelpers
   	end +
   	".</span>"
   end
+
+  # Capitalizes string as a title.
+  def title(text)
+    text.gsub(/\b\w/){$&.upcase}
+  end
   
   # Replaces tabs with spaces because Firefox does _really_ wacky things with
   # tabs in a +pre+ in a +table+.

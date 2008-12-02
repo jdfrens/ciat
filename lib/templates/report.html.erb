@@ -20,7 +20,7 @@
   		<tr id="header">
 			  <th>Description</th>
 				<% processors.each do |processor| %>
-				  <th><%= processor.describe %></th>
+				  <th><%= title(processor.describe) %></th>
 				<% end %>
   		</tr>
 

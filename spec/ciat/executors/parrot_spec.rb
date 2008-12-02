@@ -59,4 +59,29 @@ describe CIAT::Executors::Parrot do
     
     @executor.args(@crate).should == "argument1 \t argument2"
   end
+  
+  describe "elements of Parrot processor" do
+    it "should produce compilation and execution" do
+      compilation, execution = mock("compilation"), mock("execution")
+      
+      @crate.should_receive(:element?).with(:compilation_generated).and_return(true)
+      @crate.should_receive(:element?).with(:command_line).and_return(false)
+      @crate.should_receive(:element?).with(:execution_generated).and_return(true)
+      @crate.should_receive(:element).with(:compilation_generated).and_return(compilation)
+      @crate.should_receive(:element).with(:execution_generated).and_return(execution)
+      
+      @executor.elements(@crate).should == [compilation, execution]
+    end
+
+    it "should also produce command-line arguments when used" do
+      compilation, arguments, execution = mock("compilation"), mock("arguments"), mock("execution")
+      
+      @crate.should_receive(:element?).with(anything()).any_number_of_times.and_return(true)
+      @crate.should_receive(:element).with(:compilation_generated).and_return(compilation)
+      @crate.should_receive(:element).with(:command_line).and_return(arguments)
+      @crate.should_receive(:element).with(:execution_generated).and_return(execution)
+      
+      @executor.elements(@crate).should == [compilation, arguments, execution]
+    end
+  end
 end

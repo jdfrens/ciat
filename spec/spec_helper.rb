@@ -21,6 +21,10 @@ module ERBHelpers
   def light_to_sentence(prefix, light)
     prefix
   end
+  
+  def title(text)
+    text
+  end
 
   def render(file, locals)
     @recursion.render(file, locals)

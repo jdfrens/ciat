@@ -58,11 +58,13 @@ module CIAT
       end
       
       def elements(crate)
-        [:compilation_generated, :execution_generated].map { |name| crate.element(name) }
+        [:compilation_generated, :command_line, :execution_generated].
+          map { |name| crate.element?(name) ? crate.element(name) : nil }.
+          compact
       end
 
       def args(crate)
-        (crate.element?(:command_line) ? crate.element(:command_line).content : '').strip
+        crate.element?(:command_line) ? crate.element(:command_line).content.strip : ''
       end
     end
   end

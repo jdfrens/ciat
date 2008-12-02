@@ -1,4 +1,4 @@
-Copies source for PIR execution with a command line.
+PIR program that uses command-line arguments.
 ==== compilation generated
 .sub main
 	.param pmc argv

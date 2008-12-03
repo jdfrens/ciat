@@ -1,0 +1,5 @@
+Simple test to see the in-Java compiler succeed.
+==== source
+success
+==== compilation
+Hello, success.

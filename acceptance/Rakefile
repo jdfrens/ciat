@@ -38,48 +38,48 @@ end
 # tasks to exercise CIAT itself
 task :exercise_ciat => [:simple,
                         :less_simple,
-                        :failures]
+                        :errors_and_failures]
                         
 task :simple do
   puts "Simple test of CIAT system"
   CIAT::Suite.new(
     :processors => [copy_compiler],
-    :files => ['ciat/copy-cat.ciat'],
+    :files => ['ciat/simple.ciat'],
     :feedback => feedback(1, [:green])).run
 end
     
 task :less_simple do
-  puts "two processors, two tests, special folder"
+  puts "two processors, two tests, special folder, special report"
   CIAT::Suite.new(
     :processors => [java_compiler("Hello"), copy_executor],
-    :folder => 'ciat/java-cat',
-    :report_filename => 'java-cat.html',
+    :folder => 'ciat/less-simple',
+    :report_filename => 'less-simple.html',
     :feedback => feedback(2, [:green, :green, :green, :green])).run
 end
 
-task :failures do
+task :errors_and_failures do
   puts "Should error during compilation"
   CIAT::Suite.new(
     :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
-    :files => 'ciat/failures/compile-error.ciat',
+    :files => 'ciat/errors-and-failures/compile-error.ciat',
     :report_filename => 'compile-error.html',
     :feedback => feedback(1, [:yellow, :unset])).run
   puts "Should fail compilation expectation"
   CIAT::Suite.new(
     :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
-    :files => 'ciat/failures/compile-fail.ciat',
+    :files => 'ciat/errors-and-failures/compile-fail.ciat',
     :report_filename => 'compile-fail.html',
     :feedback => feedback(1, [:red, :unset])).run
   puts "Should error during execution"
   CIAT::Suite.new(
     :processors => [copy_compiler, DoNothingProcessor.new(:yellow)],
-    :files => 'ciat/failures/execution-error.ciat',
+    :files => 'ciat/errors-and-failures/execution-error.ciat',
     :report_filename => 'execution-error.html',
     :feedback => feedback(1, [:green, :yellow])).run
   puts "Should fails execution expectation"
   CIAT::Suite.new(
     :processors => [copy_compiler, DoNothingProcessor.new(:red)],
-    :files => 'ciat/failures/execution-fail.ciat',
+    :files => 'ciat/errors-and-failures/execution-fail.ciat',
     :report_filename => 'execution-fail.html',
     :feedback => feedback(1, [:green, :red])).run
 end
@@ -87,20 +87,26 @@ end
 # *************************************************************
 # task to exercise implemented-in-Java compilers
 task :exercise_java do
-  # TODO: java compiler that errors
-  # TODO: java compiler that fails
+  puts "Exercise the Java compiler"
+  CIAT::Suite.new(
+    :processors => [java_compiler("Hello")],
+    :folder => 'ciat/java',
+    # TODO: java compiler that errors
+    # TODO: java compiler that fails
+    :report_filename => 'java.html',
+    :feedback => feedback(1, [:green])).run
 end
 
 # *************************************************************
 # task to exercise Parrot executor
 task :exercise_parrot do
-  puts "Should allow optional 'command line' element with PIR virtual machine"
+  puts "Exercise the Parrot executor"
   CIAT::Suite.new(
     :processors => [parrot_executor],
-    :folder => 'ciat/optional-elements',
+    :folder => 'ciat/parrot',
     # TODO: parrot execution that errors
     # TODO: parrot execution that fails
-    :report_filename => 'optional-elements.html',
+    :report_filename => 'parrot.html',
     :feedback => feedback(1, [:green])).run
 end
 

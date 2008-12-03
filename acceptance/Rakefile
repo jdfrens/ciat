@@ -1,4 +1,5 @@
-$:.unshift(File.join(File.dirname(__FILE__), "..", "lib"))
+$:.unshift(File.join(File.dirname(__FILE__), "..", "lib")).
+  unshift(File.join(File.dirname(__FILE__), "lib"))
 
 require 'fileutils'
 
@@ -16,11 +17,10 @@ require 'helpers'
 
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
-                  :simple,
-                  :java_cat, :java_parrot,
-                  :failures,
+                  :exercise_ciat,
                   :exercise_java,
-                  :exercise_parrot] do
+                  :exercise_parrot,
+                  :exercise_java_and_parrot] do
   check_output_files
 end
 
@@ -34,30 +34,27 @@ task :clean_start do
   FileUtils.rm_r("temp/") if File.exists?("temp/")
 end
 
+# *************************************************************
+# tasks to exercise CIAT itself
+task :exercise_ciat => [:simple,
+                        :less_simple,
+                        :failures]
+                        
 task :simple do
-  puts "Should copy the source as a compilation"
+  puts "Simple test of CIAT system"
   CIAT::Suite.new(
     :processors => [copy_compiler],
     :files => ['ciat/copy-cat.ciat'],
     :feedback => feedback(1, [:green])).run
 end
     
-task :java_cat do
-  puts "Java compiler, copy executor, TWO tests, special folder"
+task :less_simple do
+  puts "two processors, two tests, special folder"
   CIAT::Suite.new(
     :processors => [java_compiler("Hello"), copy_executor],
     :folder => 'ciat/java-cat',
     :report_filename => 'java-cat.html',
     :feedback => feedback(2, [:green, :green, :green, :green])).run
-end
-
-task :java_parrot do
-  puts "Java compiler, Parrot executor, special folder"
-  CIAT::Suite.new(
-    :processors => [java_compiler("Parrot5"), parrot_executor],
-    :folder => 'ciat/java-parrot',
-    :report_filename => 'java-parrot.html',
-    :feedback => feedback(1, [:green, :green])).run  
 end
 
 task :failures do
@@ -87,11 +84,15 @@ task :failures do
     :feedback => feedback(1, [:green, :red])).run
 end
 
+# *************************************************************
+# task to exercise implemented-in-Java compilers
 task :exercise_java do
   # TODO: java compiler that errors
   # TODO: java compiler that fails
 end
 
+# *************************************************************
+# task to exercise Parrot executor
 task :exercise_parrot do
   puts "Should allow optional 'command line' element with PIR virtual machine"
   CIAT::Suite.new(
@@ -101,4 +102,15 @@ task :exercise_parrot do
     # TODO: parrot execution that fails
     :report_filename => 'optional-elements.html',
     :feedback => feedback(1, [:green])).run
+end
+
+# *************************************************************
+# task to exercise Java compiler and Parrot executor
+task :exercise_java_and_parrot do
+  puts "Java compiler, Parrot executor, special folder"
+  CIAT::Suite.new(
+    :processors => [java_compiler("Parrot5"), parrot_executor],
+    :folder => 'ciat/java-parrot',
+    :report_filename => 'java-parrot.html',
+    :feedback => feedback(1, [:green, :green])).run  
 end

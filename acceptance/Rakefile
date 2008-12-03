@@ -19,7 +19,8 @@ task :default => [:clean_start, :compile_java,
                   :simple,
                   :java_cat, :java_parrot,
                   :failures,
-                  :optional_elements] do
+                  :exercise_java,
+                  :exercise_parrot] do
   check_output_files
 end
 
@@ -86,12 +87,18 @@ task :failures do
     :feedback => feedback(1, [:green, :red])).run
 end
 
-task :optional_elements do
+task :exercise_java do
+  # TODO: java compiler that errors
+  # TODO: java compiler that fails
+end
+
+task :exercise_parrot do
   puts "Should allow optional 'command line' element with PIR virtual machine"
   CIAT::Suite.new(
     :processors => [parrot_executor],
     :folder => 'ciat/optional-elements',
+    # TODO: parrot execution that errors
+    # TODO: parrot execution that fails
     :report_filename => 'optional-elements.html',
     :feedback => feedback(1, [:green])).run
 end
-

@@ -1,4 +1,4 @@
-The contents of the input file will be ignored; the PIR output should work though.
+Java "compiler" ignores source and generates PIR program that prints a 5.
 ==== source
 Ignore these contents!!!!
 ==== compilation

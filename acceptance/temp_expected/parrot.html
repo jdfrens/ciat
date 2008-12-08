@@ -19,101 +19,65 @@ All</a>
 <table border="1" summary="Table of tests" class="results">
 <tr id="header">
 <th>Description</th>
-<th>copier</th>
-<th>Parrot virtual machine</th>
+<th>Parrot Virtual Machine</th>
 </tr>
 <tr class="summary">
 <td><a href="#" onclick=
-"$(this).up('tr').next().toggle(); return false;">Copies source for
-PIR execution with a command line.</a></td>
-<td class="green">passed</td>
+"$(this).up('tr').next().toggle(); return false;">PIR program that
+uses command-line arguments.</a></td>
 <td class="green">passed</td>
 </tr>
 <tr class="details" style="display:none">
-<td colspan="3">
-<h3>Source</h3>
-<table summary="">
-<tr>
-<td class="source">
-<pre>
-.sub main
-    .param pmc argv
-    $S0 = argv[3]
-    print $S0
-    $S0 = argv[2]
-    print $S0
-    $S0 = argv[1]
-    print $S0
-    print "\n"
-.end
-</pre></td>
-</tr>
-</table>
-<h3>Results from copier</h3>
-<table summary="">
-<tr>
-<th>Expected</th>
-<th>Generated</th>
-</tr>
-<tr class="green">
-<td>
-<pre>
-.sub main
-    .param pmc argv
-    $S0 = argv[3]
-    print $S0
-    $S0 = argv[2]
-    print $S0
-    $S0 = argv[1]
-    print $S0
-    print "\n"
-.end
-</pre></td>
-<td>
-<pre>
-.sub main
-    .param pmc argv
-    $S0 = argv[3]
-    print $S0
-    $S0 = argv[2]
-    print $S0
-    $S0 = argv[1]
-    print $S0
-    print "\n"
-.end
-</pre></td>
-</tr>
-</table>
+<td colspan="2">
 <h3>Results from Parrot virtual machine</h3>
-<div class="command_line">
-<table summary="">
+<div class="compilation_generated">
+<table summary="table for compilation">
 <tr>
-<th>Command-line arguments</th>
+<th>compilation</th>
 </tr>
 <tr>
-<td class="source">
-<pre class="source">
+<td>
+<pre class="code">
+.sub main
+    .param pmc argv
+    $S0 = argv[3]
+    print $S0
+    $S0 = argv[2]
+    print $S0
+    $S0 = argv[1]
+    print $S0
+    print "\n"
+.end
+</pre></td>
+</tr>
+</table>
+</div>
+<div class="command_line">
+<table summary="table for command-line arguments">
+<tr>
+<th>command-line arguments</th>
+</tr>
+<tr>
+<td>
+<pre class="code">
 3.14 abc q
 </pre></td>
 </tr>
 </table>
 </div>
-<table summary="">
+<div class="execution_generated">
+<table summary="table for execution">
 <tr>
-<th>Expected</th>
-<th>Generated</th>
+<th>execution</th>
 </tr>
-<tr class="green">
+<tr>
 <td>
-<pre>
-qabc3.14
-</pre></td>
-<td>
-<pre>
+<pre class="code">
 qabc3.14
 </pre></td>
 </tr>
 </table>
+</div>
 </td>
 </tr>
 </table>

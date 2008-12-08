@@ -19,8 +19,8 @@ All</a>
 <table border="1" summary="Table of tests" class="results">
 <tr id="header">
 <th>Description</th>
-<th>copier</th>
-<th>Failing Executor</th>
+<th>Copy Processor</th>
+<th>Do-Nothing Processor With Yellow Light</th>
 </tr>
 <tr class="summary">
 <td><a href="#" onclick=
@@ -31,39 +31,34 @@ copying, executor errors.</a></td>
 </tr>
 <tr class="details" style="display:none">
 <td colspan="3">
-<h3>Source</h3>
-<table summary="">
+<h3>Results from copy processor</h3>
+<div class="source">
+<table summary="table for source code">
 <tr>
-<td class="source">
-<pre>
-compile me!
-</pre></td>
+<th>source code</th>
 </tr>
-</table>
-<h3>Results from copier</h3>
-<table summary="">
 <tr>
-<th>Expected</th>
-<th>Generated</th>
-</tr>
-<tr class="green">
 <td>
-<pre>
-compile me!
-</pre></td>
-<td>
-<pre>
+<pre class="code">
 compile me!
 </pre></td>
 </tr>
 </table>
-<h3>Results from Failing Executor</h3>
-<table summary="">
+</div>
+<div class="compilation">
+<table summary="table for compilation">
 <tr>
-<td class="yellow"><span class="yellow">Failing Executor
-errored.</span></td>
+<th>compilation</th>
+</tr>
+<tr>
+<td>
+<pre class="code">
+compile me!
+</pre></td>
 </tr>
 </table>
+</div>
+<h3>Results from Do-Nothing Processor with yellow light</h3>
 </td>
 </tr>
 </table>

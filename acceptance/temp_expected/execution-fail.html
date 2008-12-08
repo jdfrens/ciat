@@ -19,8 +19,8 @@ All</a>
 <table border="1" summary="Table of tests" class="results">
 <tr id="header">
 <th>Description</th>
-<th>copier</th>
-<th>copier</th>
+<th>Copy Processor</th>
+<th>Do-Nothing Processor With Red Light</th>
 </tr>
 <tr class="summary">
 <td><a href="#" onclick=
@@ -31,49 +31,34 @@ copying, executor fails expectation.</a></td>
 </tr>
 <tr class="details" style="display:none">
 <td colspan="3">
-<h3>Source</h3>
-<table summary="">
+<h3>Results from copy processor</h3>
+<div class="source">
+<table summary="table for source code">
 <tr>
-<td class="source">
-<pre>
+<th>source code</th>
+</tr>
+<tr>
+<td>
+<pre class="code">
 just copy me
 </pre></td>
 </tr>
 </table>
-<h3>Results from copier</h3>
-<table summary="">
+</div>
+<div class="compilation">
+<table summary="table for compilation">
 <tr>
-<th>Expected</th>
-<th>Generated</th>
+<th>compilation</th>
 </tr>
-<tr class="green">
+<tr>
 <td>
-<pre>
-just copy me
-</pre></td>
-<td>
-<pre>
+<pre class="code">
 just copy me
 </pre></td>
 </tr>
 </table>
-<h3>Results from copier</h3>
-<table summary="">
-<tr>
-<th>Expected</th>
-<th>Generated</th>
-</tr>
-<tr class="yellow">
-<td>
-<pre>
-but this won't match!
-</pre></td>
-<td>
-<pre>
-just copy me
-</pre></td>
-</tr>
-</table>
+</div>
+<h3>Results from Do-Nothing Processor with red light</h3>
 </td>
 </tr>
 </table>

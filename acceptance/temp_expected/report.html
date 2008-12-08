@@ -19,61 +19,43 @@ All</a>
 <table border="1" summary="Table of tests" class="results">
 <tr id="header">
 <th>Description</th>
-<th>copier</th>
-<th>copier</th>
+<th>Copy Processor</th>
 </tr>
 <tr class="summary">
 <td><a href="#" onclick=
-"$(this).up('tr').next().toggle(); return false;">Copy compiler and
-executor.</a></td>
-<td class="green">passed</td>
+"$(this).up('tr').next().toggle(); return false;">Copying a simple
+text file.</a></td>
 <td class="green">passed</td>
 </tr>
 <tr class="details" style="display:none">
-<td colspan="3">
-<h3>Source</h3>
-<table summary="">
+<td colspan="2">
+<h3>Results from copy processor</h3>
+<div class="source">
+<table summary="table for source code">
 <tr>
-<td class="source">
-<pre>
+<th>source code</th>
+</tr>
+<tr>
+<td>
+<pre class="code">
 text
 </pre></td>
 </tr>
 </table>
-<h3>Results from copier</h3>
-<table summary="">
+</div>
+<div class="compilation">
+<table summary="table for compilation">
 <tr>
-<th>Expected</th>
-<th>Generated</th>
+<th>compilation</th>
 </tr>
-<tr class="green">
+<tr>
 <td>
-<pre>
-text
-</pre></td>
-<td>
-<pre>
+<pre class="code">
 text
 </pre></td>
 </tr>
 </table>
-<h3>Results from copier</h3>
-<table summary="">
-<tr>
-<th>Expected</th>
-<th>Generated</th>
-</tr>
-<tr class="green">
-<td>
-<pre>
-text
-</pre></td>
-<td>
-<pre>
-text
-</pre></td>
-</tr>
-</table>
+</div>
 </td>
 </tr>
 </table>

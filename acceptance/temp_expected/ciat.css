@@ -12,7 +12,7 @@
     background-color: #CCCCCC;
 }
 
-.source {
+.code {
     background-color: #FFC929;
 }
 
@@ -30,6 +30,12 @@
   padding: 1em;
 }
 
+.details .diff td {
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
 .details pre {
+  padding: 0.5em;
   margin: 0;
 }

@@ -1,3 +1,5 @@
+require "yaml"
+
 class CIAT::TestElement
   attr_reader :name
   
@@ -8,12 +10,11 @@ class CIAT::TestElement
   end
   
   def template
-    File.join("elements", name.to_s)
+    File.join("elements", descriptions[name.to_s]["template"])
   end
   
   def describe
-    # TODO: a better definition!
-    "Element named #{name}"
+    descriptions[name.to_s]["description"]
   end
   
   def content
@@ -25,5 +26,11 @@ class CIAT::TestElement
       CIAT::Cargo.write_file(@filename, @content)
     end
     @filename
+  end
+  
+  private
+  
+  def descriptions
+    @@descriptions ||= YAML.load_file(File.join(File.dirname(__FILE__), "..", "data", "elements.yml"))
   end
 end

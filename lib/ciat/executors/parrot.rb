@@ -16,7 +16,7 @@ module CIAT
       include CIAT::Differs::HtmlDiffer
 
       # Traffic light
-      attr_reader :light
+      attr :light, true
 
       # Creates a Parrot executor.
       #

@@ -1,0 +1,7 @@
+<div class="<%= element.name %>">
+	<table class="diff" summary="table for <%= element.describe %>">
+		<tr><th colspan="2"><%= element.describe %></th></tr>
+		<tr><th>Expected</th> <th>Generated</th></tr>
+		<%= replace_tabs(element.content) %>
+	</table>
+</div>

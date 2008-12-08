@@ -18,7 +18,7 @@ module CIAT
     class Java
       include CIAT::Differs::HtmlDiffer
 
-      attr_reader :light
+      attr :light, true
       
       # Constructs a "Java compiler" object.  +classpath+ is the complete
       # classpath to execute the compiler.  +compiler_class+ is the fully

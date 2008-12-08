@@ -91,10 +91,8 @@ task :exercise_java do
   CIAT::Suite.new(
     :processors => [java_compiler("Hello")],
     :folder => 'ciat/java',
-    # TODO: java compiler that errors
-    # TODO: java compiler that fails
     :report_filename => 'java.html',
-    :feedback => feedback(1, [:green])).run
+    :feedback => feedback(3, [:green, :yellow, :red])).run
 end
 
 # *************************************************************

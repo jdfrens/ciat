@@ -1,0 +1,5 @@
+In-Java compiler will error on this input.
+==== source
+error
+==== compilation
+Hello, error.

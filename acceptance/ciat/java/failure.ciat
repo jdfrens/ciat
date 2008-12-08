@@ -1,0 +1,6 @@
+Compilation does not match in-Java compiler's output.
+==== source
+failure
+==== compilation
+Hello, failure.
+And goodbye!

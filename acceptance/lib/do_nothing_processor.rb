@@ -1,5 +1,5 @@
 class DoNothingProcessor
-  attr_reader :light
+  attr :light, true
   
   def initialize(setting)
     @light = CIAT::TrafficLight.new(setting)

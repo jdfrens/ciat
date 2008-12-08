@@ -1,4 +1,10 @@
 class DoNotProcessExecutor
+  attr :light, true
+
+  def initialize
+    @light = CIAT::TrafficLight.new
+  end
+  
   def describe
     "Should not be executed!"
   end
@@ -7,10 +13,6 @@ class DoNotProcessExecutor
     raise("**** should not run this executor!!!")
   end
 
-  def light
-    CIAT::TrafficLight.new
-  end
-  
   def elements(crate)
     []
   end

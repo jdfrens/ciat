@@ -36,6 +36,12 @@ module CIAT
         @descriptions[:self] = options[:description] || "compiler (implemented in Java)"
         @light = options[:light] || TrafficLight.new
       end
+
+      def for_test
+        copy = clone
+        copy.light = light.clone
+        copy
+      end
       
       def describe(what=:self)
         @descriptions[what]

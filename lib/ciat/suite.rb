@@ -86,11 +86,7 @@ class CIAT::Suite
   end
   
   def test_processors #:nodoc:
-    @processors.map do |p|
-      c = p.clone
-      c.light = c.light.clone
-      c
-    end
+    @processors.map { |processor| processor.for_test }
   end
 
   def generate_report #:nodoc:

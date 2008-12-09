@@ -4,6 +4,10 @@ class DoNothingProcessor
   def initialize(setting)
     @light = CIAT::TrafficLight.new(setting)
   end
+
+  def for_test
+    self
+  end
   
   def describe
     "Do-Nothing Processor with #{light.setting} light"

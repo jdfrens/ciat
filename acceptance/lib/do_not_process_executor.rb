@@ -5,6 +5,10 @@ class DoNotProcessExecutor
     @light = CIAT::TrafficLight.new
   end
   
+  def for_test
+    self
+  end
+  
   def describe
     "Should not be executed!"
   end

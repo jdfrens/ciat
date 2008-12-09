@@ -11,6 +11,12 @@ module CIAT
         @light = CIAT::TrafficLight.new
       end
       
+      def for_test
+        copy = clone
+        copy.light = light.clone
+        copy
+      end
+      
       def describe(what=:self)
         case what
         when :self

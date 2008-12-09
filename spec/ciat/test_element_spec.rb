@@ -37,8 +37,13 @@ describe CIAT::TestElement do
   end
   
   it "should have a template file based on the name" do
-    @name.should_receive(:to_s).and_return("name")
+    descriptions, this_description = mock("descriptions"), mock("this description")
     
-    @element.template.should == File.join("elements", "name")
+    @element.should_receive(:descriptions).and_return(descriptions)
+    @name.should_receive(:to_s).and_return("name")
+    descriptions.should_receive(:[]).with("name").and_return(this_description)
+    this_description.should_receive(:[]).with("template").and_return("filename")
+    
+    @element.template.should == File.join("elements", "filename")
   end
 end

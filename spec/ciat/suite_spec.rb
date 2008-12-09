@@ -59,15 +59,19 @@ describe CIAT::Suite do
     crate, test, result = mock("crate"), mock("test"), mock("result")
     suite = CIAT::Suite.new(:processors => processors, :cargo => @cargo, :feedback => @feedback)
 
-    processors[0].should_receive(:clone).and_return(test_processors[0])
-    processors[1].should_receive(:clone).and_return(test_processors[1])
-    processors[2].should_receive(:clone).and_return(test_processors[2])
+    expect_processor_clone(processors[0], test_processors[0])
+    expect_processor_clone(processors[1], test_processors[1])
+    expect_processor_clone(processors[2], test_processors[2])
     CIAT::Test.should_receive(:new).
       with(crate, :processors => test_processors, :feedback => @feedback).
       and_return(test)
     test.should_receive(:run).and_return(result)
     
     suite.run_test(crate).should == result
+  end
+  
+  def expect_processor_clone(original, clone)
+    original.should_receive(:for_test).and_return(clone)
   end
   
   it "should generate a report" do

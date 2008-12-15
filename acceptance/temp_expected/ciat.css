@@ -13,21 +13,16 @@
 }
 
 .code {
-    background-color: #FFC929;
+    background-color: #AAAAFF;
+}
+
+.compilation_error .code {
+  background-color: #FFFFAA;
 }
 
 
 .results {
   clear: both;
-  width: 100%;
-}
-
-.details table {
-  padding-bottom: 1em;
-}
-
-.details td {
-  padding: 1em;
 }
 
 .details .diff td {
@@ -37,5 +32,9 @@
 
 .details pre {
   padding: 0.5em;
+  margin: 0;
+}
+
+.details h4, .details h3 {
   margin: 0;
 }

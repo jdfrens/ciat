@@ -32,7 +32,7 @@ describe "detail row of test report" do
     expect_red_or_green(processor, "The Processor", "fake elements")
 
     doc = process_erb
-    doc.should have_description("Results from The Processor")
+    doc.should have_description("h3", "Results from The Processor")
     doc.should have_fake(:elements, "fake elements")
   end
   
@@ -45,11 +45,11 @@ describe "detail row of test report" do
     expect_red_or_green(processors[2], "Processor 2", "fake elements 2")
 
     doc = process_erb
-    doc.should have_description("Results from Processor 0")
+    doc.should have_description("h3", "Results from Processor 0")
     doc.should have_fake(:elements, "fake elements 0")
-    doc.should have_description("Results from Processor 1")
+    doc.should have_description("h3", "Results from Processor 1")
     doc.should have_fake(:elements, "fake elements 1")
-    doc.should have_description("Results from Processor 2")
+    doc.should have_description("h3", "Results from Processor 2")
     doc.should have_fake(:elements, "fake elements 2")
   end
   

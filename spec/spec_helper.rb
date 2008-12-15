@@ -106,19 +106,15 @@ module CustomDetailRowMatchers
     HaveNone.new(xpath)
   end
   
-  def have_description(expected)
-    have_inner_html("//h3", expected)
+  def have_description(header, expected)
+    have_inner_html("//#{header}", expected)
   end
   
   def have_fake(type, expected)
     have_inner_html("//div[@class=\"fake\"]/div[@id=\"#{type}\"]", expected)
   end
     
-  def have_checked_result(expected)
-    have_inner_html("table th:first", "Expected")
-  end
-  
-  def have_diff_table(n, expected)
-    have_inner_html("table:nth(#{n})", /Expected(.|\s)*Generated(.|\s)*#{expected}/)
+  def have_diff_table(expected)
+    have_inner_html("table", /Expected(.|\s)*Generated(.|\s)*#{expected}/)
   end
 end

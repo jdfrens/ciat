@@ -1,6 +1,0 @@
-<% checked_files.each do |checked_file| %>
-  <table>
-    <tr><th>Expected</th><th>Generated</th></tr>
-    <%= replace_tabs(File.read(checked_file.diff)) %>
-  </table>
-<% end %>

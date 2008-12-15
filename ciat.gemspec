@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "ciat"
-  s.version  = "0.2.0"
+  s.version  = "0.2.9"
   s.summary  = "Acceptance tester for compilers and interpreters"
   s.email    = "jdfrens@gmail.com"
   s.homepage = "http://github.com/jdfrens/ciat"
@@ -27,13 +27,13 @@ Gem::Specification.new do |s|
       "lib/ciat/feedback/composite.rb",
       "lib/data/ciat.css",
       "lib/data/prototype.js",
+      "lib/data/elements.yml",
       "lib/templates/report.html.erb"            ,
       "lib/templates/summary_row.html.erb"            ,
       "lib/templates/detail_row.html.erb"            ,
-      "lib/templates/detail_row/checked_files.html.erb",
-      "lib/templates/detail_row/no_diff.html.erb",
-      "lib/templates/detail_row/optional_elements.html.erb",
-      "lib/templates/detail_row/source.html.erb",
+      "lib/templates/detail_row/elements.html.erb",
+      "lib/templates/detail_row/diff.html.erb",
+      "lib/templates/detail_row/plain.html.erb",
       ]
   s.extra_rdoc_files = ["README.txt", "History.txt"]
   s.rdoc_options << '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<

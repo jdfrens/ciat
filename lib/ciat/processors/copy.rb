@@ -17,17 +17,8 @@ module CIAT
         copy
       end
       
-      def describe(what=:self)
-        case what
-        when :self
-          "copy processor"
-        when @original
-          "original element"
-        when @copy
-          "copied element"
-        else
-          raise "cannot describe #{what.inspect} #{@original.inspect}"
-        end
+      def describe
+        "copy processor"
       end
       
       def process(crate)

@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
       "lib/ciat/suite.rb"                   ,
       "lib/ciat/test.rb"                    ,
       "lib/ciat/erb_helpers.rb",
+      "lib/ciat/test_element.rb",
       "lib/ciat/traffic_light.rb"           ,
       "lib/ciat/processors/copy.rb"          ,
-      "lib/ciat/processors/magister.rb"          ,
       "lib/ciat/compilers/java.rb"          ,
       "lib/ciat/executors/parrot.rb"        ,
       "lib/ciat/differs/html_differ.rb",
@@ -32,8 +32,8 @@ Gem::Specification.new do |s|
       "lib/templates/summary_row.html.erb"            ,
       "lib/templates/detail_row.html.erb"            ,
       "lib/templates/detail_row/elements.html.erb",
-      "lib/templates/detail_row/diff.html.erb",
-      "lib/templates/detail_row/plain.html.erb",
+      "lib/templates/elements/diff.html.erb",
+      "lib/templates/elements/plain.html.erb",
       ]
   s.extra_rdoc_files = ["README.txt", "History.txt"]
   s.rdoc_options << '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<

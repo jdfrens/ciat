@@ -19,7 +19,7 @@ and that result is <em>interpreted by Parrot</em>.
 Input files should be named with a <code>.ciat</code> extension and saved in a
 <code>ciat</code> folder.
 
-A sample input file (<code>simpleinteger5.ciat</code>) for this scenario
+A sample input file (<code>simpleinteger5.ciat</code>) for the scenario
 described above might look like this:
 
   Compiles a simple integer.
@@ -42,7 +42,7 @@ In this example, we're using a "Java compiler" (a compiler <em>written in</em>
 Java) and a "Parrot executor". CIAT's "Java compiler" runs your compiler over
 the <b>source</b>, and that output is compared to the <b>compilation</b>
 element. Then the "Parrot executor" is executed with the <em>generated</em>
-compilation, and that output is compare to the <b>execution</b> element.
+compilation, and that output is compared to the <b>execution</b> element.
 
 If any processor fails, either due to an error while running or a failure
 during checking the output, the remaining processors are not executed.

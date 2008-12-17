@@ -2,9 +2,8 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::Crate, "generating interesting names" do
   before(:each) do
-    # @name = mock("name")
-    @cargo = mock("cargo")
-    @crate = CIAT::Crate.new("ciat/filename.ciat", @cargo)
+    @output_folder = mock("output folder")
+    @crate = CIAT::Crate.new("ciat/filename.ciat", @output_folder)
     @expected_filename = mock("expected filename")
   end
     
@@ -16,10 +15,6 @@ describe CIAT::Crate, "generating interesting names" do
     @crate.stub.should == "ciat/filename"
   end  
   
-  it "should have a parent cargo" do
-    @crate.cargo.should == @cargo
-  end
-    
   describe "processing test file" do
     it "should split and write" do
       raw_elements = { :e0 => mock("raw element 0"), :e1 => mock("raw element 1"), :e2 => mock("raw element 2")}
@@ -90,8 +85,8 @@ end
 
 describe CIAT::Crate, "generating actual file names" do
   before(:each) do
-    @cargo = mock("cargo", :output_folder => "outie")
-    @crate = CIAT::Crate.new("ciat/phile.ciat", @cargo)
+    @output_folder = "outie"
+    @crate = CIAT::Crate.new("ciat/phile.ciat", @output_folder)
   end
   
   it "should work with no modifiers" do
@@ -100,24 +95,6 @@ describe CIAT::Crate, "generating actual file names" do
   
   it "should work with multiple modifiers" do
     @crate.filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
-  end
-end
-
-describe CIAT::Crate, "file manipulation" do
-  it "should write a file with cargo" do
-    cargo = mock("cargo")
-    crate = CIAT::Crate.new("NOT USED", cargo)
-    cargo.should_receive(:write_file).with("phile.txt", "contents")
-    
-    crate.write_file("phile.txt", "contents")
-  end
-
-  it "should read a file with cargo" do
-    cargo, contents = mock("cargo"), mock("contents")
-    crate = CIAT::Crate.new("NOT USED", cargo)
-    cargo.should_receive(:read_file).with("phile.txt").and_return(contents)
-    
-    crate.read_file("phile.txt").should == contents
   end
 end
 

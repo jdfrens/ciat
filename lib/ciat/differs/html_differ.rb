@@ -1,5 +1,8 @@
 module CIAT
   module Differs
+    # Module for implementing the diff between two files.
+    # The output is in HTML table rows with the expected output on the left and
+    # the generated on the right.
     module HtmlDiffer
       def html_diff(expected_file, generated_file, diff_file)
         system("diff #{diff_options} '#{expected_file}' '#{generated_file}' > '#{diff_file}'")

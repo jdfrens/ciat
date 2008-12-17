@@ -79,7 +79,7 @@ describe CIAT::Cargo, "initializing" do
   def expect_filenames_turned_into_crates(options)
     @filenames.zip(@crates) do |filename, crate|
       CIAT::Crate.should_receive(:new).
-        with(filename, duck_type(:write_file, :output_folder)).
+        with(filename, options[:output_folder]).
         and_return(crate)
     end
   end

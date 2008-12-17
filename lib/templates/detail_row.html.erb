@@ -2,6 +2,7 @@
   <td colspan="<%= result.processors.size + 1 %>">
 	
 	<% result.processors.each do |processor| %>
+		<!-- TODO: skip unset processors? special output? -->
 	  <h3>Results from <%= processor.describe %></h3>
 		<%= render "detail_row/elements", :processor => processor,
 					:crate => result.crate, 

@@ -30,16 +30,19 @@ module CIAT
         @light = CIAT::TrafficLight.new
       end
       
+      # Produces a clone for an individual test.
       def for_test
         copy = clone
         copy.light = light.clone
         copy
       end
       
+      # Provides a description of the processor.
       def describe
         @description
       end
 
+      # Executes the program, and diffs the output.
       def process(crate)
         # TODO: verify required elements
         # TODO: handle optional element
@@ -55,21 +58,24 @@ module CIAT
         crate
       end
       
+      # Runs the Parrot VM.
       def execute(crate)        
         system "parrot '#{crate.element(:compilation, :generated).as_file}' #{args(crate)} &> '#{crate.element(:execution, :generated).as_file}'"
       end
       
+      # Compares the expected and generated executions.
       def diff(crate)
         html_diff(crate.element(:execution).as_file, crate.element(:execution, :generated).as_file, crate.element(:execution, :diff).as_file)
       end
       
+      # The interesting elements from this processor.
       def elements(crate)
         [:compilation_generated, :command_line, :execution_generated].
           map { |name| crate.element?(name) ? crate.element(name) : nil }.
           compact
       end
 
-      def args(crate)
+      def args(crate) #:nodoc:
         crate.element?(:command_line) ? crate.element(:command_line).content.strip : ''
       end
     end

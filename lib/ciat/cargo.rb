@@ -15,7 +15,7 @@ class CIAT::Cargo #:nodoc:all
       pattern = options[:pattern] || "*.ciat"
       filenames = Dir[File.join(folder, "**", pattern)]
     end
-    @crates = filenames.map { |filename| CIAT::Crate.new(filename, self) }
+    @crates = filenames.map { |filename| CIAT::Crate.new(filename, @output_folder) }
     @report_filename = File.join(@output_folder, options[:report_filename] || REPORT_FILENAME)
   end
   

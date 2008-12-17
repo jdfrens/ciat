@@ -1,15 +1,15 @@
 class CIAT::Crate #:nodoc:all
   attr_reader :test_file
   attr_reader :stub
-  attr_reader :cargo
     
-  def initialize(test_file, cargo, elements={})
+  def initialize(test_file, output_folder, elements={})
     @test_file = test_file
     @stub = test_file.gsub(File.extname(test_file), "")
-    @cargo = cargo
+    @output_folder = output_folder
     @elements = elements
   end
   
+  # TODO: move to TestElement as class method
   def process_test_file #:nodoc:
     @elements = Hash.new { |hash, name| hash[name] = CIAT::TestElement.new(name, filename(name), nil) }
     split_test_file.each do |name, contents|
@@ -18,6 +18,7 @@ class CIAT::Crate #:nodoc:all
     @elements
   end
   
+  # TODO: move to TestElement as class method
   def split_test_file #:nodoc:
     tag = :description
     content = ""
@@ -35,31 +36,23 @@ class CIAT::Crate #:nodoc:all
     raw_elements
   end
   
+  # TODO: Move to Test
   def element(*names)
     @elements[names.compact.join("_").to_sym]
   end
   
+  # TODO: Move to Test
   def element?(*names)
     @elements.has_key?(names.compact.join("_").to_sym)
   end
   
+  # TODO: Move to Test
   def elements(*names)
     names.map { |name| element(name) }
   end
   
-  def test
-    @test_file
-  end
-
+  # TODO: move to TestElement, class or instance?
   def filename(*modifiers)
-    File.join(cargo.output_folder, [stub, *modifiers].compact.join("_"))
-  end
-  
-  def write_file(filename, contents)
-    @cargo.write_file(filename, contents)
-  end
-
-  def read_file(filename)
-    @cargo.read_file(filename)
+    File.join(@output_folder, [stub, *modifiers].compact.join("_"))
   end
 end

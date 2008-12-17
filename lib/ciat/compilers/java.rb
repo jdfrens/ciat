@@ -18,6 +18,7 @@ module CIAT
     class Java
       include CIAT::Differs::HtmlDiffer
 
+      # The traffic light to indicate the success or failure of the processor.
       attr :light, true
       
       # Constructs a "Java compiler" object.  +classpath+ is the complete
@@ -33,20 +34,23 @@ module CIAT
         @classpath = classpath
         @compiler_class = compiler_class
         @descriptions = {}
-        @descriptions[:self] = options[:description] || "compiler (implemented in Java)"
+        @description = options[:description] || "compiler (implemented in Java)"
         @light = options[:light] || TrafficLight.new
       end
 
+      # Produces a clone for an individual test.
       def for_test
         copy = clone
         copy.light = light.clone
         copy
       end
-      
-      def describe(what=:self)
-        @descriptions[what]
+
+      # Return a description of the processor.
+      def describe
+        @description
       end
       
+      # Compiles the code and diffs the output.
       def process(crate)
         # TODO: verify required elements
         if compile(crate)
@@ -60,15 +64,19 @@ module CIAT
         end
         crate
       end
-      
+
+      # Does the actual compilation.
       def compile(crate)        
         system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.element(:source).as_file}' '#{crate.element(:compilation, :generated).as_file}' 2> '#{crate.element(:compilation, :error).as_file}'"
       end
       
+      # Computes the difference between the generated and expected output.
       def diff(crate)
         html_diff(crate.element(:compilation).as_file, crate.element(:compilation, :generated).as_file, crate.element(:compilation, :diff).as_file)
       end
       
+      # The interesting elements of a Java processor based on the traffic light's
+      # setting.
       def elements(crate)
         case light.setting
         when :green

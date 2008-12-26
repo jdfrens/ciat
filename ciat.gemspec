@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "ciat"
-  s.version  = "0.2.9"
+  s.version  = "0.3.0"
   s.summary  = "Acceptance tester for compilers and interpreters"
   s.email    = "jdfrens@gmail.com"
   s.homepage = "http://github.com/jdfrens/ciat"

@@ -8,7 +8,7 @@ Gem::Specification.new do |s|
   s.has_rdoc = true
   s.authors  = ["Jeremy D. Frens", "Mark Van Holstyn"]
   s.files    = 
-    ["History.txt", "README.txt", "Rakefile", "ciat.gemspec", 
+    ["History.txt", "README.rdoc", "Rakefile", "ciat.gemspec", 
       "lib/ciat/version.rb"                 ,
       "lib/ciat.rb"                         ,
       "lib/ciat/cargo.rb"                   ,
@@ -35,7 +35,7 @@ Gem::Specification.new do |s|
       "lib/templates/elements/diff.html.erb",
       "lib/templates/elements/plain.html.erb",
       ]
-  s.extra_rdoc_files = ["README.txt", "History.txt"]
+  s.extra_rdoc_files = ["README.rdoc", "History.txt"]
   s.rdoc_options << '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<
                     '--main' << 'README.txt' <<
                     '--line-numbers'

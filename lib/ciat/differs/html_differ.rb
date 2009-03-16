@@ -10,10 +10,10 @@ module CIAT
 
       # TODO: it would be nice to have line numbers in the output
       def diff_options
-        "--old-group-format='<tr><td class=\"red\"><pre>%<</pre></td><td></td></tr>' " + 
-        "--new-group-format='<tr><td></td><td class=\"red\"><pre>%></pre><td></tr>' " +
-        "--changed-group-format='<tr class=\"yellow\"><td><pre>%<</pre></td><td><pre>%></pre></td></tr>' " +
-        "--unchanged-group-format='<tr class=\"green\"><td><pre>%=</pre></td><td><pre>%=</pre></td></tr>'"
+        "--old-group-format='<tr><td>%df</td><td class=\"red\"><pre>%<</pre></td><td></td><td></td></tr>' " + 
+        "--new-group-format='<tr><td></td><td></td><td>%dF</td><td class=\"red\"><pre>%></pre><td></tr>' " +
+        "--changed-group-format='<tr class=\"yellow\"><td>%df</td><td><pre>%<</pre></td><td>%dF</td><td><pre>%></pre></td></tr>' " +
+        "--unchanged-group-format='<tr class=\"green\"><td>%df</td><td><pre>%=</pre></td><td>%dF</td><td><pre>%=</pre></td></tr>'"
       end
     end
   end

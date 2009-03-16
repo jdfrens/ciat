@@ -52,18 +52,40 @@ describe CIAT::Executors::Java do
   end
   
   describe "elements of Java interpreter" do
-    it "should produce compilation and execution" do
-      source, execution = mock("source"), mock("execution")
+    it "should produce source and execution normally" do
+      elements = mock("elements")
       
-      @crate.should_receive(:element?).
-        with(anything()).
-        any_number_of_times.and_return(true)
-      @crate.should_receive(:element).
-        with(:source).and_return(source)
-      @crate.should_receive(:element).
-        with(:execution_generated).and_return(execution)
+      @executor.should_receive(:light).
+        and_return(mock("light", :setting => :green))
+      @crate.should_receive(:elements).
+        with(:source, :execution_generated).
+        and_return(elements)
       
-      @executor.elements(@crate).should == [source, execution]
+      @executor.elements(@crate).should equal(elements)
+    end
+
+    it "should produce source and execution when errored" do
+      elements = mock("elements")
+      
+      @executor.should_receive(:light).
+        and_return(mock("light", :setting => :yellow))
+      @crate.should_receive(:elements).
+        with(:source, :execution_generated).
+        and_return(elements)
+      
+      @executor.elements(@crate).should equal(elements)
+    end
+
+    it "should produce source and diff on failure" do
+      elements = mock("elements")
+      
+      @executor.should_receive(:light).
+        and_return(mock("light", :setting => :red))
+      @crate.should_receive(:elements).
+        with(:source, :execution_diff).
+        and_return(elements)
+      
+      @executor.elements(@crate).should equal(elements)
     end
   end
 end

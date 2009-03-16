@@ -13,6 +13,9 @@ execution:
 execution_generated:
   description: execution
   template: plain
+execution_diff:
+  description: execution diff
+  template: diff
 compilation_error:
   description: error from compiler
   template: plain

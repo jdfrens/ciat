@@ -16,7 +16,7 @@ module CIAT
       def initialize(classpath, interpreter_class, options={})
         @classpath = classpath
         @interpreter_class = interpreter_class
-        @description = options[:description] || "Java interpreter"
+        @description = options[:description] || "in-Java interpreter"
         @light = CIAT::TrafficLight.new
       end
       
@@ -63,9 +63,16 @@ module CIAT
       
       # The interesting elements from this processor.
       def elements(crate)
-        [:source, :execution_generated].
-          map { |name| crate.element?(name) ? crate.element(name) : nil }.
-          compact
+        case light.setting
+        when :green
+          crate.elements(:source, :execution_generated)
+        when :yellow
+          crate.elements(:source, :execution_generated)
+        when :red
+          crate.elements(:source, :execution_diff)
+        else
+          raise "unexpected setting #{light.setting}"
+        end
       end
 
     end

@@ -24,7 +24,7 @@ Rake::RDocTask.new(:doc) do |t|
   t.title    = "CIAT"
   t.options << '--line-numbers' << '--inline-source'
   t.options << '--charset' << 'utf-8'
-  t.rdoc_files.include('README.txt')
+  t.rdoc_files.include('README.rdoc')
   t.rdoc_files.include('History.txt')
   t.rdoc_files.include('lib/**/*.rb')
 end

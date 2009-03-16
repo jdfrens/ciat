@@ -9,6 +9,10 @@ def java_compiler(type)
   CIAT::Compilers::Java.new('./java', type + 'Compiler')
 end
 
+def java_interpreter(type)
+  CIAT::Executors::Java.new('./java', type + 'Interpreter')
+end
+
 def copy_executor
   CIAT::Processors::Copy.new(:compilation_generated, :execution)
 end

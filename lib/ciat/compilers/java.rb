@@ -72,7 +72,10 @@ module CIAT
       
       # Computes the difference between the generated and expected output.
       def diff(crate)
-        html_diff(crate.element(:compilation).as_file, crate.element(:compilation, :generated).as_file, crate.element(:compilation, :diff).as_file)
+        html_diff(
+          crate.element(:compilation).as_file,
+          crate.element(:compilation, :generated).as_file,
+          crate.element(:compilation, :diff).as_file)
       end
       
       # The interesting elements of a Java processor based on the traffic light's

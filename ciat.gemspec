@@ -12,7 +12,6 @@ Gem::Specification.new do |s|
       "lib/ciat/version.rb"                 ,
       "lib/ciat.rb"                         ,
       "lib/ciat/cargo.rb"                   ,
-      "lib/ciat/checked_file.rb",
       "lib/ciat/crate.rb"                   ,
       "lib/ciat/suite.rb"                   ,
       "lib/ciat/test.rb"                    ,

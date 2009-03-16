@@ -1,32 +1,22 @@
 module CIAT
   module Executors
-    # Executor class for Parrot programs.  This will execute PIR or PASM code
-    # using the +parrot+ executable.
+    # Executor class for Java interpreters.
     #
-    # The Parrot executor expects <code>compilation</code> and
-    # <code>execution</code> elements.  The <code>compilation</code> element
-    # is used as input (and it actually pulls in the generated version, but it
-    # should be the same as the expected).  <code>execution</code> is
-    # compared.
-    #
-    # The Parrot executor allows for a <code>command line</code> element.  This
-    # specifies the command-line arguments when the <code>compilation</code> is executed.
-    # If none is provided, no command-line arguments are used.
-    class Parrot
+    class Java
       include CIAT::Differs::HtmlDiffer
 
       # Traffic light
       attr :light, true
 
-      # Creates a Parrot executor.
+      # Creates a Java executor.
       #
       # Possible options:
       # * <code>:description</code> is the description used in the HTML report 
       #   for this processor (default: <code>"Parrot virtual machine"</code>).
-      # * <code>:command_line</code> is the description used in the HTML report
-      #   for the command-line arguments (if any) (default: "Command-line arguments").
-      def initialize(options={})
-        @description = options[:description] || "Parrot virtual machine"
+      def initialize(classpath, interpreter_class, options={})
+        @classpath = classpath
+        @interpreter_class = interpreter_class
+        @description = options[:description] || "Java interpreter"
         @light = CIAT::TrafficLight.new
       end
       
@@ -58,9 +48,9 @@ module CIAT
         crate
       end
       
-      # Runs the Parrot VM.
+      # Runs the Java interpreter.
       def execute(crate)        
-        system "parrot '#{crate.element(:compilation, :generated).as_file}' #{args(crate)} &> '#{crate.element(:execution, :generated).as_file}'"
+        system "java -cp '#{@classpath}' #{@interpreter_class} '#{crate.element(:source).as_file}' &> '#{crate.element(:execution, :generated).as_file}'"
       end
       
       # Compares the expected and generated executions.
@@ -73,14 +63,11 @@ module CIAT
       
       # The interesting elements from this processor.
       def elements(crate)
-        [:compilation_generated, :command_line, :execution_generated].
+        [:source, :execution_generated].
           map { |name| crate.element?(name) ? crate.element(name) : nil }.
           compact
       end
 
-      def args(crate) #:nodoc:
-        crate.element?(:command_line) ? crate.element(:command_line).content.strip : ''
-      end
     end
   end
 end

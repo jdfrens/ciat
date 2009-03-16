@@ -6,6 +6,7 @@ require 'fileutils'
 require 'ciat'
 require 'ciat/compilers/java'
 require 'ciat/processors/copy'
+require 'ciat/executors/java'
 require 'ciat/executors/parrot'
 require 'ciat/feedback/composite'
 
@@ -19,6 +20,7 @@ desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => [:clean_start, :compile_java,
                   :exercise_ciat,
                   :exercise_java,
+                  :exercise_java_interpreter,
                   :exercise_parrot,
                   :exercise_java_and_parrot] do
   check_output_files
@@ -92,6 +94,17 @@ task :exercise_java do
     :processors => [java_compiler("Hello")],
     :folder => 'ciat/java',
     :report_filename => 'java.html',
+    :feedback => feedback(3, [:green, :yellow, :red])).run
+end
+
+# *************************************************************
+# task to exercise implemented-in-Java interpreter
+task :exercise_java_interpreter do
+  puts "Exercise the Java interpreter"
+  CIAT::Suite.new(
+    :processors => [java_interpreter("Hello")],
+    :folder => 'ciat/java-interpreter',
+    :report_filename => 'java-interpreter.html',
     :feedback => feedback(3, [:green, :yellow, :red])).run
 end
 

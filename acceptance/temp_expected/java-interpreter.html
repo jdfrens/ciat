@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 1 September 2005), see www.w3.org" />
+<meta http-equiv="Content-type" content=
+"text/html; charset=us-ascii" />
+<title>CIAT Report</title>
+<link rel="stylesheet" href="ciat.css" type="text/css" />
+<script src="prototype.js" type="text/javascript">
+</script>
+</head>
+<body>
+<h1>CIAT Report</h1>
+<a href="#" onclick=
+"$$('.results .details').invoke('toggle'); return false;">Expand/Collapse
+All</a> <!-- TODO: summary X tests, Y failures, Z errors -->
+ 
+<!-- TODO: organize table (or tables) based on directory structure -->
+<table border="1" summary="Table of tests" class="results">
+<tr id="header">
+<th>Description</th>
+<th>Java Interpreter</th>
+</tr>
+<tr class="summary">
+<td><a href="#" onclick=
+"$(this).up('tr').next().toggle(); return false;">Simple test to
+see the in-Java interpreter succeed.</a></td>
+<td class="green">passed</td>
+</tr>
+<tr class="details" style="display:none">
+<td colspan="2">
+<!-- TODO: skip unset processors? special output? -->
+<h3>Results from Java interpreter</h3>
+<div class="source">
+<h4>source code</h4>
+<table summary="table for source code">
+<tr>
+<td>
+<pre class="code">
+success
+</pre></td>
+</tr>
+</table>
+</div>
+<div class="execution_generated">
+<h4>execution</h4>
+<table summary="table for execution">
+<tr>
+<td>
+<pre class="code">
+Hello, success.
+</pre></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+<tr class="summary">
+<td><a href="#" onclick=
+"$(this).up('tr').next().toggle(); return false;">In-Java
+interpreter will error on this input.</a></td>
+<td class="yellow">ERROR</td>
+</tr>
+<tr class="details" style="display:none">
+<td colspan="2">
+<!-- TODO: skip unset processors? special output? -->
+<h3>Results from Java interpreter</h3>
+<div class="source">
+<h4>source code</h4>
+<table summary="table for source code">
+<tr>
+<td>
+<pre class="code">
+error
+</pre></td>
+</tr>
+</table>
+</div>
+<div class="execution_generated">
+<h4>execution</h4>
+<table summary="table for execution">
+<tr>
+<td>
+<pre class="code">
+The HelloInterpreter will not greet 'error' under any circumstances.
+</pre></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+<tr class="summary">
+<td><a href="#" onclick=
+"$(this).up('tr').next().toggle(); return false;">Interpretation
+does not match in-Java interpreter's output.</a></td>
+<td class="red">FAILURE</td>
+</tr>
+<tr class="details" style="display:none">
+<td colspan="2">
+<!-- TODO: skip unset processors? special output? -->
+<h3>Results from Java interpreter</h3>
+<div class="source">
+<h4>source code</h4>
+<table summary="table for source code">
+<tr>
+<td>
+<pre class="code">
+failure
+</pre></td>
+</tr>
+</table>
+</div>
+<div class="execution_generated">
+<h4>execution</h4>
+<table summary="table for execution">
+<tr>
+<td>
+<pre class="code">
+Hello, failure.
+</pre></td>
+</tr>
+</table>
+</div>
+</td>
+</tr>
+</table>
+</body>
+</html>

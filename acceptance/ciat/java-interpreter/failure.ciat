@@ -1,0 +1,6 @@
+Interpretation does not match in-Java interpreter's output.
+==== source
+failure
+==== execution
+Hello, failure.
+And goodbye!

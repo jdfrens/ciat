@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
       "lib/ciat/traffic_light.rb"           ,
       "lib/ciat/processors/copy.rb"          ,
       "lib/ciat/compilers/java.rb"          ,
+      "lib/ciat/executors/java.rb"        ,
       "lib/ciat/executors/parrot.rb"        ,
       "lib/ciat/differs/html_differ.rb",
       "lib/ciat/feedback/standard_output.rb",

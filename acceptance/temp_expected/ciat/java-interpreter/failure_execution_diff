@@ -1,4 +1,4 @@
-<tr class="green"><td><pre>Hello, failure.
-</pre></td><td><pre>Hello, failure.
-</pre></td></tr><tr><td class="red"><pre>And goodbye!
-</pre></td><td></td></tr>
+<tr class="green"><td>1</td><td><pre>Hello, failure.
+</pre></td><td>1</td><td><pre>Hello, failure.
+</pre></td></tr><tr><td>2</td><td class="red"><pre>And goodbye!
+</pre></td><td></td><td></td></tr>

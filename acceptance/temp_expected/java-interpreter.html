@@ -21,7 +21,7 @@ All</a> <!-- TODO: summary X tests, Y failures, Z errors -->
 <table border="1" summary="Table of tests" class="results">
 <tr id="header">
 <th>Description</th>
-<th>Java Interpreter</th>
+<th>In-Java Interpreter</th>
 </tr>
 <tr class="summary">
 <td><a href="#" onclick=
@@ -32,7 +32,7 @@ see the in-Java interpreter succeed.</a></td>
 <tr class="details" style="display:none">
 <td colspan="2">
 <!-- TODO: skip unset processors? special output? -->
-<h3>Results from Java interpreter</h3>
+<h3>Results from in-Java interpreter</h3>
 <div class="source">
 <h4>source code</h4>
 <table summary="table for source code">
@@ -66,7 +66,7 @@ interpreter will error on this input.</a></td>
 <tr class="details" style="display:none">
 <td colspan="2">
 <!-- TODO: skip unset processors? special output? -->
-<h3>Results from Java interpreter</h3>
+<h3>Results from in-Java interpreter</h3>
 <div class="source">
 <h4>source code</h4>
 <table summary="table for source code">
@@ -100,7 +100,7 @@ does not match in-Java interpreter's output.</a></td>
 <tr class="details" style="display:none">
 <td colspan="2">
 <!-- TODO: skip unset processors? special output? -->
-<h3>Results from Java interpreter</h3>
+<h3>Results from in-Java interpreter</h3>
 <div class="source">
 <h4>source code</h4>
 <table summary="table for source code">
@@ -112,14 +112,35 @@ failure
 </tr>
 </table>
 </div>
-<div class="execution_generated">
-<h4>execution</h4>
-<table summary="table for execution">
+<div class="execution_diff">
+<h4>execution diff</h4>
+<table class="diff" summary="table for execution diff">
 <tr>
+<th></th>
+<th>Expected</th>
+<th></th>
+<th>Generated</th>
+</tr>
+<tr class="green">
+<td>1</td>
 <td>
-<pre class="code">
+<pre>
 Hello, failure.
 </pre></td>
+<td>1</td>
+<td>
+<pre>
+Hello, failure.
+</pre></td>
+</tr>
+<tr>
+<td>2</td>
+<td class="red">
+<pre>
+And goodbye!
+</pre></td>
+<td></td>
+<td></td>
 </tr>
 </table>
 </div>

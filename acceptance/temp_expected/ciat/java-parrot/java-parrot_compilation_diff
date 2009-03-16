@@ -1,8 +1,8 @@
-<tr class="green"><td><pre>.sub main
+<tr class="green"><td>1</td><td><pre>.sub main
 	print 5
 	print "\n"
 .end
-</pre></td><td><pre>.sub main
+</pre></td><td>1</td><td><pre>.sub main
 	print 5
 	print "\n"
 .end

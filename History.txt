@@ -1,3 +1,17 @@
+== 0.3.2 2009-02-16
+* 1 minor enhancement
+  * Some line number information in diffs.
+* 1 minor bug fix
+  * in-Java interpreter uses diff output for failures.
+
+== 0.3.1 2009-02-16
+* 1 major bug fix
+  * ACTUALLY added in-Java interpreter executor (missed file in gemspec).
+
+== 0.3.0 2009-02-15
+* 1 major enhancement:
+  * Added in-Java interpreter executor.
+
 == 0.2.0 2008-10-26
 
 * 3 major enhancements:

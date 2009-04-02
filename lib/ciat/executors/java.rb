@@ -50,7 +50,7 @@ module CIAT
       
       # Runs the Java interpreter.
       def execute(crate)        
-        system "java -cp '#{@classpath}' #{@interpreter_class} '#{crate.element(:source).as_file}' &> '#{crate.element(:execution, :generated).as_file}'"
+        system "java -cp '#{@classpath}' #{@interpreter_class} '#{crate.element(:source).as_file}' > '#{crate.element(:execution, :generated).as_file}' 2>&1"
       end
       
       # Compares the expected and generated executions.

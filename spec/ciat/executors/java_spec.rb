@@ -45,7 +45,7 @@ describe CIAT::Executors::Java do
     @crate.should_receive(:element).with(:execution, :generated).and_return(execution)
     execution.should_receive(:as_file).and_return("execution file")
     @executor.should_receive(:system).
-      with("java -cp 'the classpath' the interpreter 'source file' &> 'execution file'").
+      with("java -cp 'the classpath' the interpreter 'source file' > 'execution file' 2>&1").
       and_return(result)
     
     @executor.execute(@crate).should == result

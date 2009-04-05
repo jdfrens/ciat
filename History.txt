@@ -1,3 +1,7 @@
+== 0.3.4 2009-04-05
+* 1 minor feature
+  * Command-line feedback reports number of failures and errors.
+
 == 0.3.3 2009-04-01
 * 1 minor bug fix
   * Fixed file redirection for Java executor since sh doesn't support &>.

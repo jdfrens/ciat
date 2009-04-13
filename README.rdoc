@@ -104,7 +104,7 @@ documentation for CIAT::Suite for more information.
 
 * Install +diff+.
 * Install Ruby and Ruby Gems.
-* <code>gem sources -a http://gems.github.com</code> (only needed once)
+* <code>sudo gem sources -a http</code><code>://gems.github.com</code> (only needed once)
 * <code>sudo gem install jdfrens-ciat</code>
 
 

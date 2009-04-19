@@ -7,12 +7,10 @@ public class Parrot5Compiler {
         String input = reader.readLine();
         reader.close();
         
-        PrintWriter printer = new PrintWriter(args[1]);
-        printer.println(".sub main");
-        printer.println("\tprint 5");
-        printer.println("\tprint \"\\n\"");
-        printer.println(".end");
-        printer.close();
+        System.out.println(".sub main");
+        System.out.println("\tprint 5");
+        System.out.println("\tprint \"\\n\"");
+        System.out.println(".end");
         
         System.exit(0);
     }

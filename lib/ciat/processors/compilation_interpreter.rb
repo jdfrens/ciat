@@ -3,7 +3,8 @@ class CIAT::Processors::CompilationInterpreter
     {
       :green => [:compilation_generated, :execution_generated],
       :yellow => [:compilation_generated, :execution_error],
-      :red => [:compilation_generated, :execution_diff]
+      :red => [:compilation_generated, :execution_diff],
+      :unset => []
     }
   end
   

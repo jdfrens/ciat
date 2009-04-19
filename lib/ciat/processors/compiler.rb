@@ -3,7 +3,8 @@ class CIAT::Processors::Compiler
     {
       :green => [:source, :compilation_generated],
       :yellow => [:source, :compilation_error],
-      :red => [:source, :compilation_diff]
+      :red => [:source, :compilation_diff],
+      :unset => []
     }
   end
 

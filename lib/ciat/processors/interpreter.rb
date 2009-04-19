@@ -3,7 +3,8 @@ class CIAT::Processors::Interpreter
     {
       :green => [:source, :command_line, :execution_generated],
       :yellow => [:source, :command_line, :execution_error],
-      :red => [:source, :command_line, :execution_diff]
+      :red => [:source, :command_line, :execution_diff],
+      :unset => []
     }
   end
   

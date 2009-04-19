@@ -117,11 +117,17 @@ describe CIAT::Processors::BasicProcessing do
   
   describe "computing a diff" do
     it "should compute a diff in HTML" do
-      test, result = mock("test"), mock("result")
+      test, processor_kind, result = 
+        mock("test"), mock("processor kind"), mock("result")
+      output_name = mock("output name")
 
-      original_file = expect_element_as_file(test, :execution)
-      generated_file = expect_element_as_file(test, :execution, :generated)
-      diff_file = expect_element_as_file(test, :execution, :diff)
+      @processor.should_receive(:processor_kind).any_number_of_times.
+        and_return(processor_kind)
+      processor_kind.should_receive(:output_name).any_number_of_times.
+        and_return(output_name)
+      original_file = expect_element_as_file(test, output_name)
+      generated_file = expect_element_as_file(test, output_name, :generated)
+      diff_file = expect_element_as_file(test, output_name, :diff)
       @processor.should_receive(:html_diff).
         with(original_file, generated_file, diff_file).and_return(result)
     

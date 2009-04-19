@@ -16,6 +16,7 @@ module CIAT
     # You may find this classpath useful:
     #   Dir.glob('../lib/*.jar').join(':') + ":../bin"
     class Java
+      include CIAT::Processors::BasicProcessing
       include CIAT::Differs::HtmlDiffer
 
       # The traffic light to indicate the success or failure of the processor.
@@ -33,7 +34,6 @@ module CIAT
       #   compiler; used in the HTML report.
       def initialize(classpath, compiler_class, options={})
         @processor_kind = options[:processor_kind] || CIAT::Processors::Compiler.new
-        @processor_kind = :compiler
         @classpath = classpath
         @compiler_class = compiler_class
         @descriptions = {}
@@ -53,52 +53,8 @@ module CIAT
         @description
       end
       
-      # Compiles the code and diffs the output.
-      def process(crate)
-        # TODO: verify required elements
-        if execute(crate)
-          if diff(crate)
-            light.green!
-          else
-            light.red!
-          end
-        else
-          light.yellow!
-        end
-        crate
-      end
-
-      # Does the actual compilation.
-      # TODO: use execute from BasicProcessing
-      def execute(crate)        
-        system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.element(:source).as_file}' '#{crate.element(:compilation, :generated).as_file}' 2> '#{crate.element(:compilation, :error).as_file}'"
-      end
-      
-      # Computes the difference between the generated and expected output.
-      def diff(crate)
-        html_diff(
-          crate.element(:compilation).as_file,
-          crate.element(:compilation, :generated).as_file,
-          crate.element(:compilation, :diff).as_file)
-      end
-      
-      # The interesting elements of a Java processor based on the traffic light's
-      # setting.
-      def relevant_elements(crate)
-        relevant_names.map { |name| crate.element(name) }
-      end
-      
-      def relevant_names
-        case light.setting
-        when :green
-          [:source, :compilation]
-        when :yellow
-          [:source, :compilation_error]
-        when :red
-          [:source, :compilation_diff]
-        else
-          raise "unexpected setting #{light.setting}"
-        end
+      def executable
+        "java -cp '#{@classpath}' #{@compiler_class}"
       end
     end
   end

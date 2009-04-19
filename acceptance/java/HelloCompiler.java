@@ -10,9 +10,7 @@ public class HelloCompiler {
           System.err.println("The HelloCompiler will not greet 'error' under any circumstances.");
           System.exit(-1);
         }
-        PrintWriter printer = new PrintWriter(args[1]);
-        printer.println("Hello, " + input + ".");
-        printer.close();
+        System.out.println("Hello, " + input + ".");
         System.exit(0);
     }
     

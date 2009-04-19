@@ -13,6 +13,7 @@ module CIAT
     # specifies the command-line arguments when the <code>compilation</code> is executed.
     # If none is provided, no command-line arguments are used.
     class Parrot
+      include CIAT::Processors::BasicProcessing
       include CIAT::Differs::HtmlDiffer
 
       # Traffic light
@@ -47,33 +48,6 @@ module CIAT
       def executable
         "parrot"
       end
-
-      # Executes the program, and diffs the output.
-      def process(crate)
-        # TODO: verify required elements
-        # TODO: handle optional element
-        if execute(crate)
-          if diff(crate)
-            light.green!
-          else
-            light.red!
-          end
-        else
-          light.yellow!
-        end
-        crate
-      end
-            
-      # Compares the expected and generated executions.
-      def diff(crate)
-        html_diff(
-          crate.element(:execution).as_file,
-          crate.element(:execution, :generated).as_file, 
-          crate.element(:execution, :diff).as_file)
-      end
-
-      include CIAT::Processors::BasicProcessing
-
     end
   end
 end

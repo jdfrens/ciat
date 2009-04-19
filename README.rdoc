@@ -94,7 +94,7 @@ documentation for CIAT::Suite for more information.
 
 == REQUIREMENTS:
 
-* Pronounce "CIAT" as "dog".
+* Pronounce "CIAT" as "dog".  (See <a href="http://www.youtube.com/watch?v=tyQvjKqXA0Y">"Raymond Luxury Yacht".)
 * Must have +diff+ executable.
 * You have to provide your own target-code executors (e.g., +parrot+ for the
   Parrot Virtual Machine, +spim+ for MIPS emulation, etc.)

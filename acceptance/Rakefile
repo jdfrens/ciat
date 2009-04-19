@@ -109,11 +109,11 @@ task :exercise_java_interpreter do
 end
 
 # *************************************************************
-# task to exercise Parrot executor
+# task to exercise Parrot interpreter
 task :exercise_parrot do
-  puts "Exercise the Parrot executor"
+  puts "Exercise the Parrot interpreter"
   CIAT::Suite.new(
-    :processors => [parrot_executor],
+    :processors => [parrot_executor(CIAT::Processors::Interpreter.new)],
     :folder => 'ciat/parrot',
     # TODO: parrot execution that errors
     # TODO: parrot execution that fails
@@ -126,7 +126,10 @@ end
 task :exercise_java_and_parrot do
   puts "Java compiler, Parrot executor, special folder"
   CIAT::Suite.new(
-    :processors => [java_compiler("Parrot5"), parrot_executor],
+    :processors => [
+      java_compiler("Parrot5"),
+      parrot_executor(CIAT::Processors::CompilationInterpreter.new)
+      ],
     :folder => 'ciat/java-parrot',
     :report_filename => 'java-parrot.html',
     :feedback => feedback(1, [:green, :green])).run  

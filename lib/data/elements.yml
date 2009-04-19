@@ -7,20 +7,23 @@ compilation:
 compilation_generated:
   description: compilation
   template: plain
+compilation_error:
+  description: error from compilation
+  template: plain
+compilation_diff:
+  description: compilation diff
+  template: diff
 execution:
   description: execution
   template: plain
 execution_generated:
   description: execution
   template: plain
+execution_error:
+  description: error from execution
+  template: plain
 execution_diff:
   description: execution diff
-  template: diff
-compilation_error:
-  description: error from compiler
-  template: plain
-compilation_diff:
-  description: compilation diff
   template: diff
 command_line:
   description: command-line arguments

@@ -20,6 +20,7 @@ module CIAT
 
       # The traffic light to indicate the success or failure of the processor.
       attr :light, true
+      attr_reader :processor_kind
       
       # Constructs a "Java compiler" object.  +classpath+ is the complete
       # classpath to execute the compiler.  +compiler_class+ is the fully
@@ -31,6 +32,8 @@ module CIAT
       # * <code>description</code> specifies a descriptive name for your
       #   compiler; used in the HTML report.
       def initialize(classpath, compiler_class, options={})
+        @processor_kind = options[:processor_kind] || CIAT::Processors::Compiler.new
+        @processor_kind = :compiler
         @classpath = classpath
         @compiler_class = compiler_class
         @descriptions = {}
@@ -53,7 +56,7 @@ module CIAT
       # Compiles the code and diffs the output.
       def process(crate)
         # TODO: verify required elements
-        if compile(crate)
+        if execute(crate)
           if diff(crate)
             light.green!
           else
@@ -66,7 +69,8 @@ module CIAT
       end
 
       # Does the actual compilation.
-      def compile(crate)        
+      # TODO: use execute from BasicProcessing
+      def execute(crate)        
         system "java -cp '#{@classpath}' #{@compiler_class} '#{crate.element(:source).as_file}' '#{crate.element(:compilation, :generated).as_file}' 2> '#{crate.element(:compilation, :error).as_file}'"
       end
       

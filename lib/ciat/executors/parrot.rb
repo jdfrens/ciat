@@ -17,6 +17,7 @@ module CIAT
 
       # Traffic light
       attr :light, true
+      attr_reader :processor_kind
 
       # Creates a Parrot executor.
       #
@@ -26,6 +27,7 @@ module CIAT
       # * <code>:command_line</code> is the description used in the HTML report
       #   for the command-line arguments (if any) (default: "Command-line arguments").
       def initialize(options={})
+        @processor_kind = options[:processor_kind] || CIAT::Processors::Interpreter.new
         @description = options[:description] || "Parrot virtual machine"
         @light = CIAT::TrafficLight.new
       end
@@ -40,6 +42,10 @@ module CIAT
       # Provides a description of the processor.
       def describe
         @description
+      end
+      
+      def executable
+        "parrot"
       end
 
       # Executes the program, and diffs the output.
@@ -57,12 +63,7 @@ module CIAT
         end
         crate
       end
-      
-      # Runs the Parrot VM.
-      def execute(crate)        
-        system "parrot '#{crate.element(:compilation, :generated).as_file}' #{args(crate)} &> '#{crate.element(:execution, :generated).as_file}'"
-      end
-      
+            
       # Compares the expected and generated executions.
       def diff(crate)
         html_diff(
@@ -72,20 +73,7 @@ module CIAT
       end
 
       include CIAT::Processors::BasicProcessing
-      # The interesting elements from this processor.
-      # def elements(crate)
-      #   [:compilation_generated, :command_line, :execution_generated].
-      #     map { |name| crate.element?(name) ? crate.element(name) : nil }.
-      #     compact
-      # end
-      
-      def relevant_names
-        [:compilation_generated, :command_line, :execution_generated]
-      end
 
-      def args(crate) #:nodoc:
-        crate.element?(:command_line) ? crate.element(:command_line).content.strip : ''
-      end
     end
   end
 end

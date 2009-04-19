@@ -11,7 +11,7 @@ describe CIAT::Compilers::Java do
   end
   
   it "should process without error" do
-    @compiler.should_receive(:compile).with(@crate).and_return(true)
+    @compiler.should_receive(:execute).with(@crate).and_return(true)
     @compiler.should_receive(:diff).with(@crate).and_return(true)
 
     @compiler.process(@crate).should == @crate
@@ -19,14 +19,14 @@ describe CIAT::Compilers::Java do
   end
   
   it "should process with compilation error" do
-    @compiler.should_receive(:compile).with(@crate).and_return(false)
+    @compiler.should_receive(:execute).with(@crate).and_return(false)
     
     @compiler.process(@crate).should == @crate
     @compiler.light.should be_yellow
   end
   
   it "should process with diff failure" do
-    @compiler.should_receive(:compile).with(@crate).and_return(true)
+    @compiler.should_receive(:execute).with(@crate).and_return(true)
     @compiler.should_receive(:diff).with(@crate).and_return(false)
     
     @compiler.process(@crate).should == @crate
@@ -46,7 +46,7 @@ describe CIAT::Compilers::Java do
       with("java -cp '#{@classpath}' #{@compiler_class} 'source filename' 'compilation filename' 2> 'error filename'").
       and_return(true)    
     
-    @compiler.compile(@crate).should == true
+    @compiler.execute(@crate).should == true
   end
 end
 

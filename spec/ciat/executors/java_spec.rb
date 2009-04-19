@@ -3,10 +3,12 @@ require File.dirname(__FILE__) + '/../../spec_helper.rb'
 require 'ciat/executors/java'
 
 describe CIAT::Executors::Java do
-  it "should use basic processing module" do
-    CIAT::Executors::Java.should include(CIAT::Processors::BasicProcessing)
+  describe "mixins" do
+    it "should use basic processing module" do
+      CIAT::Executors::Java.should include(CIAT::Processors::BasicProcessing)
+    end
   end
-
+  
   before(:each) do
     @classpath = mock("classpath", :to_s => 'the classpath')
     @interpreter_class = mock("interpreter", :to_s => 'the interpreter')
@@ -40,19 +42,8 @@ describe CIAT::Executors::Java do
     end
   end
 
-  it "should execute generated code" do
-    source, command_line, execution, error, result =
-      mock("source"), mock("command line"), mock("execution"), mock("error"), mock("resut")
-    
-    @crate.should_receive(:element).with(:source).and_return(source)
-    source.should_receive(:as_file).and_return("source file")
-    @crate.should_receive(:element).with(:execution, :generated).and_return(execution)
-    execution.should_receive(:as_file).and_return("execution file")
-    @executor.should_receive(:system).
-      with("java -cp 'the classpath' the interpreter 'source file' > 'execution file' 2>&1").
-      and_return(result)
-    
-    @executor.execute(@crate).should == result
+  it "should have an executable" do
+    @executor.executable.should == "java -cp 'the classpath' the interpreter"
   end
   
 end

@@ -17,8 +17,8 @@ def copy_executor
   CIAT::Processors::Copy.new(:compilation_generated, :execution)
 end
 
-def parrot_executor
-  CIAT::Executors::Parrot.new
+def parrot_executor(kind)
+  CIAT::Executors::Parrot.new(:processor_kind => kind)
 end
 
 #

@@ -7,6 +7,7 @@ module CIAT
 
       # Traffic light
       attr :light, true
+      attr_reader :processor_kind
 
       # Creates a Java executor.
       #
@@ -14,6 +15,7 @@ module CIAT
       # * <code>:description</code> is the description used in the HTML report 
       #   for this processor (default: <code>"Parrot virtual machine"</code>).
       def initialize(classpath, interpreter_class, options={})
+        @processor_kind = options[:processor_kind] || CIAT::Processors::Interpreter.new
         @classpath = classpath
         @interpreter_class = interpreter_class
         @description = options[:description] || "in-Java interpreter"
@@ -48,11 +50,10 @@ module CIAT
         crate
       end
       
-      # Runs the Java interpreter.
-      def execute(crate)        
-        system "java -cp '#{@classpath}' #{@interpreter_class} '#{crate.element(:source).as_file}' > '#{crate.element(:execution, :generated).as_file}' 2>&1"
+      def executable
+        "java -cp '#{@classpath}' #{@interpreter_class}"
       end
-      
+
       # Compares the expected and generated executions.
       def diff(crate)
         html_diff(

@@ -1,5 +1,5 @@
 PIR program that uses command-line arguments.
-==== compilation generated
+==== source
 .sub main
 	.param pmc argv
 	$S0 = argv[3]

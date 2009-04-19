@@ -10,6 +10,9 @@ class CIAT::TestElement
   end
   
   def template
+    if descriptions[name.to_s].nil?
+      raise "Need entry for #{name.to_s} in data/elements.yml"
+    end
     File.join("elements", descriptions[name.to_s]["template"])
   end
   

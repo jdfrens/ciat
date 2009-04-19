@@ -1,11 +1,35 @@
 module CIAT::Processors
   module BasicProcessing
+    # Executes the program, and diffs the output.
+    def process(test)
+      # TODO: verify required elements
+      # TODO: handle optional element
+      if execute(test)
+        if diff(test)
+          light.green!
+        else
+          light.red!
+        end
+      else
+        light.yellow!
+      end
+      test
+    end
+    
     def execute(test)
       system "#{executable} '#{input_file(test)}' #{command_line_args(test)} > '#{output_file(test)}' 2> '#{error_file(test)}'"
     end
     
     def command_line_args(test) #:nodoc:
       test.element?(:command_line) ? test.element(:command_line).content.strip : ''
+    end
+    
+    # Compares the expected and generated executions.
+    def diff(test)
+      html_diff(
+        test.element(:execution).as_file,
+        test.element(:execution, :generated).as_file, 
+        test.element(:execution, :diff).as_file)
     end
     
     def relevant_elements(test)

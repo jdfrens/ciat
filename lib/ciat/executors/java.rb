@@ -23,13 +23,6 @@ module CIAT
         @light = CIAT::TrafficLight.new
       end
       
-      # Produces a clone for an individual test.
-      def for_test
-        copy = clone
-        copy.light = light.clone
-        copy
-      end
-      
       # Provides a description of the processor.
       def describe
         @description

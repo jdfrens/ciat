@@ -1,5 +1,12 @@
 module CIAT::Processors
-  module BasicProcessing
+  module BasicProcessing    
+    # Produces a clone for an individual test.
+    def for_test
+      copy = clone
+      copy.light = light.clone
+      copy
+    end
+
     # Executes the program, and diffs the output.
     def process(test)
       # TODO: verify required elements

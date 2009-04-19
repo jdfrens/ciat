@@ -56,30 +56,34 @@ describe "returning the relevant elements" do
     @compiler = CIAT::Compilers::Java.new(@classpath, @compiler_class, :light => @light)
   end
   
+  it "should return the relevant names mapped to elements" do
+    crate = mock("crate")
+    names = [mock("name 1"), mock("name 2"), mock("name 3")]
+    elements = [mock("element 1"), mock("element 2"), mock("element 3")]
+    
+    @compiler.should_receive(:relevant_names).and_return(names)
+    crate.should_receive(:element).with(names[0]).and_return(elements[0])
+    crate.should_receive(:element).with(names[1]).and_return(elements[1])
+    crate.should_receive(:element).with(names[2]).and_return(elements[2])
+
+    @compiler.relevant_elements(crate).should == elements
+  end
+  
   it "should return source and compilation on a green light" do
-    crate, elements = mock("crate"), mock("elements")
-
     @light.green!
-    crate.should_receive(:elements).with(:source, :compilation).and_return(elements)
 
-    @compiler.elements(crate).should == elements
+    @compiler.relevant_names.should == [:source, :compilation]
   end
 
   it "should return source and error output on a yellow light" do
-    crate, elements = mock("crate"), mock("elements")
-
     @light.yellow!
-    crate.should_receive(:elements).with(:source, :compilation_error).and_return(elements)
 
-    @compiler.elements(crate).should == elements
+    @compiler.relevant_names.should == [:source, :compilation_error]
   end
   
   it "should return source and diff on a red light" do
-    crate, elements = mock("crate"), mock("elements")
-
     @light.red!
-    crate.should_receive(:elements).with(:source, :compilation_diff).and_return(elements)
 
-    @compiler.elements(crate).should == elements
+    @compiler.relevant_names.should == [:source, :compilation_diff]
   end
 end

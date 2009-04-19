@@ -57,10 +57,9 @@ describe "detail row of test report" do
     elements = mock('elements')
 
     processor.should_receive(:describe).with().and_return(description)
-    processor.should_receive(:elements).and_return(elements)
+    processor.should_receive(:relevant_elements).and_return(elements)
     @recursion.should_receive(:render).
-      with("detail_row/elements",
-       :elements => elements, :processor => processor, :crate => @crate).
+      with("detail_row/elements", :elements => elements).
       and_return(fake(:elements, rendered_elements))
   end
     

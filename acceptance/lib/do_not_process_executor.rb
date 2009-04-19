@@ -17,7 +17,7 @@ class DoNotProcessExecutor
     raise("**** should not run this executor!!!")
   end
 
-  def elements(crate)
+  def relevant_elements(crate)
     []
   end
 end

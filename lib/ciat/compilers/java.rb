@@ -80,14 +80,18 @@ module CIAT
       
       # The interesting elements of a Java processor based on the traffic light's
       # setting.
-      def elements(crate)
+      def relevant_elements(crate)
+        relevant_names.map { |name| crate.element(name) }
+      end
+      
+      def relevant_names
         case light.setting
         when :green
-          crate.elements(:source, :compilation)
+          [:source, :compilation]
         when :yellow
-          crate.elements(:source, :compilation_error)
+          [:source, :compilation_error]
         when :red
-          crate.elements(:source, :compilation_diff)
+          [:source, :compilation_diff]
         else
           raise "unexpected setting #{light.setting}"
         end

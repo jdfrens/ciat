@@ -60,21 +60,8 @@ module CIAT
           crate.element(:execution, :generated).as_file, 
           crate.element(:execution, :diff).as_file)
       end
-      
-      # The interesting elements from this processor.
-      def elements(crate)
-        case light.setting
-        when :green
-          crate.elements(:source, :execution_generated)
-        when :yellow
-          crate.elements(:source, :execution_generated)
-        when :red
-          crate.elements(:source, :execution_diff)
-        else
-          raise "unexpected setting #{light.setting}"
-        end
-      end
 
+      include CIAT::Processors::BasicProcessing
     end
   end
 end

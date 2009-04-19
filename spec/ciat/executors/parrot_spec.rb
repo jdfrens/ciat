@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/../../spec_helper.rb'
 require 'ciat/executors/parrot'
 
 describe CIAT::Executors::Parrot do
+  it "should use basic processing module" do
+    CIAT::Executors::Java.should include(CIAT::Processors::BasicProcessing)
+  end
+
   before(:each) do
     @crate = mock('crate')
     @elements = mock('elements')
@@ -60,27 +64,8 @@ describe CIAT::Executors::Parrot do
     @executor.args(@crate).should == "argument1 \t argument2"
   end
   
-  describe "elements of Parrot processor" do
-    it "should produce compilation and execution" do
-      compilation, execution = mock("compilation"), mock("execution")
-      
-      @crate.should_receive(:element?).with(:command_line).and_return(false)
-      @crate.should_receive(:element?).with(anything()).any_number_of_times.and_return(true)
-      @crate.should_receive(:element).with(:compilation_generated).and_return(compilation)
-      @crate.should_receive(:element).with(:execution_generated).and_return(execution)
-      
-      @executor.elements(@crate).should == [compilation, execution]
-    end
-
-    it "should also produce command-line arguments when used" do
-      compilation, arguments, execution = mock("compilation"), mock("arguments"), mock("execution")
-      
-      @crate.should_receive(:element?).with(anything()).any_number_of_times.and_return(true)
-      @crate.should_receive(:element).with(:compilation_generated).and_return(compilation)
-      @crate.should_receive(:element).with(:command_line).and_return(arguments)
-      @crate.should_receive(:element).with(:execution_generated).and_return(execution)
-      
-      @executor.elements(@crate).should == [compilation, arguments, execution]
-    end
+  it "should have relevant elements names" do
+    @executor.relevant_names.should == [:compilation_generated, :command_line, :execution_generated]
+    
   end
 end

@@ -3,6 +3,10 @@ require File.dirname(__FILE__) + '/../../spec_helper.rb'
 require 'ciat/executors/java'
 
 describe CIAT::Executors::Java do
+  it "should use basic processing module" do
+    CIAT::Executors::Java.should include(CIAT::Processors::BasicProcessing)
+  end
+
   before(:each) do
     @classpath = mock("classpath", :to_s => 'the classpath')
     @interpreter_class = mock("interpreter", :to_s => 'the interpreter')
@@ -51,41 +55,4 @@ describe CIAT::Executors::Java do
     @executor.execute(@crate).should == result
   end
   
-  describe "elements of Java interpreter" do
-    it "should produce source and execution normally" do
-      elements = mock("elements")
-      
-      @executor.should_receive(:light).
-        and_return(mock("light", :setting => :green))
-      @crate.should_receive(:elements).
-        with(:source, :execution_generated).
-        and_return(elements)
-      
-      @executor.elements(@crate).should equal(elements)
-    end
-
-    it "should produce source and execution when errored" do
-      elements = mock("elements")
-      
-      @executor.should_receive(:light).
-        and_return(mock("light", :setting => :yellow))
-      @crate.should_receive(:elements).
-        with(:source, :execution_generated).
-        and_return(elements)
-      
-      @executor.elements(@crate).should equal(elements)
-    end
-
-    it "should produce source and diff on failure" do
-      elements = mock("elements")
-      
-      @executor.should_receive(:light).
-        and_return(mock("light", :setting => :red))
-      @crate.should_receive(:elements).
-        with(:source, :execution_diff).
-        and_return(elements)
-      
-      @executor.elements(@crate).should equal(elements)
-    end
-  end
 end

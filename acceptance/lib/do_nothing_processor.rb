@@ -17,7 +17,7 @@ class DoNothingProcessor
     crate
   end
   
-  def elements(crate)
+  def relevant_elements(crate)
     # TODO: maybe return an element?
     []
   end

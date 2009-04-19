@@ -29,7 +29,7 @@ module CIAT
         end
       end
       
-      def elements(crate)
+      def relevant_elements(crate)
         [@original, @copy].map { |e| crate.element(e) }
       end
     end

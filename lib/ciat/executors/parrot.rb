@@ -70,12 +70,17 @@ module CIAT
           crate.element(:execution, :generated).as_file, 
           crate.element(:execution, :diff).as_file)
       end
-      
+
+      include CIAT::Processors::BasicProcessing
       # The interesting elements from this processor.
-      def elements(crate)
-        [:compilation_generated, :command_line, :execution_generated].
-          map { |name| crate.element?(name) ? crate.element(name) : nil }.
-          compact
+      # def elements(crate)
+      #   [:compilation_generated, :command_line, :execution_generated].
+      #     map { |name| crate.element?(name) ? crate.element(name) : nil }.
+      #     compact
+      # end
+      
+      def relevant_names
+        [:compilation_generated, :command_line, :execution_generated]
       end
 
       def args(crate) #:nodoc:

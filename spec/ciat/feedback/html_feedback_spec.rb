@@ -7,6 +7,15 @@ describe CIAT::Feedback::HtmlFeedback do
     @feedback = CIAT::Feedback::HtmlFeedback.new
   end
   
+  it "should have a pre-test action" do
+    suite, cargo = mock("suite"), mock("cargo")
+    
+    suite.should_receive(:cargo).and_return(cargo)
+    cargo.should_receive(:copy_suite_data)
+    
+    @feedback.pre_tests(suite)
+  end
+  
   it "should generate a report" do
     suite = mock("suite")
     cargo = mock("cargo")

@@ -141,4 +141,57 @@ describe CIAT::Processors::BasicProcessing do
       filename
     end
   end
+  
+  it "should have relevant element names" do
+    kind, hash, light, setting = 
+      mock("kind"), mock("hash"), mock("light"), mock("setting")
+    names = mock("names")
+    
+    @processor.should_receive(:processor_kind).and_return(kind)
+    kind.should_receive(:element_name_hash).and_return(hash)
+    @processor.should_receive(:light).and_return(light)
+    light.should_receive(:setting).and_return(setting)
+    hash.should_receive(:[]).with(setting).and_return(names)
+    
+    @processor.relevant_element_names.should eql(names)
+  end
+  
+  it "should get filename of input" do
+    test = mock("test")
+    kind, element, name = mock("kind"), mock("element"), mock("name")
+    filename = mock("filename")
+    
+    @processor.should_receive(:processor_kind).and_return(kind)
+    kind.should_receive(:input_name).and_return(name)
+    test.should_receive(:element).with(name).and_return(element)
+    element.should_receive(:as_file).and_return(filename)
+    
+    @processor.input_file(test).should eql(filename)
+  end
+
+  it "should get filename of input" do
+    test = mock("test")
+    kind, element, name = mock("kind"), mock("element"), mock("name")
+    filename = mock("filename")
+    
+    @processor.should_receive(:processor_kind).and_return(kind)
+    kind.should_receive(:output_name).and_return(name)
+    test.should_receive(:element).with(name, :generated).and_return(element)
+    element.should_receive(:as_file).and_return(filename)
+    
+    @processor.output_file(test).should eql(filename)
+  end
+
+  it "should get filename of input" do
+    test = mock("test")
+    kind, element, name = mock("kind"), mock("element"), mock("name")
+    filename = mock("filename")
+    
+    @processor.should_receive(:processor_kind).and_return(kind)
+    kind.should_receive(:output_name).and_return(name)
+    test.should_receive(:element).with(name, :error).and_return(element)
+    element.should_receive(:as_file).and_return(filename)
+    
+    @processor.error_file(test).should eql(filename)
+  end
 end

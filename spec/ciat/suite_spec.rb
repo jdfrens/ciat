@@ -8,8 +8,11 @@ describe CIAT::Suite do
   end
   
   it "should construct cargo with options to constructor" do
-    CIAT::Cargo.should_receive(:new).with(:processors => @processors, :option1 => "optionA", :option2 => "optionB", :option3 => "optionC").and_return(@cargo)
-    suite = CIAT::Suite.new(:processors => @processors, :option1 => "optionA", :option2 => "optionB", :option3 => "optionC")
+    CIAT::Cargo.should_receive(:new).with(:processors => @processors,
+      :option1 => "optionA", :option2 => "optionB", :option3 => "optionC"
+    ).and_return(@cargo)
+    suite = CIAT::Suite.new(:processors => @processors,
+      :option1 => "optionA", :option2 => "optionB", :option3 => "optionC")
     suite.cargo.should == @cargo
   end
   
@@ -22,76 +25,43 @@ describe CIAT::Suite do
   end
 
   describe "the top-level function to run the tests" do
-    it "should run tests on no test files" do
-      suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo, :feedback => @feedback)
+    before(:each) do
+      @processors = [mock("processor 0"), mock("processor 1"), mock("processor 2")]
+      @suite = CIAT::Suite.new(
+        :processors => @processors, 
+        :cargo => @cargo, 
+        :feedback => @feedback)
+    end
     
-      @cargo.should_receive(:copy_suite_data)
+    it "should run tests on no test files" do    
+      @feedback.should_receive(:pre_tests).with(@suite)
       @cargo.should_receive(:crates).and_return([])
-      suite.should_receive(:generate_report).with()
-      @feedback.should_receive(:post_tests).with(suite)
+      @feedback.should_receive(:post_tests).with(@suite)
     
-      suite.run.should == []
-      suite.results.should == []
+      @suite.run.should == []
+      @suite.results.should == []
     end
   
     it "should run tests on test files" do
       folder = "THE_FOLDER"
-      crates = [mock("crate1"), mock("crate2")]
-      results = [mock("result1"), mock("result2")]
-      suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo, :feedback => @feedback)
+      crates = [mock("crate 1"), mock("crate 2")]
+      elements = [mock("element 1"), mock("element 2")]
+      results = [mock("result 1"), mock("result 2")]
 
-      @cargo.should_receive(:copy_suite_data)
+      @feedback.should_receive(:pre_tests).with(@suite)
       @cargo.should_receive(:crates).with().and_return(crates)
-      crates.zip(results).each do |crate, result|
-        suite.should_receive(:run_test).with(crate).and_return(result)
-      end
-      suite.should_receive(:generate_report).with()
-      @feedback.should_receive(:post_tests).with(suite)
+      expect_create_and_run_test(crates[0], results[0])
+      expect_create_and_run_test(crates[1], results[1])
+      @feedback.should_receive(:post_tests).with(@suite)
     
-      suite.run.should == results
-      suite.results.should == results
+      @suite.run.should == results
+      @suite.results.should == results
     end
-  end
-
-  it "should run a single test" do
-    processors = [mock("p 0"), mock("p 1"), mock("p 2")]
-    test_processors = [mock("tp 0"), mock("tp 1"), mock("tp 2")]
-    crate, test, result = mock("crate"), mock("test"), mock("result")
-    suite = CIAT::Suite.new(:processors => processors, :cargo => @cargo, :feedback => @feedback)
-
-    expect_processor_clone(processors[0], test_processors[0])
-    expect_processor_clone(processors[1], test_processors[1])
-    expect_processor_clone(processors[2], test_processors[2])
-    CIAT::Test.should_receive(:new).
-      with(crate, :processors => test_processors, :feedback => @feedback).
-      and_return(test)
-    test.should_receive(:run).and_return(result)
     
-    suite.run_test(crate).should == result
-  end
-  
-  def expect_processor_clone(original, clone)
-    original.should_receive(:for_test).and_return(clone)
-  end
-  
-  it "should generate a report" do
-    html, report_filename = mock("html"), mock("report filename")
-    suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo, :feedback => @feedback)
-    suite.should_receive(:generate_html).with().and_return(html)
-    @cargo.should_receive(:report_filename).and_return(report_filename)
-    @cargo.should_receive(:write_file).with(report_filename, html)
-    
-    suite.generate_report
-  end
-  
-  it "should generate html" do
-    erb_template, binding, result = mock("erb_template"), mock("binding"), mock("result")
-    suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo)
-    
-    ERB.should_receive(:new).with(CIAT::Suite.template).and_return(erb_template)
-    suite.should_receive(:binding).with().and_return(binding)
-    erb_template.should_receive(:result).with(binding).and_return(result)
-    
-    suite.generate_html()
+    def expect_create_and_run_test(crate, result)
+      test = mock("test for #{crate}")
+      @suite.should_receive(:create_test).with(crate).and_return(test)
+      test.should_receive(:run).and_return(result)
+    end
   end
 end

@@ -1,31 +1,31 @@
-class HtmlFeedback
-  include CIAT::ERBHelpers
+module CIAT::Feedback
+  class HtmlFeedback
+    include CIAT::ERBHelpers
 
-  attr_reader :processors
+    def pre_tests(suite)
+      suite.cargo.copy_suite_data      
+    end
   
-  def initialize(cargo, processors)
-    @cargo = cargo
-    @processors = processors
-  end
+    def processor_result(processor)
+      nil
+    end
   
-  def pre_tests(suite)
-    suite.cargo.copy_suite_data      
-  end
-  
-  def processor_result(processor)
-    nil
-  end
-  
-  def post_tests(suite)
-    @cargo.write_file(@cargo.report_filename, generate_html(suite.results))
-  end
+    def post_tests(suite)
+      suite.cargo.write_file(
+        suite.cargo.report_filename, 
+        generate_html(suite))
+    end
 
-  def generate_html(results) #:nodoc:
-    ERB.new(template).result(binding)
-  end
+    def generate_html(suite) #:nodoc:
+      processors = suite.processors
+      results = suite.results
+      ERB.new(template).result(binding)
+    end
 
-  def template #:nodoc:
-    File.read(File.join(File.dirname(__FILE__), "..", "..", "templates", "report.html.erb"))
+    def template #:nodoc:
+      File.read(File.join(
+        File.dirname(__FILE__), "..", "..", "templates", "report.html.erb"
+        ))
+    end
   end
 end
-

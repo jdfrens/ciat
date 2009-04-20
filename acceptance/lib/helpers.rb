@@ -41,6 +41,7 @@ end
 def feedback(size, expected_lights)
   CIAT::Feedback::Composite.new(
     CIAT::Feedback::StandardOutput.new,
+    CIAT::Feedback::HtmlFeedback.new,
     FeedbackTester.new(size, expected_lights)
     )
 end

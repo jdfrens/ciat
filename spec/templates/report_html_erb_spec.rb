@@ -11,7 +11,7 @@ describe "report" do
     
     @processors = []
     @results = []
-    @erb = ERB.new(CIAT::Suite.template)
+    @erb = ERB.new(File.read("lib/templates/report.html.erb"))
   end
   
   describe "writing table header" do

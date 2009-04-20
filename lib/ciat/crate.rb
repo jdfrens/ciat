@@ -5,8 +5,11 @@ class CIAT::Crate #:nodoc:all
     
   def initialize(test_file, output_folder)
     @test_file = test_file
-    @stub = test_file.gsub(File.extname(test_file), "")
     @output_folder = output_folder
+  end
+  
+  def stub
+    test_file.gsub(File.extname(test_file), "")
   end
 
   def filename(*modifiers)
@@ -18,11 +21,11 @@ class CIAT::Crate #:nodoc:all
   end  
   
   def process_test_file #:nodoc:
-    @elements = Hash.new { |hash, name| hash[name] = CIAT::TestElement.new(name, filename(name), nil) }
+    elements = empty_elements_hash
     split_test_file.each do |name, contents|
-      @elements[name] = CIAT::TestElement.new(name, filename(name), contents)
+      elements[name] = CIAT::TestElement.new(name, filename(name), contents)
     end
-    @elements
+    elements
   end
   
   def split_test_file #:nodoc:
@@ -42,4 +45,14 @@ class CIAT::Crate #:nodoc:all
     raw_elements
   end
   
+  #
+  # Helpers
+  #
+  private
+  
+  def empty_elements_hash
+    Hash.new do |hash, name|
+      hash[name] = CIAT::TestElement.new(name, filename(name), nil)
+    end
+  end
 end

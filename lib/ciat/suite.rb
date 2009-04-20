@@ -61,9 +61,11 @@ class CIAT::Suite
   def initialize(options = {})
     @processors = options[:processors]
     @cargo = options[:cargo] || CIAT::Cargo.new(options)
-    @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
-    @feedback = CIAT::Feedback::Composite.new(@feedback,
-      HtmlFeedback.new(@cargo, @processors))
+    @feedback = options[:feedback] ||   
+      CIAT::Feedback::Composite.new(
+        CIAT::Feedback::StandardOutput.new,
+        CIAT::Feedback::HtmlFeedback.new
+        )
   end
   
   # Returns the number of tests in the suite.
@@ -76,14 +78,17 @@ class CIAT::Suite
   def run
     @feedback.pre_tests(self)
     @results = cargo.crates.
-      map { |crate| CIAT::Test.new(
-        crate.process_test_file,
-        :processors => test_processors,
-        :feedback => @feedback)
-      }.
+      map { |crate| create_test(crate) }.
       map { |test| test.run }
     @feedback.post_tests(self)
     @results
+  end
+  
+  def create_test(crate)
+    CIAT::Test.new(
+      crate.process_test_file,
+      :processors => test_processors,
+      :feedback => @feedback)
   end
   
   def test_processors #:nodoc:

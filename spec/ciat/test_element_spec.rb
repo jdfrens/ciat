@@ -16,9 +16,11 @@ describe CIAT::TestElement do
     end
 
     it "should just return filename for pending content" do
+      test_element = CIAT::TestElement.new(:some_name, @filename, nil)
+      
       CIAT::Cargo.should_not_receive(:write_file)
-
-      CIAT::TestElement.new(:some_name, @filename, nil).as_file.should == @filename
+      
+      test_element.as_file.should == @filename
     end
   end
   
@@ -29,22 +31,48 @@ describe CIAT::TestElement do
     
     it "should read when content is empty" do
       read_content = mock("read content")
+      test_element = CIAT::TestElement.new(:some_name, @filename, nil)
       
-      CIAT::Cargo.should_receive(:read_file).with(@filename).and_return(read_content)
+      CIAT::Cargo.should_receive(:read_file).
+        with(@filename).and_return(read_content)
       
-      CIAT::TestElement.new(:some_name, @filename, nil).content.should == read_content
+      test_element.content.should == read_content
     end
   end
   
-  it "should have a template file based on the name" do
-    descriptions, this_description = mock("descriptions"), mock("this description")
+  describe "finding template files" do
+    it "should have a template file based on the name" do
+      entry = mock("entry")
     
-    @element.should_receive(:descriptions).
-      at_least(:once).and_return(descriptions)
+      @element.should_receive(:yaml_entry).at_least(:once).and_return(entry)
+      entry.should_receive(:[]).with("template").and_return("filename")
+    
+      @element.template.should == File.join("elements", "filename")
+    end
+    
+    it "should raise an error when name is missing from YAML file" do
+      @element.should_receive(:yaml_entry).and_return(nil)
+
+      lambda { @element.template }.should raise_error
+    end
+  end
+  
+  it "should describe the test element" do
+    entry, description = mock("entry"), mock("description")
+    
+    @element.should_receive(:yaml_entry).and_return(entry)
+    entry.should_receive(:[]).with("description").and_return(description)
+    
+    @element.describe.should == description
+  end
+  
+  it "should get a YAML entry" do
+    metadata, entry = mock("metadata"), mock("entry")
+  
+    @element.should_receive(:metadata).and_return(metadata)
     @name.should_receive(:to_s).at_least(:once).and_return("name")
-    descriptions.should_receive(:[]).with("name").at_least(:once).and_return(this_description)
-    this_description.should_receive(:[]).with("template").and_return("filename")
+    metadata.should_receive(:[]).with("name").and_return(entry)
     
-    @element.template.should == File.join("elements", "filename")
+    @element.yaml_entry.should == entry
   end
 end

@@ -10,14 +10,18 @@ class CIAT::TestElement
   end
   
   def template
-    if descriptions[name.to_s].nil?
+    if yaml_entry.nil?
       raise "Need entry for #{name.to_s} in data/elements.yml"
     end
-    File.join("elements", descriptions[name.to_s]["template"])
+    File.join("elements", yaml_entry["template"])
   end
   
   def describe
-    descriptions[name.to_s]["description"]
+    yaml_entry["description"]
+  end
+  
+  def yaml_entry
+    metadata[name.to_s]
   end
   
   def content
@@ -33,7 +37,7 @@ class CIAT::TestElement
   
   private
   
-  def descriptions
-    @@descriptions ||= YAML.load_file(File.join(File.dirname(__FILE__), "..", "data", "elements.yml"))
+  def metadata
+    @@metadata ||= YAML.load_file(File.join(File.dirname(__FILE__), "..", "data", "elements.yml"))
   end
 end

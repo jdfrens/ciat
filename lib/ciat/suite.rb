@@ -1,5 +1,5 @@
 require 'erb'
-require 'ciat/erb_helpers'
+require 'ciat/feedback/composite'
 
 # = A Suite of Tests
 #

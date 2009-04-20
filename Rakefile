@@ -32,6 +32,7 @@ end
 desc "Make and install gem"
 task :gem => [:specs_with_rcov] do
   system "sudo gem uninstall ciat"
+  system "rm *.gem"
   system "gem build ciat.gemspec"
   system "sudo gem install ciat*.gem"
 end

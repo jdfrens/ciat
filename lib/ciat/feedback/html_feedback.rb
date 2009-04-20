@@ -1,3 +1,5 @@
+require 'ciat/erb_helpers'
+
 module CIAT::Feedback
   class HtmlFeedback
     include CIAT::ERBHelpers

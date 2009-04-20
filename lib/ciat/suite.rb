@@ -56,14 +56,14 @@ class CIAT::Suite
   attr_reader :results
   attr_reader :processors
   
-  include CIAT::ERBHelpers
-  
   # Constructs a suite of CIAT tests.  See the instructions above for possible
   # values for the +options+.
   def initialize(options = {})
     @processors = options[:processors]
     @cargo = options[:cargo] || CIAT::Cargo.new(options)
     @feedback = options[:feedback] || CIAT::Feedback::StandardOutput.new
+    @feedback = CIAT::Feedback::Composite.new(@feedback,
+      HtmlFeedback.new(@cargo, @processors))
   end
   
   # Returns the number of tests in the suite.
@@ -74,30 +74,19 @@ class CIAT::Suite
   # Runs all of the tests in the suite, and returns the results.  The results
   # are also available through #results.
   def run
-    @cargo.copy_suite_data
-    @results = cargo.crates.collect { |crate| run_test(crate) }
-    generate_report
+    @feedback.pre_tests(self)
+    @results = cargo.crates.
+      map { |crate| CIAT::Test.new(
+        crate.process_test_file,
+        :processors => test_processors,
+        :feedback => @feedback)
+      }.
+      map { |test| test.run }
     @feedback.post_tests(self)
     @results
   end
   
-  def run_test(crate) #:nodoc:
-    CIAT::Test.new(crate, :processors => test_processors, :feedback => @feedback).run
-  end
-  
   def test_processors #:nodoc:
     @processors.map { |processor| processor.for_test }
-  end
-
-  def generate_report #:nodoc:
-    cargo.write_file(cargo.report_filename, generate_html)
-  end
-  
-  def generate_html #:nodoc:
-    ERB.new(CIAT::Suite.template).result(binding)
-  end
- 
-  def self.template #:nodoc:
-    File.read(File.join(File.dirname(__FILE__), "..", "templates", "report.html.erb"))
   end
 end

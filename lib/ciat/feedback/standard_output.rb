@@ -26,6 +26,10 @@ module CIAT
         @failure_count += 1
       end
       
+      def pre_tests(suite)
+        nil
+      end
+      
       def post_tests(suite)
         print "\n"
         print "#{suite.size} tests executed"

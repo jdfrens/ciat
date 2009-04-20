@@ -9,6 +9,10 @@ class FeedbackTester
     @lights << processor.light.setting
   end
   
+  def pre_tests(suite)
+    nil
+  end
+  
   def post_tests(suite)
     unless @expected_lights == @lights
       raise "Wrong lights: [#{@expected_lights.join(',')}] expected, got [#{@lights.join(',')}]"

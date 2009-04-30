@@ -60,52 +60,67 @@ task :less_simple do
 end
 
 task :errors_and_failures do
-  puts "Should error during compilation"
-  CIAT::Suite.new(
-    :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
-    :files => 'ciat/errors-and-failures/compile-error.ciat',
-    :report_filename => 'compile-error.html',
-    :feedback => feedback(1, [:yellow, :unset])).run
-  puts "Should fail compilation expectation"
-  CIAT::Suite.new(
-    :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
-    :files => 'ciat/errors-and-failures/compile-fail.ciat',
-    :report_filename => 'compile-fail.html',
-    :feedback => feedback(1, [:red, :unset])).run
-  puts "Should error during execution"
-  CIAT::Suite.new(
-    :processors => [copy_compiler, DoNothingProcessor.new(:yellow)],
-    :files => 'ciat/errors-and-failures/execution-error.ciat',
-    :report_filename => 'execution-error.html',
-    :feedback => feedback(1, [:green, :yellow])).run
-  puts "Should fails execution expectation"
-  CIAT::Suite.new(
-    :processors => [copy_compiler, DoNothingProcessor.new(:red)],
-    :files => 'ciat/errors-and-failures/execution-fail.ciat',
-    :report_filename => 'execution-fail.html',
-    :feedback => feedback(1, [:green, :red])).run
+  deliberate_failure do
+    puts "Should error during compilation"
+    CIAT::Suite.new(
+      :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
+      :files => 'ciat/errors-and-failures/compile-error.ciat',
+      :report_filename => 'compile-error.html',
+      :feedback => feedback(1, [:yellow, :unset])).run
+  end
+  
+  deliberate_failure do
+    puts "Should fail compilation expectation"
+    CIAT::Suite.new(
+      :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
+      :files => 'ciat/errors-and-failures/compile-fail.ciat',
+      :report_filename => 'compile-fail.html',
+      :feedback => feedback(1, [:red, :unset])).run
+  end
+  
+  deliberate_failure do
+    puts "Should error during execution"
+    CIAT::Suite.new(
+      :processors => [copy_compiler, DoNothingProcessor.new(:yellow)],
+      :files => 'ciat/errors-and-failures/execution-error.ciat',
+      :report_filename => 'execution-error.html',
+      :feedback => feedback(1, [:green, :yellow])).run
+  end
+  
+  deliberate_failure do
+    puts "Should fails execution expectation"
+    CIAT::Suite.new(
+      :processors => [copy_compiler, DoNothingProcessor.new(:red)],
+      :files => 'ciat/errors-and-failures/execution-fail.ciat',
+      :report_filename => 'execution-fail.html',
+      :feedback => feedback(1, [:green, :red])).run
+  end
 end
 
 # *************************************************************
 # task to exercise implemented-in-Java compilers
 task :exercise_java do
-  puts "Exercise the Java compiler"
-  CIAT::Suite.new(
-    :processors => [java_compiler("Hello")],
-    :folder => 'ciat/java',
-    :report_filename => 'java.html',
-    :feedback => feedback(3, [:green, :yellow, :red])).run
+  deliberate_failure do
+    puts "Exercise the Java compiler"
+    CIAT::Suite.new(
+      :processors => [java_compiler("Hello")],
+      :folder => 'ciat/java',
+      :report_filename => 'java.html',
+      :feedback => feedback(3, [:green, :yellow, :red])).run
+  end
 end
 
 # *************************************************************
 # task to exercise implemented-in-Java interpreter
 task :exercise_java_interpreter do
-  puts "Exercise the Java interpreter"
-  CIAT::Suite.new(
-    :processors => [java_interpreter("Hello")],
-    :folder => 'ciat/java-interpreter',
-    :report_filename => 'java-interpreter.html',
-    :feedback => feedback(3, [:green, :yellow, :red])).run
+  deliberate_failure do
+    puts "Exercise the Java interpreter"
+    CIAT::Suite.new(
+      :processors => [java_interpreter("Hello")],
+      :folder => 'ciat/java-interpreter',
+      :report_filename => 'java-interpreter.html',
+      :feedback => feedback(3, [:green, :yellow, :red])).run
+  end
 end
 
 # *************************************************************

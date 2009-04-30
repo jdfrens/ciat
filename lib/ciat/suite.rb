@@ -1,5 +1,6 @@
 require 'erb'
 require 'ciat/feedback/composite'
+require 'ciat/feedback/return_status'
 
 # = A Suite of Tests
 #
@@ -66,6 +67,9 @@ class CIAT::Suite
         CIAT::Feedback::StandardOutput.new,
         CIAT::Feedback::HtmlFeedback.new
         )
+    @feedback = CIAT::Feedback::Composite.new(
+        @feedback, CIAT::Feedback::ReturnStatus.new
+      )
   end
   
   # Returns the number of tests in the suite.

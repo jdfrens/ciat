@@ -45,3 +45,13 @@ def feedback(size, expected_lights)
     FeedbackTester.new(size, expected_lights)
     )
 end
+
+def deliberate_failure
+  ooops = false
+  begin
+    yield
+    ooops = true
+  rescue RuntimeError => e
+  end
+  fail "Should have failed at the end" if ooops  
+end

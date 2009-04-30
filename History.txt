@@ -1,3 +1,8 @@
+== 0.4.1 2009-04-29
+* 1 major feature (bug fix?)
+  * If a test errors or fails, the Suite task will fail.  This sets
+        the command-line status appropriately.
+
 == 0.4.0 2009-04-20
 * 2 major features
   * All processors now need to read from a file and output to standard output

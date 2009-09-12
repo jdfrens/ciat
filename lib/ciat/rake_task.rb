@@ -2,6 +2,8 @@ class CIAT::RakeTask
   attr_accessor :processors
   attr_accessor :files
   attr_accessor :feedback
+  attr_accessor :folder
+  attr_accessor :report_filename
   
   def initialize(name = :ciat)
     @name = name
@@ -15,7 +17,9 @@ class CIAT::RakeTask
       suite = CIAT::Suite.new(
         :processors => @processors,
         :files => @files,
-        :feedback => @feedback)
+        :feedback => @feedback,
+        :folder => @folder,
+        :report_filename => @report_filename)
       suite.run
     end
   end

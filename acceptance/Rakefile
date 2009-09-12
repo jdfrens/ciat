@@ -48,13 +48,11 @@ CIAT::RakeTask.new(:simple) do |task|
   task.feedback = feedback(1, [:green])
 end
     
-task :less_simple do
-  puts "two processors, two tests, special folder, special report"
-  CIAT::Suite.new(
-    :processors => [java_compiler("Hello"), copy_executor],
-    :folder => 'ciat/less-simple',
-    :report_filename => 'less-simple.html',
-    :feedback => feedback(2, [:green, :green, :green, :green])).run
+CIAT::RakeTask.new(:less_simple) do |task|
+  task.processors = [java_compiler("Hello"), copy_executor]
+  task.folder = 'ciat/less-simple'
+  task.report_filename = 'less-simple.html'
+  task.feedback = feedback(2, [:green, :green, :green, :green])
 end
 
 task :errors_and_failures do

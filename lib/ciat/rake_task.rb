@@ -7,6 +7,7 @@ class CIAT::RakeTask
   
   def initialize(name = :ciat)
     @name = name
+    @processors = []
     yield self if block_given?
     define
   end

@@ -43,13 +43,14 @@ task :exercise_ciat => [:simple,
                         :errors_and_failures]
                         
 CIAT::RakeTask.new(:simple) do |task|
-  task.processors = [copy_compiler]
+  task.processors << copy_compiler
   task.files = ['ciat/simple.ciat']
   task.feedback = feedback(1, [:green])
 end
     
 CIAT::RakeTask.new(:less_simple) do |task|
-  task.processors = [java_compiler("Hello"), copy_executor]
+  task.processors << java_compiler("Hello")
+  task.processors << copy_executor
   task.folder = 'ciat/less-simple'
   task.report_filename = 'less-simple.html'
   task.feedback = feedback(2, [:green, :green, :green, :green])
@@ -127,27 +128,21 @@ end
 
 # *************************************************************
 # task to exercise Parrot interpreter
-task :exercise_parrot do
-  puts "Exercise the Parrot interpreter"
-  CIAT::Suite.new(
-    :processors => [parrot_executor(CIAT::Processors::Interpreter.new)],
-    :folder => 'ciat/parrot',
-    # TODO: parrot execution that errors
-    # TODO: parrot execution that fails
-    :report_filename => 'parrot.html',
-    :feedback => feedback(1, [:green])).run
+CIAT::RakeTask.new(:exercise_parrot) do |task|
+  task.processors << parrot_executor(interpreter)
+  task.folder = 'ciat/parrot'
+  # TODO: parrot execution that errors
+  # TODO: parrot execution that fails
+  task.report_filename = 'parrot.html'
+  task.feedback = feedback(1, [:green])
 end
 
 # *************************************************************
 # task to exercise Java compiler and Parrot executor
-task :exercise_java_and_parrot do
-  puts "Java compiler, Parrot executor, special folder"
-  CIAT::Suite.new(
-    :processors => [
-      java_compiler("Parrot5"),
-      parrot_executor(CIAT::Processors::CompilationInterpreter.new)
-      ],
-    :folder => 'ciat/java-parrot',
-    :report_filename => 'java-parrot.html',
-    :feedback => feedback(1, [:green, :green])).run  
+CIAT::RakeTask.new(:exercise_java_and_parrot) do |task|
+  task.processors << java_compiler("Parrot5")
+  task.processors << parrot_executor(compilation_interpreter)
+  task.folder = 'ciat/java-parrot'
+  task.report_filename = 'java-parrot.html'
+  task.feedback = feedback(1, [:green, :green])
 end

@@ -58,38 +58,42 @@ end
 task :errors_and_failures do
   deliberate_failure do
     puts "Should error during compilation"
-    CIAT::Suite.new(
+    suite = CIAT::Suite.new(
       :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
       :files => 'ciat/errors-and-failures/compile-error.ciat',
       :report_filename => 'compile-error.html',
-      :feedback => feedback(1, [:yellow, :unset])).run
+      :feedback => feedback(1, [:yellow, :unset]))
+    suite.run
   end
   
   deliberate_failure do
     puts "Should fail compilation expectation"
-    CIAT::Suite.new(
+    suite = CIAT::Suite.new(
       :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
       :files => 'ciat/errors-and-failures/compile-fail.ciat',
       :report_filename => 'compile-fail.html',
-      :feedback => feedback(1, [:red, :unset])).run
+      :feedback => feedback(1, [:red, :unset]))
+    suite.run
   end
   
   deliberate_failure do
     puts "Should error during execution"
-    CIAT::Suite.new(
+    suite = CIAT::Suite.new(
       :processors => [copy_compiler, DoNothingProcessor.new(:yellow)],
       :files => 'ciat/errors-and-failures/execution-error.ciat',
       :report_filename => 'execution-error.html',
-      :feedback => feedback(1, [:green, :yellow])).run
+      :feedback => feedback(1, [:green, :yellow]))
+    suite.run
   end
   
   deliberate_failure do
     puts "Should fails execution expectation"
-    CIAT::Suite.new(
+    suite = CIAT::Suite.new(
       :processors => [copy_compiler, DoNothingProcessor.new(:red)],
       :files => 'ciat/errors-and-failures/execution-fail.ciat',
       :report_filename => 'execution-fail.html',
-      :feedback => feedback(1, [:green, :red])).run
+      :feedback => feedback(1, [:green, :red]))
+    suite.run
   end
 end
 

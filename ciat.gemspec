@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "ciat"
-  s.version  = "0.4.1"
+  s.version  = "0.4.5"
   s.summary  = "Acceptance tester for compilers and interpreters"
   s.email    = "jdfrens@gmail.com"
   s.homepage = "http://github.com/jdfrens/ciat"
@@ -11,6 +11,7 @@ Gem::Specification.new do |s|
     ["History.txt", "README.rdoc", "Rakefile", "ciat.gemspec", 
       "lib/ciat/version.rb",
       "lib/ciat.rb",
+      "lib/ciat/rake_task.rb",
       "lib/ciat/cargo.rb",
       "lib/ciat/crate.rb",
       "lib/ciat/suite.rb",

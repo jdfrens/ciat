@@ -6,6 +6,7 @@ $:.unshift(File.dirname(__FILE__)) unless
 # at.
 module CIAT; end
 
+require 'ciat/rake_task'
 require 'ciat/traffic_light'
 require 'ciat/suite'
 require 'ciat/test'

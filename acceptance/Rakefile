@@ -42,12 +42,10 @@ task :exercise_ciat => [:simple,
                         :less_simple,
                         :errors_and_failures]
                         
-task :simple do
-  puts "Simple test of CIAT system"
-  CIAT::Suite.new(
-    :processors => [copy_compiler],
-    :files => ['ciat/simple.ciat'],
-    :feedback => feedback(1, [:green])).run
+CIAT::RakeTask.new(:simple) do |task|
+  task.processors = [copy_compiler]
+  task.files = ['ciat/simple.ciat']
+  task.feedback = feedback(1, [:green])
 end
     
 task :less_simple do

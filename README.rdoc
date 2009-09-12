@@ -72,10 +72,6 @@ This sample +Rakefile+ will pull everything together:
   require 'ciat/compilers/java'
   require 'ciat/executors/parrot'
 
-  task :ciat do
-    CIAT::Suite.new(:processors => [compiler, executor]).run
-  end
-
   def compiler
     classpath = Dir.glob('../lib/*.jar').join(':') + ":../bin"
     CIAT::Compilers::Java.new(classpath, 'org.norecess.hobbes.drivers.PIRCompiler')
@@ -85,11 +81,16 @@ This sample +Rakefile+ will pull everything together:
     CIAT::Executors::Parrot.new
   end
 
+  CIAT::RakeTask.new do |t|
+    t.processors << compiler
+    t.processors << executor
+  end
+
 This rakefile will find all of the <code>.ciat</code> files inside a +ciat+
 directory, each one representing a test. Each test will be executed, and the
 results are put into a folder named +temp+, including the HTML report
 <code>report.html</code>. All of these settings can be tweaked; see the
-documentation for CIAT::Suite for more information.
+documentation for CIAT::RakeTask for more information.
 
 
 == REQUIREMENTS:

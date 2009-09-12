@@ -4,15 +4,15 @@ require 'ciat/feedback/return_status'
 
 # = A Suite of Tests
 #
-# This is the class to use in your +Rakefile+.  The simplest use looks like
-# this:
+# This is the top-level class for organizing CIAT tests.  It can be used in a
+# +Rakefile+ like so:
 #
 #   task :ciat do
 #     CIAT::Suite.new(:processors => [compiler, executor]).run
 #   end
 #
-# Define +compiler+ and +executor+ in the +Rakefile+ to return a compiler and
-# executor, respectively.
+# You may find the CIAT::RakeTask a little bit easier and more familiar 
+# to use.
 #
 # == Specifying Test and Output Files and Folders
 #

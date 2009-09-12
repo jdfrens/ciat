@@ -102,11 +102,12 @@ end
 task :exercise_java do
   deliberate_failure do
     puts "Exercise the Java compiler"
-    CIAT::Suite.new(
+    suite = CIAT::Suite.new(
       :processors => [java_compiler("Hello")],
       :folder => 'ciat/java',
       :report_filename => 'java.html',
-      :feedback => feedback(3, [:green, :yellow, :red])).run
+      :feedback => feedback(3, [:green, :yellow, :red]))
+    suite.run
   end
 end
 
@@ -115,11 +116,12 @@ end
 task :exercise_java_interpreter do
   deliberate_failure do
     puts "Exercise the Java interpreter"
-    CIAT::Suite.new(
+    suite = CIAT::Suite.new(
       :processors => [java_interpreter("Hello")],
       :folder => 'ciat/java-interpreter',
       :report_filename => 'java-interpreter.html',
-      :feedback => feedback(3, [:green, :yellow, :red])).run
+      :feedback => feedback(3, [:green, :yellow, :red]))
+    suite.run
   end
 end
 

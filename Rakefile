@@ -1,4 +1,5 @@
 require 'rake'
+require 'rake/clean'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
 
@@ -36,3 +37,4 @@ task :gem => [:specs_with_rcov] do
   system "gem build ciat.gemspec"
   system "sudo gem install ciat*.gem"
 end
+CLOBBER << FileList['*.gem']

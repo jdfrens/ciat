@@ -21,6 +21,7 @@ module CIAT::Feedback
     def generate_html(suite) #:nodoc:
       processors = suite.processors
       results = suite.results
+      report_title = suite.report_title
       ERB.new(template).result(binding)
     end
 

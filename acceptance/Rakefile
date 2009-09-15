@@ -53,46 +53,47 @@ CIAT::RakeTask.new(:less_simple) do |task|
   task.processors << copy_executor
   task.folder = 'ciat/less-simple'
   task.report_filename = 'less-simple.html'
+  task.report_title = "Less Simple Tests"
   task.feedback = feedback(2, [:green, :green, :green, :green])
 end
 
 task :errors_and_failures do
   deliberate_failure do
-    puts "Should error during compilation"
     suite = CIAT::Suite.new(
       :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
       :files => 'ciat/errors-and-failures/compile-error.ciat',
       :report_filename => 'compile-error.html',
+      :report_title => "Errors during compilation",
       :feedback => feedback(1, [:yellow, :unset]))
     suite.run
   end
   
   deliberate_failure do
-    puts "Should fail compilation expectation"
     suite = CIAT::Suite.new(
       :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
       :files => 'ciat/errors-and-failures/compile-fail.ciat',
       :report_filename => 'compile-fail.html',
+      :report_title => "Failures in compilation",
       :feedback => feedback(1, [:red, :unset]))
     suite.run
   end
   
   deliberate_failure do
-    puts "Should error during execution"
     suite = CIAT::Suite.new(
       :processors => [copy_compiler, DoNothingProcessor.new(:yellow)],
       :files => 'ciat/errors-and-failures/execution-error.ciat',
       :report_filename => 'execution-error.html',
+      :report_title => "Errors during execution",
       :feedback => feedback(1, [:green, :yellow]))
     suite.run
   end
   
   deliberate_failure do
-    puts "Should fails execution expectation"
     suite = CIAT::Suite.new(
       :processors => [copy_compiler, DoNothingProcessor.new(:red)],
       :files => 'ciat/errors-and-failures/execution-fail.ciat',
       :report_filename => 'execution-fail.html',
+      :report_title => "Failures in execution",
       :feedback => feedback(1, [:green, :red]))
     suite.run
   end
@@ -102,7 +103,6 @@ end
 # task to exercise implemented-in-Java compilers
 task :exercise_java do
   deliberate_failure do
-    puts "Exercise the Java compiler"
     suite = CIAT::Suite.new(
       :processors => [java_compiler("Hello")],
       :folder => 'ciat/java',
@@ -116,7 +116,6 @@ end
 # task to exercise implemented-in-Java interpreter
 task :exercise_java_interpreter do
   deliberate_failure do
-    puts "Exercise the Java interpreter"
     suite = CIAT::Suite.new(
       :processors => [java_interpreter("Hello")],
       :folder => 'ciat/java-interpreter',

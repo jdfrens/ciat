@@ -29,6 +29,8 @@ class CIAT::RakeTask
   attr_accessor :feedback
   attr_accessor :folder
   attr_accessor :report_filename
+  attr_accessor :report_title
+  attr_accessor :output_folder
   
   def initialize(name = :ciat)
     @name = name
@@ -45,7 +47,9 @@ class CIAT::RakeTask
         :files => @files,
         :feedback => @feedback,
         :folder => @folder,
-        :report_filename => @report_filename)
+        :report_filename => @report_filename,
+        :output_folder => @output_folder,
+        :report_title => @report_title)
       suite.run
     end
   end

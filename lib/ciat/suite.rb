@@ -56,12 +56,17 @@ class CIAT::Suite
   attr_reader :cargo
   attr_reader :results
   attr_reader :processors
+  attr_reader :report_title
   
   # Constructs a suite of CIAT tests.  See the instructions above for possible
   # values for the +options+.
   def initialize(options = {})
     @processors = options[:processors]
     @cargo = options[:cargo] || CIAT::Cargo.new(options)
+    @report_title = "CIAT Report"
+    if options[:report_title]
+      @report_title = @report_title + ": " + options[:report_title]
+    end
     @feedback = options[:feedback] ||   
       CIAT::Feedback::Composite.new(
         CIAT::Feedback::StandardOutput.new,

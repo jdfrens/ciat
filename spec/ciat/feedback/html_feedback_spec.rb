@@ -36,6 +36,7 @@ describe CIAT::Feedback::HtmlFeedback do
     
     suite.should_receive(:results).and_return(mock("results"))
     suite.should_receive(:processors).and_return(mock("processors"))
+    suite.should_receive(:report_title).and_return(mock("report title"))
     @feedback.should_receive(:template).and_return(filename)
     ERB.should_receive(:new).with(filename).and_return(erb_template)
     @feedback.should_receive(:binding).with().and_return(binding)

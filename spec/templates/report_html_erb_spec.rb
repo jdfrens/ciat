@@ -11,6 +11,8 @@ describe "report" do
     
     @processors = []
     @results = []
+    @report_title = "CIAT Report"
+    
     @erb = ERB.new(File.read("lib/templates/report.html.erb"))
   end
   
@@ -59,7 +61,8 @@ describe "report" do
     @results
   end
   
-  # def render(file, result)
-  #   @recursion.render(file, result)
-  # end
+  def report_title
+    @report_title
+  end
+  
 end

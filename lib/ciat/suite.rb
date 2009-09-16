@@ -1,5 +1,6 @@
 require 'erb'
 require 'ciat/feedback/composite'
+require 'ciat/feedback/feedback_counter'
 require 'ciat/feedback/return_status'
 
 # = A Suite of Tests
@@ -67,11 +68,7 @@ class CIAT::Suite
     if options[:report_title]
       @report_title = @report_title + ": " + options[:report_title]
     end
-    @feedback = options[:feedback] ||   
-      CIAT::Feedback::Composite.new(
-        CIAT::Feedback::StandardOutput.new,
-        CIAT::Feedback::HtmlFeedback.new
-        )
+    @feedback = options[:feedback] || default_feedback
     @feedback = CIAT::Feedback::Composite.new(
         @feedback, CIAT::Feedback::ReturnStatus.new
       )
@@ -102,5 +99,14 @@ class CIAT::Suite
   
   def test_processors #:nodoc:
     @processors.map { |processor| processor.for_test }
+  end
+  
+  private
+  def default_feedback
+    counter = CIAT::Feedback::FeedbackCounter.new
+    CIAT::Feedback::Composite.new(counter,
+      CIAT::Feedback::StandardOutput.new(counter),
+      CIAT::Feedback::HtmlFeedback.new(counter)
+      )
   end
 end

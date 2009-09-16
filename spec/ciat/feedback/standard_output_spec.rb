@@ -4,7 +4,8 @@ require 'ciat/feedback/standard_output'
 
 describe CIAT::Feedback::StandardOutput do
   before(:each) do
-    @feedback = CIAT::Feedback::StandardOutput.new
+    @counter = mock("counter")
+    @feedback = CIAT::Feedback::StandardOutput.new(@counter)
   end
   
   describe "the post-test report" do
@@ -12,8 +13,8 @@ describe CIAT::Feedback::StandardOutput do
       suite = mock("suite")
     
       suite.should_receive(:size).and_return(88)
-      @feedback.should_receive(:failure_count).and_return(0)
-      @feedback.should_receive(:error_count).and_return(0)
+      @counter.should_receive(:failure_count).and_return(0)
+      @counter.should_receive(:error_count).and_return(0)
       @feedback.should_receive(:print).with("\n")
       @feedback.should_receive(:print).with("88 tests executed")
       @feedback.should_receive(:print).with(".\n")
@@ -25,8 +26,8 @@ describe CIAT::Feedback::StandardOutput do
       suite = mock("suite")
     
       suite.should_receive(:size).and_return(30)
-      @feedback.should_receive(:failure_count).at_least(:once).and_return(12)
-      @feedback.should_receive(:error_count).and_return(0)
+      @counter.should_receive(:failure_count).at_least(:once).and_return(12)
+      @counter.should_receive(:error_count).and_return(0)
       @feedback.should_receive(:print).with("\n")
       @feedback.should_receive(:print).with("30 tests executed")
       @feedback.should_receive(:print).with(", 12 failures")
@@ -39,8 +40,8 @@ describe CIAT::Feedback::StandardOutput do
       suite = mock("suite")
     
       suite.should_receive(:size).and_return(3)
-      @feedback.should_receive(:failure_count).and_return(0)
-      @feedback.should_receive(:error_count).at_least(:once).and_return(1)
+      @counter.should_receive(:failure_count).and_return(0)
+      @counter.should_receive(:error_count).at_least(:once).and_return(1)
       @feedback.should_receive(:print).with("\n")
       @feedback.should_receive(:print).with("3 tests executed")
       @feedback.should_receive(:print).with(", 1 errors")
@@ -53,8 +54,8 @@ describe CIAT::Feedback::StandardOutput do
       suite = mock("suite")
     
       suite.should_receive(:size).and_return(78)
-      @feedback.should_receive(:failure_count).at_least(:once).and_return(9)
-      @feedback.should_receive(:error_count).at_least(:once).and_return(3)
+      @counter.should_receive(:failure_count).at_least(:once).and_return(9)
+      @counter.should_receive(:error_count).at_least(:once).and_return(3)
       @feedback.should_receive(:print).with("\n")
       @feedback.should_receive(:print).with("78 tests executed")
       @feedback.should_receive(:print).with(", 9 failures")
@@ -73,8 +74,8 @@ describe CIAT::Feedback::StandardOutput do
     end
     
     it "should report a green light" do
-      @feedback.should_receive(:putc).with(".")
       expect_light(:green)
+      @feedback.should_receive(:putc).with(".")
       
       @feedback.processor_result(@processor)
     end
@@ -82,7 +83,6 @@ describe CIAT::Feedback::StandardOutput do
     it "should report a red light" do
       expect_light(:red)
       @feedback.should_receive(:putc).with("F")
-      @feedback.should_receive(:increment_failure_count)
       
       @feedback.processor_result(@processor)
     end
@@ -90,7 +90,6 @@ describe CIAT::Feedback::StandardOutput do
     it "should report a yellow light" do      
       expect_light(:yellow)
       @feedback.should_receive(:putc).with("E")
-      @feedback.should_receive(:increment_error_count)
 
       @feedback.processor_result(@processor)
     end
@@ -107,47 +106,4 @@ describe CIAT::Feedback::StandardOutput do
     end
   end
   
-  describe "failure count" do
-    it "should be zero initially" do
-      @feedback.failure_count.should == 0
-    end
-    
-    it "should increment" do
-      @feedback.increment_failure_count
-      
-      @feedback.failure_count.should == 1
-    end
-
-    it "should increment lots" do
-      1000.times { @feedback.increment_failure_count }
-      
-      @feedback.failure_count.should == 1000
-    end
-  end
-
-  describe "error count" do
-    it "should be zero initially" do
-      @feedback.error_count.should == 0
-    end
-    
-    it "should increment" do
-      @feedback.increment_error_count
-      
-      @feedback.error_count.should == 1
-    end
-
-    it "should increment lots" do
-      666.times { @feedback.increment_error_count }
-      
-      @feedback.error_count.should == 666
-    end
-    
-    it "should not interfere with failure count" do
-      666.times { @feedback.increment_failure_count }
-      777.times { @feedback.increment_error_count }
-      
-      @feedback.failure_count.should == 666
-      @feedback.error_count.should == 777
-    end
-  end
 end

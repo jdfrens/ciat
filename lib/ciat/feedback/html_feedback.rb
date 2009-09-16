@@ -3,6 +3,10 @@ require 'ciat/erb_helpers'
 module CIAT::Feedback
   class HtmlFeedback
     include CIAT::ERBHelpers
+    
+    def initialize(counter)
+      @counter = counter
+    end
 
     def pre_tests(suite)
       suite.cargo.copy_suite_data      
@@ -22,6 +26,8 @@ module CIAT::Feedback
       processors = suite.processors
       results = suite.results
       report_title = suite.report_title
+      size = suite.size
+      counter = @counter
       ERB.new(template).result(binding)
     end
 

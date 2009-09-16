@@ -1,3 +1,5 @@
+require 'ciat/feedback/feedback_counter'
+
 #
 # Compilers & Executors
 #
@@ -47,9 +49,10 @@ end
 # Feedback
 #
 def feedback(size, expected_lights)
-  CIAT::Feedback::Composite.new(
-    CIAT::Feedback::StandardOutput.new,
-    CIAT::Feedback::HtmlFeedback.new,
+  counter = CIAT::Feedback::FeedbackCounter.new
+  CIAT::Feedback::Composite.new(counter,
+    CIAT::Feedback::StandardOutput.new(counter),
+    CIAT::Feedback::HtmlFeedback.new(counter),
     FeedbackTester.new(size, expected_lights)
     )
 end

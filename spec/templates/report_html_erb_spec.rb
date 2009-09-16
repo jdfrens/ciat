@@ -12,8 +12,20 @@ describe "report" do
     @processors = []
     @results = []
     @report_title = "CIAT Report"
+    @counter = mock("counter")
+    @size = mock("size")
+    
+    @recursion.stub!(:render).with("test_numbers", :counter => @counter, :size => @size)
     
     @erb = ERB.new(File.read("lib/templates/report.html.erb"))
+  end
+  
+  it "should have test numbers" do
+    @recursion.should_receive(:render).
+      with("test_numbers", :counter => @counter, :size => @size).
+      and_return("<h6>The Test Numbers</h6>")
+    
+    (process_erb/"h6").inner_text.should == "The Test Numbers"    
   end
   
   describe "writing table header" do
@@ -38,12 +50,18 @@ describe "report" do
     it "should write summary rows" do
       @results = [mock("r 0"), mock("r 1"), mock("r 2")]
       
-      @recursion.should_receive(:render).with("summary_row", :result => @results[0])
-      @recursion.should_receive(:render).with("summary_row", :result => @results[1])
-      @recursion.should_receive(:render).with("summary_row", :result => @results[2])
-      @recursion.should_receive(:render).with("detail_row", :result => @results[0])
-      @recursion.should_receive(:render).with("detail_row", :result => @results[1])
-      @recursion.should_receive(:render).with("detail_row", :result => @results[2])
+      @recursion.should_receive(:render).
+        with("summary_row", :result => @results[0])
+      @recursion.should_receive(:render).
+        with("summary_row", :result => @results[1])
+      @recursion.should_receive(:render).
+        with("summary_row", :result => @results[2])
+      @recursion.should_receive(:render).
+        with("detail_row", :result => @results[0])
+      @recursion.should_receive(:render).
+        with("detail_row", :result => @results[1])
+      @recursion.should_receive(:render).
+        with("detail_row", :result => @results[2])
       
       process_erb
     end
@@ -53,16 +71,10 @@ describe "report" do
     Hpricot(@erb.result(binding))
   end
   
-  def processors
-    @processors
-  end
-  
-  def results
-    @results
-  end
-  
-  def report_title
-    @report_title
-  end
-  
+  attr_reader :processors
+  attr_reader :results
+  attr_reader :report_title
+  attr_reader :counter
+  attr_reader :size
+
 end

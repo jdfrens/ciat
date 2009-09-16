@@ -1,0 +1,12 @@
+<p>
+  <span class="test-count"><%= size %> tests</span>
+  <% if counter.error_count > 0 %>
+    / <span class="yellow"><%= counter.error_count %> errors</span>
+  <% end %>
+  <% if counter.failure_count > 0 %>
+    / <span class="red"><%= counter.failure_count %> failures</span>
+  <% end %>
+  <% if counter.error_count + counter.failure_count == 0 %>
+    / <span class="green">all good</span>
+  <% end %>
+</p>

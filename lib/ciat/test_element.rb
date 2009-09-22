@@ -2,6 +2,7 @@ require "yaml"
 
 class CIAT::TestElement
   attr_reader :name
+  attr_reader :filename
   
   def initialize(name, filename, content)
     @name = name

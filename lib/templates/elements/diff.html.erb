@@ -1,5 +1,5 @@
 <div class="<%= element.name %>">
-	<h4><%= element.describe %></h4>
+	<h4 title="<%= element.filename %>"><%= element.describe %></h4>
 	<table class="diff" summary="table for <%= element.describe %>">
 		<tr><th></th><th>Expected</th><th></th><th>Generated</th></tr>
 		<%= replace_tabs(element.content) %>

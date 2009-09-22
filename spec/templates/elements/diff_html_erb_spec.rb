@@ -17,6 +17,7 @@ describe "checked-files output in detail row" do
     @element = mock("element")
     
     @element.should_receive(:name).and_return(:element)
+    @element.should_receive(:filename).and_return("the filename")
     @element.should_receive(:describe).at_least(:once).and_return("the description")
     @element.should_receive(:content).and_return("the diff")
     

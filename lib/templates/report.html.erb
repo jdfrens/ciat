@@ -20,15 +20,18 @@
       	
   	<table border="1" summary="Table of tests" class="results">
   		<tr id="header">
-			  <th>Description</th>
-				<% processors.each do |processor| %>
-				  <th><%= title(processor.describe) %></th>
-				<% end %>
+			<th>Description</th>
+			<% processors.each do |processor| %>
+				<th><%= title(processor.describe) %></th>
+			<% end %>
   		</tr>
 
   		<% results.each do |result| %>
-				<%= render "summary_row", :result => result %>
-				<%= render "detail_row", :result => result %>
+			<% if new_path?(result) %>
+				<%= render "group_header", :result => result %>
+			<% end %>
+			<%= render "summary_row", :result => result %>
+			<%= render "detail_row", :result => result %>
   		<% end %>
   	</table>
 	</body>

@@ -40,6 +40,7 @@ end
 # tasks to exercise CIAT itself
 task :exercise_ciat => [:simple,
                         :less_simple,
+                        :subfolders,
                         :errors_and_failures]
                         
 CIAT::RakeTask.new(:simple) do |task|
@@ -57,6 +58,14 @@ CIAT::RakeTask.new(:less_simple) do |task|
   task.feedback = feedback(2, [:green, :green, :green, :green])
 end
 
+CIAT::RakeTask.new(:subfolders) do |task|
+  task.processors << copy_compiler
+  task.folder = 'ciat/subfolders'
+  task.report_filename = 'subfolders.html'
+  task.report_title = "Subfolder Tests"
+  task.feedback = feedback(3, [:green, :green, :green])
+end
+    
 task :errors_and_failures do
   deliberate_failure do
     suite = CIAT::Suite.new(

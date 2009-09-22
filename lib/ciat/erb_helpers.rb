@@ -41,6 +41,15 @@ module CIAT::ERBHelpers
   	string.gsub("\t", "    ")
   end
   
+  def new_path?(result)
+    if @old_path == File.dirname(result.filename)
+      false
+    else
+      @old_path = File.dirname(result.filename)
+      true
+    end
+  end
+  
   # Recursively renders another template.  If it's possible to write your own
   # templates for reports, this will probably play a key role.
   def render(file, locals)

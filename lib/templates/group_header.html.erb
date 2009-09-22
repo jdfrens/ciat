@@ -1,0 +1,7 @@
+<% if new_path?(result) %>
+	<tr>
+		<td colspan="<%= result.processors.size + 1 %>">
+	  		<strong><%= File.dirname(result.filename).gsub("/", " / ") %></strong>
+		</td>
+	</tr>
+<% end %>

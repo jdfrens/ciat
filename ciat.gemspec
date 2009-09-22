@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name     = "ciat"
-  s.version  = "0.4.6"
+  s.version  = "0.4.7"
   s.summary  = "Acceptance tester for compilers and interpreters"
   s.email    = "jdfrens@gmail.com"
   s.homepage = "http://github.com/jdfrens/ciat"
@@ -37,6 +37,7 @@ Gem::Specification.new do |s|
       "lib/data/prototype.js",
       "lib/data/elements.yml",
       "lib/templates/report.html.erb",
+      "lib/templates/group_header.html.erb",
       "lib/templates/summary_row.html.erb",
       "lib/templates/test_numbers.html.erb",
       "lib/templates/detail_row.html.erb",

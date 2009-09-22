@@ -16,6 +16,7 @@ describe "report" do
     @size = mock("size")
     
     @recursion.stub!(:render).with("test_numbers", :counter => @counter, :size => @size)
+    @recursion.stub!(:new_path?).with(:anything).and_return(false)
     
     @erb = ERB.new(File.read("lib/templates/report.html.erb"))
   end
@@ -47,6 +48,10 @@ describe "report" do
   end
   
   describe "writing table rows" do
+    def new_path?(foo)
+      false
+    end
+    
     it "should write summary rows" do
       @results = [mock("r 0"), mock("r 1"), mock("r 2")]
       

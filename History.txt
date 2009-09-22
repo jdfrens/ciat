@@ -1,3 +1,11 @@
+== 0.4.7 2009-09-22
+* 3 major features
+  * File names appear as title attributes for tests and elements in the
+		HTML report.
+  * Folders containing tests are grouped in the HTML report, and each
+		group has a header consisting of the folder's path.
+  * The CIAT::RakeTask class makes defining a rake task a bit cleaner.
+
 == 0.4.1 2009-04-29
 * 1 major feature (bug fix?)
   * If a test errors or fails, the Suite task will fail.  This sets

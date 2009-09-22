@@ -1,10 +1,12 @@
 require 'set'
 
 class CIAT::Test
+  attr_reader :filename
   attr_reader :processors
   attr_reader :elements
 
-  def initialize(elements, options={}) #:nodoc:
+  def initialize(filename, elements, options={}) #:nodoc:
+    @filename = filename
     @elements = elements
     @processors = options[:processors]
     @feedback = options[:feedback]

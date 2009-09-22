@@ -11,6 +11,7 @@ describe "summary row of test report" do
   
   before(:each) do
     @result = mock('result')
+    @result.stub!(:filename).and_return("the filename")
     @recursion = mock('recursion')
     @erb = ERB.new(File.read("lib/templates/summary_row.html.erb"))
   end

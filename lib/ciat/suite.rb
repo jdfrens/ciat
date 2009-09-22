@@ -91,7 +91,7 @@ class CIAT::Suite
   end
   
   def create_test(crate)
-    CIAT::Test.new(
+    CIAT::Test.new(crate.test_file,
       crate.process_test_file,
       :processors => test_processors,
       :feedback => @feedback)

@@ -10,7 +10,8 @@ module CIAT
     # compared.
     #
     # The Parrot executor allows for a <code>command line</code> element.  This
-    # specifies the command-line arguments when the <code>compilation</code> is executed.
+    # specifies the command-line arguments when the <code>compilation</code>
+    # is executed.
     # If none is provided, no command-line arguments are used.
     class Parrot
       include CIAT::Processors::BasicProcessing
@@ -25,11 +26,15 @@ module CIAT
       # Possible options:
       # * <code>:description</code> is the description used in the HTML report 
       #   for this processor (default: <code>"Parrot virtual machine"</code>).
-      # * <code>:command_line</code> is the description used in the HTML report
-      #   for the command-line arguments (if any) (default: "Command-line arguments").
+      # * <code>:command_line</code> is the description used in the HTML
+      #   report
+      #   for the command-line arguments (if any) (default: "Command-line
+      #   arguments").
       def initialize(options={})
-        @processor_kind = options[:processor_kind] || CIAT::Processors::Interpreter.new
+        @processor_kind = options[:processor_kind] ||   
+          CIAT::Processors::Interpreter.new
         @description = options[:description] || "Parrot virtual machine"
+        @libraries = options[:libraries] || []
         @light = CIAT::TrafficLight.new
       end
       
@@ -39,7 +44,7 @@ module CIAT
       end
       
       def executable
-        "parrot"
+        (["parrot"] + @libraries.map { |l| "-L" + l }).join(" ")
       end
     end
   end

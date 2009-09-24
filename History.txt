@@ -1,3 +1,7 @@
+== 0.4.8 2009-
+* 1 minor feature
+  * Library paths can be specified for parrot executor.
+
 == 0.4.7 2009-09-22
 * 3 major features
   * File names appear as title attributes for tests and elements in the

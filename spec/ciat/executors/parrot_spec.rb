@@ -13,13 +13,18 @@ describe CIAT::Executors::Parrot do
     end
   end
   
-  before(:each) do
-    @crate = mock('crate')
-    @elements = mock('elements')
-    @executor = CIAT::Executors::Parrot.new
-  end
+  describe "default executor" do
+    before(:each) do
+      @executor = CIAT::Executors::Parrot.new
+    end
 
-  it "should have an executable" do
-    @executor.executable.should == "parrot"
-  end  
+    it "should have an executable" do
+      @executor.executable.should == "parrot"
+    end
+  end
+  
+  it "should use system libraries" do
+    executor = CIAT::Executors::Parrot.new(:libraries => ["/usr/local/foo", "../bar"])
+    executor.executable.should == "parrot -L/usr/local/foo -L../bar"
+  end
 end

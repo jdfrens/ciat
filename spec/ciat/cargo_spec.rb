@@ -89,8 +89,8 @@ describe CIAT::Cargo, "copying suite data" do
   it "should copy CSS files for report to default folder" do
     cargo = CIAT::Cargo.new(:files => [])
     FileUtils.should_receive(:mkdir_p).with(CIAT::Cargo::OUTPUT_FOLDER)
-    FileUtils.should_receive(:cp).with("./spec/ciat/../../lib/ciat/../data/ciat.css", CIAT::Cargo::OUTPUT_FOLDER)
-    FileUtils.should_receive(:cp).with("./spec/ciat/../../lib/ciat/../data/prototype.js", CIAT::Cargo::OUTPUT_FOLDER)
+    FileUtils.should_receive(:cp).with(/.*\/data\/ciat.css/, CIAT::Cargo::OUTPUT_FOLDER)
+    FileUtils.should_receive(:cp).with(/.*\/data\/prototype.js/, CIAT::Cargo::OUTPUT_FOLDER)
     
     cargo.copy_suite_data
   end
@@ -100,8 +100,8 @@ describe CIAT::Cargo, "copying suite data" do
     cargo = CIAT::Cargo.new(:files => [], :output_folder => output_folder)
     
     FileUtils.should_receive(:mkdir_p).with(output_folder)
-    FileUtils.should_receive(:cp).with("./spec/ciat/../../lib/ciat/../data/ciat.css", output_folder)
-    FileUtils.should_receive(:cp).with("./spec/ciat/../../lib/ciat/../data/prototype.js", output_folder)
+    FileUtils.should_receive(:cp).with(/.*\/data\/ciat.css/, output_folder)
+    FileUtils.should_receive(:cp).with(/.*\/data\/prototype.js/, output_folder)
     
     cargo.copy_suite_data
   end

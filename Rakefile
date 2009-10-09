@@ -30,6 +30,27 @@ Rake::RDocTask.new(:doc) do |t|
   t.rdoc_files.include('lib/**/*.rb')
 end
 
+begin
+  require 'jeweler'
+  Jeweler::Tasks.new do |gemspec|
+    gemspec.name     = "ciat"
+    gemspec.summary  = "Acceptance tester for compilers and interpreters"
+    gemspec.email    = "jdfrens@gmail.com"
+    gemspec.homepage = "http://github.com/jdfrens/ciat"
+    gemspec.description = "CIAT (pronounced \"dog\") is a library of Ruby and rake code to make writing acceptance tests for compilers and interpreters easier (despite their implementation, source, and target languages)."
+    gemspec.files = Dir['lib/**/*.rb']
+    gemspec.has_rdoc = true
+    gemspec.authors  = ["Jeremy D. Frens", "Mark Van Holstyn"]
+    gemspec.rdoc_options <<
+      '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<
+      '--main' << 'README.txt' <<
+      '--line-numbers'
+  end
+  Jeweler::GemcutterTasks.new
+rescue LoadError
+  puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
+end
+
 desc "Make and install gem"
 task :gem => [:specs_with_rcov] do
   system "sudo gem uninstall ciat"

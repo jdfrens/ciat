@@ -76,7 +76,7 @@ class CIAT::Suite
   
   # Returns the number of tests in the suite.
   def size
-    cargo.size
+    cargo.crates.size
   end
   
   # Runs all of the tests in the suite, and returns the results.  The results

@@ -18,11 +18,7 @@ class CIAT::Cargo #:nodoc:all
     @crates = filenames.map { |filename| CIAT::Crate.new(filename, @output_folder) }
     @report_filename = File.join(@output_folder, options[:report_filename] || REPORT_FILENAME)
   end
-  
-  def size
-    crates.size
-  end
-  
+    
   def copy_suite_data
     FileUtils.mkdir_p(output_folder)
     FileUtils.cp(File.join(File.dirname(__FILE__), "..", "data", "ciat.css"), output_folder)

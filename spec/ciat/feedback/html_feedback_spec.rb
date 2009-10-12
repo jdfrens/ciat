@@ -25,7 +25,7 @@ describe CIAT::Feedback::HtmlFeedback do
     suite.should_receive(:cargo).any_number_of_times.and_return(cargo)
     @feedback.should_receive(:generate_html).with(suite).and_return(html)
     cargo.should_receive(:report_filename).and_return(report_filename)
-    cargo.should_receive(:write_file).with(report_filename, html)
+    CIAT::Cargo.should_receive(:write_file).with(report_filename, html)
     
     @feedback.post_tests(suite)
   end

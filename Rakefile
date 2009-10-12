@@ -6,17 +6,17 @@ require 'spec/rake/spectask'
 task :default => :specs
 
 desc "Run all examples"
-Spec::Rake::SpecTask.new(:specs) do |t|
-  t.spec_opts = ['--options', "spec/spec.opts"]
+Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_files = FileList['spec/**/*_spec.rb']
 end
 
-desc "Run all examples with rcov"
-Spec::Rake::SpecTask.new(:specs_with_rcov) do |t|
-  t.spec_opts = ['--options', "spec/spec.opts"]
-  t.spec_files = FileList['spec/**/*_spec.rb']
-  t.rcov = true
-  t.rcov_opts = ['--exclude', 'spec']
+namespace :spec do
+  desc "Run all examples with rcov"
+  Spec::Rake::SpecTask.new(:rcov) do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.rcov = true
+    t.rcov_opts = ['--exclude', 'spec']
+  end
 end
 
 desc "Generate documentation for CIAT"
@@ -51,11 +51,4 @@ rescue LoadError
   puts "Jeweler not available. Install it with: sudo gem install technicalpickles-jeweler -s http://gems.github.com"
 end
 
-desc "Make and install gem"
-task :gem => [:specs_with_rcov] do
-  system "sudo gem uninstall ciat"
-  system "rm *.gem"
-  system "gem build ciat.gemspec"
-  system "sudo gem install ciat*.gem"
-end
 CLOBBER << FileList['*.gem']

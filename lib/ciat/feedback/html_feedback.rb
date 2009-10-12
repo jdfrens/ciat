@@ -17,7 +17,7 @@ module CIAT::Feedback
     end
   
     def post_tests(suite)
-      suite.cargo.write_file(
+      CIAT::Cargo.write_file(
         suite.cargo.report_filename, 
         generate_html(suite))
     end

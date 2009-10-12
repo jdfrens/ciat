@@ -29,19 +29,6 @@ class CIAT::Cargo #:nodoc:all
     FileUtils.cp(File.join(File.dirname(__FILE__), "..", "data", "prototype.js"), output_folder)
   end
   
-  # TODO: get rid of this in favor of the class method
-  def write_file(filename, content)
-    FileUtils.mkdir_p(File.dirname(filename))
-    File.open(filename, "w") do |file|
-      file.write content
-    end
-  end
-  
-  # TODO: get rid of this in favor of the class method
-  def read_file(filename)
-    File.read(filename)
-  end
-
   def self.write_file(filename, content)
     FileUtils.mkdir_p(File.dirname(filename))
     File.open(filename, "w") do |file|

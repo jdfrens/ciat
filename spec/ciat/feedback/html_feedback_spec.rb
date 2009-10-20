@@ -7,12 +7,15 @@ describe CIAT::Feedback::HtmlFeedback do
     @counter = mock("counter")
     @feedback = CIAT::Feedback::HtmlFeedback.new(@counter)
   end
-  
+
   it "should have a pre-test action" do
-    suite, cargo = mock("suite"), mock("cargo")
-    
-    suite.should_receive(:cargo).and_return(cargo)
-    cargo.should_receive(:copy_suite_data)
+    suite, output_folder = mock("suite"), mock("output folder")
+
+    suite.should_receive(:output_folder).
+      at_least(:once).and_return(output_folder)
+    FileUtils.should_receive(:mkdir_p).with(output_folder)
+    FileUtils.should_receive(:cp).with(/.*\/data\/ciat.css/, output_folder)
+    FileUtils.should_receive(:cp).with(/.*\/data\/prototype.js/, output_folder)
     
     @feedback.pre_tests(suite)
   end
@@ -25,7 +28,7 @@ describe CIAT::Feedback::HtmlFeedback do
     suite.should_receive(:cargo).any_number_of_times.and_return(cargo)
     @feedback.should_receive(:generate_html).with(suite).and_return(html)
     cargo.should_receive(:report_filename).and_return(report_filename)
-    CIAT::Cargo.should_receive(:write_file).with(report_filename, html)
+    @feedback.should_receive(:write_file).with(report_filename, html)
     
     @feedback.post_tests(suite)
   end

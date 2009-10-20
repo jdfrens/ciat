@@ -10,7 +10,7 @@ describe CIAT::TestElement do
   
   describe "treating as a file" do
     it "should be written as a file when interesting content" do
-      CIAT::Cargo.should_receive(:write_file).with(@filename, @content)
+      @element.should_receive(:write_file).with(@filename, @content)
 
       @element.as_file.should == @filename
     end
@@ -33,7 +33,7 @@ describe CIAT::TestElement do
       read_content = mock("read content")
       test_element = CIAT::TestElement.new(:some_name, @filename, nil)
       
-      CIAT::Cargo.should_receive(:read_file).
+      test_element.should_receive(:read_file).
         with(@filename).and_return(read_content)
       
       test_element.content.should == read_content

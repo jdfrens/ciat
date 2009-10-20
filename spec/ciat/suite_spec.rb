@@ -19,7 +19,7 @@ describe CIAT::Suite do
   it "should have a size based on the number of test files" do
     suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo)
     
-    @cargo.should_receive(:size).and_return(42)
+    @cargo.stub_chain(:crates, :size).and_return(42)
 
     suite.size.should == 42
   end

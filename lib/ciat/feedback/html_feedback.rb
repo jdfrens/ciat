@@ -1,15 +1,19 @@
 require 'ciat/erb_helpers'
+require 'ciat/io'
 
 module CIAT::Feedback
   class HtmlFeedback
     include CIAT::ERBHelpers
+    include CIAT::IO
     
     def initialize(counter)
       @counter = counter
     end
 
     def pre_tests(suite)
-      suite.cargo.copy_suite_data      
+      FileUtils.mkdir_p(suite.output_folder)
+      FileUtils.cp(File.join(File.dirname(__FILE__), "..", "..", "data", "ciat.css"), suite.output_folder)
+      FileUtils.cp(File.join(File.dirname(__FILE__), "..", "..", "data", "prototype.js"), suite.output_folder)
     end
   
     def processor_result(processor)
@@ -17,9 +21,10 @@ module CIAT::Feedback
     end
   
     def post_tests(suite)
-      CIAT::Cargo.write_file(
+      write_file(
         suite.cargo.report_filename, 
-        generate_html(suite))
+        generate_html(suite)
+        )
     end
 
     def generate_html(suite) #:nodoc:

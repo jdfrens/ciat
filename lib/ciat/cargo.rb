@@ -18,21 +18,5 @@ class CIAT::Cargo #:nodoc:all
     @crates = filenames.map { |filename| CIAT::Crate.new(filename, @output_folder) }
     @report_filename = File.join(@output_folder, options[:report_filename] || REPORT_FILENAME)
   end
-    
-  def copy_suite_data
-    FileUtils.mkdir_p(output_folder)
-    FileUtils.cp(File.join(File.dirname(__FILE__), "..", "data", "ciat.css"), output_folder)
-    FileUtils.cp(File.join(File.dirname(__FILE__), "..", "data", "prototype.js"), output_folder)
-  end
-  
-  def self.write_file(filename, content)
-    FileUtils.mkdir_p(File.dirname(filename))
-    File.open(filename, "w") do |file|
-      file.write content
-    end
-  end
-  
-  def self.read_file(filename)
-    File.read(filename)
-  end
+
 end

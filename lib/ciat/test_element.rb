@@ -1,6 +1,10 @@
 require "yaml"
+require 'ciat/io'
 
 class CIAT::TestElement
+  
+  include CIAT::IO
+  
   attr_reader :name
   attr_reader :filename
   
@@ -26,12 +30,12 @@ class CIAT::TestElement
   end
   
   def content
-    @content ||= CIAT::Cargo.read_file(@filename)
+    @content ||= read_file(@filename)
   end
   
   def as_file
     if @content
-      CIAT::Cargo.write_file(@filename, @content)
+      write_file(@filename, @content)
     end
     @filename
   end
@@ -41,4 +45,5 @@ class CIAT::TestElement
   def metadata
     @@metadata ||= YAML.load_file(File.join(File.dirname(__FILE__), "..", "data", "elements.yml"))
   end
+  
 end

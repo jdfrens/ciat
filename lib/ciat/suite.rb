@@ -101,7 +101,11 @@ class CIAT::Suite
     @processors.map { |processor| processor.for_test }
   end
   
-  private
+  def output_folder
+    cargo.output_folder
+  end
+
+  private  
   def default_feedback
     counter = CIAT::Feedback::FeedbackCounter.new
     CIAT::Feedback::Composite.new(counter,

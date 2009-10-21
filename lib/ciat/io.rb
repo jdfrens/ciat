@@ -1,5 +1,8 @@
 module CIAT::IO
   
+  OUTPUT_FOLDER = "temp"
+  REPORT_FILENAME = "report.html"
+  
   def write_file(filename, content)
     FileUtils.mkdir_p(File.dirname(filename))
     File.open(filename, "w") do |file|

@@ -3,39 +3,39 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 describe CIAT::Suite do
   before(:each) do
     @processors = mock("processors")
-    @cargo = mock("cargo")
     @feedback = mock("feedback")
   end
   
-  it "should construct cargo with options to constructor" do
-    CIAT::Cargo.should_receive(:new).with(:processors => @processors,
-      :option1 => "optionA", :option2 => "optionB", :option3 => "optionC"
-    ).and_return(@cargo)
-    suite = CIAT::Suite.new(:processors => @processors,
-      :option1 => "optionA", :option2 => "optionB", :option3 => "optionC")
-    suite.cargo.should == @cargo
-  end
-  
-  it "should have a size based on the number of test files" do
-    suite = CIAT::Suite.new(:processors => @processors, :cargo => @cargo)
+  it "should construct with suite builder" do
+    options = mock("options")
+    suite_builder = mock("suite builder")
     
-    @cargo.stub_chain(:crates, :size).and_return(42)
-
-    suite.size.should == 42
+    CIAT::SuiteBuilder.should_receive(:new).
+      with(options).and_return(suite_builder)
+    suite_builder.should_receive(:build_processors)
+    suite_builder.should_receive(:build_output_folder)
+    suite_builder.should_receive(:build_crates)
+    suite_builder.should_receive(:build_feedback)
+      
+    CIAT::Suite.new(options)
   end
-
+    
   describe "the top-level function to run the tests" do
     before(:each) do
       @processors = [mock("processor 0"), mock("processor 1"), mock("processor 2")]
       @suite = CIAT::Suite.new(
         :processors => @processors, 
-        :cargo => @cargo, 
         :feedback => @feedback)
     end
     
+    it "should have a size based on the number of test files" do
+      @suite.stub_chain(:crates, :size).and_return(42)
+
+      @suite.size.should == 42
+    end
+
     it "should run tests on no test files" do    
       @feedback.should_receive(:pre_tests).with(@suite)
-      @cargo.should_receive(:crates).and_return([])
       @feedback.should_receive(:post_tests).with(@suite)
     
       @suite.run.should == []
@@ -49,7 +49,7 @@ describe CIAT::Suite do
       results = [mock("result 1"), mock("result 2")]
 
       @feedback.should_receive(:pre_tests).with(@suite)
-      @cargo.should_receive(:crates).with().and_return(crates)
+      @suite.should_receive(:crates).with().and_return(crates)
       expect_create_and_run_test(crates[0], results[0])
       expect_create_and_run_test(crates[1], results[1])
       @feedback.should_receive(:post_tests).with(@suite)

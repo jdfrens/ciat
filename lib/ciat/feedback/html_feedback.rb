@@ -1,4 +1,5 @@
 require 'ciat/erb_helpers'
+require 'ciat/suite_builder'
 require 'ciat/io'
 
 module CIAT::Feedback
@@ -6,8 +7,15 @@ module CIAT::Feedback
     include CIAT::ERBHelpers
     include CIAT::IO
     
-    def initialize(counter)
+    attr_reader :report_title
+    attr_reader :report_filename
+    
+    def initialize(counter, options)
       @counter = counter
+      # TODO: separate suite and report builders
+      builder = CIAT::SuiteBuilder.new(options)
+      @report_title = builder.build_report_title
+      @report_filename = builder.build_report_filename
     end
 
     def pre_tests(suite)
@@ -22,7 +30,7 @@ module CIAT::Feedback
   
     def post_tests(suite)
       write_file(
-        suite.cargo.report_filename, 
+        report_filename, 
         generate_html(suite)
         )
     end
@@ -30,7 +38,6 @@ module CIAT::Feedback
     def generate_html(suite) #:nodoc:
       processors = suite.processors
       results = suite.results
-      report_title = suite.report_title
       size = suite.size
       counter = @counter
       ERB.new(template).result(binding)

@@ -2,6 +2,7 @@ require 'erb'
 require 'ciat/feedback/composite'
 require 'ciat/feedback/feedback_counter'
 require 'ciat/feedback/return_status'
+require 'ciat/io'
 
 # = A Suite of Tests
 #
@@ -54,36 +55,33 @@ require 'ciat/feedback/return_status'
 # See the README for details on the format of a test file.
 #
 class CIAT::Suite
-  attr_reader :cargo
-  attr_reader :results
+  include CIAT::IO
+  
   attr_reader :processors
-  attr_reader :report_title
+  attr_reader :output_folder
+  attr_reader :crates
+  attr_reader :results
   
   # Constructs a suite of CIAT tests.  See the instructions above for possible
   # values for the +options+.
   def initialize(options = {})
-    @processors = options[:processors]
-    @cargo = options[:cargo] || CIAT::Cargo.new(options)
-    @report_title = "CIAT Report"
-    if options[:report_title]
-      @report_title = @report_title + ": " + options[:report_title]
-    end
-    @feedback = options[:feedback] || default_feedback
-    @feedback = CIAT::Feedback::Composite.new(
-        @feedback, CIAT::Feedback::ReturnStatus.new
-      )
+    builder = CIAT::SuiteBuilder.new(options)
+    @processors = builder.build_processors
+    @output_folder = builder.build_output_folder
+    @crates = builder.build_crates
+    @feedback = builder.build_feedback
   end
-  
+    
   # Returns the number of tests in the suite.
   def size
-    cargo.crates.size
+    crates.size
   end
   
   # Runs all of the tests in the suite, and returns the results.  The results
   # are also available through #results.
   def run
     @feedback.pre_tests(self)
-    @results = cargo.crates.
+    @results = crates.
       map { |crate| create_test(crate) }.
       map { |test| test.run }
     @feedback.post_tests(self)
@@ -100,17 +98,5 @@ class CIAT::Suite
   def test_processors #:nodoc:
     @processors.map { |processor| processor.for_test }
   end
-  
-  def output_folder
-    cargo.output_folder
-  end
 
-  private  
-  def default_feedback
-    counter = CIAT::Feedback::FeedbackCounter.new
-    CIAT::Feedback::Composite.new(counter,
-      CIAT::Feedback::StandardOutput.new(counter),
-      CIAT::Feedback::HtmlFeedback.new(counter)
-      )
-  end
 end

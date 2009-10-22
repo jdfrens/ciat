@@ -1,5 +1,5 @@
 require 'ciat/erb_helpers'
-require 'ciat/suite_builder'
+require 'ciat/feedback/html_feedback_builder'
 require 'ciat/io'
 
 module CIAT::Feedback
@@ -12,8 +12,7 @@ module CIAT::Feedback
     
     def initialize(counter, options)
       @counter = counter
-      # TODO: separate suite and report builders
-      builder = CIAT::SuiteBuilder.new(options)
+      builder = CIAT::Feedback::HtmlFeedbackBuilder.new(options)
       @report_title = builder.build_report_title
       @report_filename = builder.build_report_filename
     end

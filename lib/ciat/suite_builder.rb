@@ -14,7 +14,7 @@ class CIAT::SuiteBuilder
   end
   
   def build_output_folder
-    @output_folder ||= options[:output_folder] || OUTPUT_FOLDER
+    options[:output_folder] || OUTPUT_FOLDER
   end
   
   def build_crates
@@ -25,18 +25,8 @@ class CIAT::SuiteBuilder
       pattern = options[:pattern] || "*.ciat"
       filenames = Dir[File.join(folder, "**", pattern)]
     end
-    filenames.map { |filename| CIAT::Crate.new(filename, build_output_folder) }
-  end
-  
-  def build_report_filename
-    File.join(build_output_folder, options[:report_filename] || REPORT_FILENAME)
-  end
-  
-  def build_report_title
-    if options[:report_title]
-      "CIAT Report: " + options[:report_title]
-    else
-      "CIAT Report"
+    filenames.map do |filename|
+      CIAT::Crate.new(filename, build_output_folder)
     end
   end
   

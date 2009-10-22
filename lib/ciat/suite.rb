@@ -2,7 +2,7 @@ require 'erb'
 require 'ciat/feedback/composite'
 require 'ciat/feedback/feedback_counter'
 require 'ciat/feedback/return_status'
-require 'ciat/io'
+require 'ciat/suite_builder'
 
 # = A Suite of Tests
 #
@@ -55,7 +55,6 @@ require 'ciat/io'
 # See the README for details on the format of a test file.
 #
 class CIAT::Suite
-  include CIAT::IO
   
   attr_reader :processors
   attr_reader :output_folder

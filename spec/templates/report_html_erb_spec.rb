@@ -48,7 +48,7 @@ describe "report" do
   end
   
   describe "writing table rows" do
-    def new_path?(foo)
+    def new_grouping?(result)
       false
     end
     

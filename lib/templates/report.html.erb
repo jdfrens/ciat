@@ -27,7 +27,7 @@
   		</tr>
 
   		<% results.each do |result| %>
-			<% if new_path?(result) %>
+			<% if new_grouping?(result) %>
 				<%= render "group_header", :result => result %>
 			<% end %>
 			<%= render "summary_row", :result => result %>

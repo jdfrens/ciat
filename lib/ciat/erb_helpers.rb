@@ -41,11 +41,11 @@ module CIAT::ERBHelpers
   	string.gsub("\t", "    ")
   end
   
-  def new_path?(result)
-    if @old_path == File.dirname(result.filename)
+  def new_grouping?(result)
+    if @old_grouping == result.grouping
       false
     else
-      @old_path = File.dirname(result.filename)
+      @old_grouping = result.grouping
       true
     end
   end

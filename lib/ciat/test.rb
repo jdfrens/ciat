@@ -1,15 +1,22 @@
 require 'set'
 
 class CIAT::Test
-  attr_reader :filename
   attr_reader :processors
   attr_reader :elements
 
-  def initialize(filename, elements, options={}) #:nodoc:
-    @filename = filename
+  def initialize(crate, elements, options={}) #:nodoc:
+    @crate = crate
     @elements = elements
     @processors = options[:processors]
     @feedback = options[:feedback]
+  end
+  
+  def filename
+    @crate.filename(:ciat)
+  end
+  
+  def grouping
+    @crate.grouping
   end
   
   def run

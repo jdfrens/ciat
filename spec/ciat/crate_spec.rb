@@ -7,14 +7,6 @@ describe CIAT::Crate, "generating interesting names" do
     @expected_filename = mock("expected filename")
   end
     
-  it "should have a test file" do
-    @crate.test_file.should == "ciat/filename.ciat"
-  end
-  
-  it "should have a stub" do
-    @crate.stub.should == "ciat/filename"
-  end  
-  
   #
   # Helpers
   #

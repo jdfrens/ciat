@@ -1,7 +1,7 @@
-<% if new_path?(result) %>
+<% if new_grouping?(result) %>
 	<tr>
 		<td colspan="<%= result.processors.size + 1 %>">
-	  		<strong><%= File.dirname(result.filename).gsub("/", " / ") %></strong>
+	  		<strong><%= result.grouping.gsub("/", " / ") %></strong>
 		</td>
 	</tr>
 <% end %>

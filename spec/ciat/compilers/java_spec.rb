@@ -14,7 +14,7 @@ describe CIAT::Compilers::Java do
   end
   
   before(:each) do
-    @crate = mock('crate')
+    @test_file = mock('test file')
     @classpath = mock("classpath")
     @compiler_class = mock("compiler class")
     @compiler = CIAT::Compilers::Java.new(@classpath, @compiler_class)

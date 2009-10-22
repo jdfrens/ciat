@@ -17,7 +17,7 @@ class CIAT::SuiteBuilder
     options[:output_folder] || OUTPUT_FOLDER
   end
   
-  def build_crates
+  def build_test_files
     if options[:files]
       filenames = options[:files]
     else  
@@ -26,7 +26,7 @@ class CIAT::SuiteBuilder
       filenames = Dir[File.join(folder, "**", pattern)]
     end
     filenames.map do |filename|
-      CIAT::Crate.new(filename, build_output_folder)
+      CIAT::TestFile.new(filename, build_output_folder)
     end
   end
   

@@ -1,30 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
-describe CIAT::Crate, "generating interesting names" do
+describe CIAT::TestFile do
   before(:each) do
-    @output_folder = mock("output folder")
-    @crate = CIAT::Crate.new("ciat/filename.ciat", @output_folder)
-    @expected_filename = mock("expected filename")
-  end
-    
-  #
-  # Helpers
-  #
-  def mock_and_expect_filename_and_contents(type, content)
-    filename = mock_and_expect_filename(type)
-    @crate.should_receive(:write_file).with(filename, content)
-  end
-  
-  def mock_and_expect_filename(type)
-    filename = mock(type.to_s + " filename")
-    @crate.should_receive(:filename).with(type).and_return(filename)
-    filename
-  end
-end
-
-describe CIAT::Crate, "processing a CIAT file" do
-  before(:each) do
-    @crate = CIAT::Crate.new(mock("filename"), mock("output folder"))
+    @test_file = CIAT::TestFile.new(mock("filename"), mock("output folder"))
   end
   
   describe "processing test file" do
@@ -37,10 +15,10 @@ describe CIAT::Crate, "processing a CIAT file" do
         :e0 => mock("element 0"), :e1 => mock("element 1"), 
         :e2 => mock("element 2") }
 
-      @crate.should_receive(:split_test_file).and_return(raw_elements)
-      @crate.should_receive(:filename).with(:e0).and_return(filenames[0])
-      @crate.should_receive(:filename).with(:e1).and_return(filenames[1])
-      @crate.should_receive(:filename).with(:e2).and_return(filenames[2])
+      @test_file.should_receive(:split_test_file).and_return(raw_elements)
+      @test_file.should_receive(:filename).with(:e0).and_return(filenames[0])
+      @test_file.should_receive(:filename).with(:e1).and_return(filenames[1])
+      @test_file.should_receive(:filename).with(:e2).and_return(filenames[2])
       CIAT::TestElement.should_receive(:new).
         with(:e0, filenames[0], raw_elements[:e0]).and_return(elements[:e0])
       CIAT::TestElement.should_receive(:new).
@@ -48,52 +26,56 @@ describe CIAT::Crate, "processing a CIAT file" do
       CIAT::TestElement.should_receive(:new).
         with(:e2, filenames[2], raw_elements[:e2]).and_return(elements[:e2])
       
-      @crate.process_test_file.should == elements
+      @test_file.process_test_file.should == elements
     end
   end
   
   describe "splitting a test file" do
     it "should split just a description" do
       expect_file_content("description only\n")
-      @crate.split_test_file.should == { :description => "description only\n" }
+      @test_file.split_test_file.should == { :description => "description only\n" }
     end
     
     it "should split description and something else" do
       expect_file_content("description\n", "==== tag\n", "content\n")
-      @crate.split_test_file.should == { :description => "description\n", :tag => "content\n" }
+      @test_file.split_test_file.should == { :description => "description\n", :tag => "content\n" }
     end
     
     it "should split the test file" do
       expect_file_content("d\n", "==== source\n", "s\n",
         "==== compilation_expected \n", "p\n",
         "==== output_expected\n", "o\n")
-      @crate.split_test_file.should == { :description => "d\n",
+      @test_file.split_test_file.should == { :description => "d\n",
         :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
     end
     
     it "should allow spaces in element name" do
       expect_file_content("description\n" , "==== element name\n", "content\n")
-      @crate.split_test_file.should == {
+      @test_file.split_test_file.should == {
         :description => "description\n", :element_name => "content\n" }
     end
     
     def expect_file_content(*content)
-      @crate.should_receive(:read_test_file).and_return(content)
+      @test_file.should_receive(:read_test_file).and_return(content)
     end
   end
 end
 
-describe CIAT::Crate, "generating actual file names" do
+describe CIAT::TestFile, "generating actual file names" do
   before(:each) do
     @output_folder = "outie"
-    @crate = CIAT::Crate.new("ciat/phile.ciat", @output_folder)
+    @test_file = CIAT::TestFile.new("ciat/phile.ciat", @output_folder)
+  end
+  
+  it "should return the original filename" do
+    @test_file.filename(:ciat).should == "ciat/phile.ciat"
   end
   
   it "should work with no modifiers" do
-    @crate.filename().should == "outie/ciat/phile"
+    @test_file.filename().should == "outie/ciat/phile"
   end
   
   it "should work with multiple modifiers" do
-    @crate.filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
+    @test_file.filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
   end
 end

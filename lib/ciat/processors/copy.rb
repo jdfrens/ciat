@@ -21,16 +21,16 @@ module CIAT
         "copy processor"
       end
       
-      def process(crate)
-        if system( "cp '#{crate.element(@original).as_file}' '#{crate.element(@copy).as_file}'")
+      def process(test_file)
+        if system( "cp '#{test_file.element(@original).as_file}' '#{test_file.element(@copy).as_file}'")
           light.green!
         else
           light.red!
         end
       end
       
-      def relevant_elements(crate)
-        [@original, @copy].map { |e| crate.element(e) }
+      def relevant_elements(test_file)
+        [@original, @copy].map { |e| test_file.element(e) }
       end
     end
   end

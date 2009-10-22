@@ -18,7 +18,7 @@ describe CIAT::TestElement do
     it "should just return filename for pending content" do
       test_element = CIAT::TestElement.new(:some_name, @filename, nil)
       
-      CIAT::Cargo.should_not_receive(:write_file)
+      test_element.should_not_receive(:write_file)
       
       test_element.as_file.should == @filename
     end

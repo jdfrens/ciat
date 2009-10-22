@@ -3,12 +3,12 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 describe CIAT::Test do
   before(:each) do
     @filename = mock("filename")
-    @crate = mock("crate")
+    @test_file = mock("test file")
     @processors = [mock("p 0"), mock("p 1"), mock("p 2")]
     @differ = mock("differ")
     @lights = [mock("light 0"), mock("light 1"), mock("light 2")]
     @feedback = mock("feedback")
-    @test = CIAT::Test.new(@filename, @crate,
+    @test = CIAT::Test.new(@test_file, mock("elements"),
       :processors => @processors,
       :differ => @differ,
       :feedback => @feedback)

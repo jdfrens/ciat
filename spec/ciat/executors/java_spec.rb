@@ -16,7 +16,7 @@ describe CIAT::Executors::Java do
   before(:each) do
     @classpath = mock("classpath", :to_s => 'the classpath')
     @interpreter_class = mock("interpreter", :to_s => 'the interpreter')
-    @crate = mock('crate')
+    @test_file = mock('test file')
     @elements = mock('elements')
     @executor = CIAT::Executors::Java.new(@classpath, @interpreter_class)
   end

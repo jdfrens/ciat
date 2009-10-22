@@ -11,11 +11,12 @@ describe "detail row of test report" do
   
   before(:each) do
     @result = mock('result')
-    @crate = mock('crate')
+    @test_file = mock('test file')
     @recursion = mock('recursion')
     @erb = ERB.new(File.read("lib/templates/detail_row.html.erb"))
 
-    @result.should_receive(:crate).any_number_of_times.and_return(@crate)
+    @result.should_receive(:test_file).
+      any_number_of_times.and_return(@test_file)
   end
   
   it "should work with no processors" do

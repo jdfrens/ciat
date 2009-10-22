@@ -1,4 +1,4 @@
-class CIAT::Crate #:nodoc:all
+class CIAT::TestFile #:nodoc:all
     
   def initialize(test_file, output_folder)
     @test_file = test_file

@@ -4,19 +4,19 @@ class CIAT::Test
   attr_reader :processors
   attr_reader :elements
 
-  def initialize(crate, elements, options={}) #:nodoc:
-    @crate = crate
+  def initialize(test_file, elements, options={}) #:nodoc:
+    @test_file = test_file
     @elements = elements
     @processors = options[:processors]
     @feedback = options[:feedback]
   end
   
   def filename
-    @crate.filename(:ciat)
+    @test_file.filename(:ciat)
   end
   
   def grouping
-    @crate.grouping
+    @test_file.grouping
   end
   
   def run

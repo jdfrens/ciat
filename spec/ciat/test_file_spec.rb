@@ -15,7 +15,7 @@ describe CIAT::TestFile do
         :e0 => mock("element 0"), :e1 => mock("element 1"), 
         :e2 => mock("element 2") }
 
-      @test_file.should_receive(:split_test_file).and_return(raw_elements)
+      @test_file.should_receive(:split).and_return(raw_elements)
       @test_file.should_receive(:filename).with(:e0).and_return(filenames[0])
       @test_file.should_receive(:filename).with(:e1).and_return(filenames[1])
       @test_file.should_receive(:filename).with(:e2).and_return(filenames[2])
@@ -26,32 +26,32 @@ describe CIAT::TestFile do
       CIAT::TestElement.should_receive(:new).
         with(:e2, filenames[2], raw_elements[:e2]).and_return(elements[:e2])
       
-      @test_file.process_test_file.should == elements
+      @test_file.process.should == elements
     end
   end
   
   describe "splitting a test file" do
     it "should split just a description" do
       expect_file_content("description only\n")
-      @test_file.split_test_file.should == { :description => "description only\n" }
+      @test_file.split.should == { :description => "description only\n" }
     end
     
     it "should split description and something else" do
       expect_file_content("description\n", "==== tag\n", "content\n")
-      @test_file.split_test_file.should == { :description => "description\n", :tag => "content\n" }
+      @test_file.split.should == { :description => "description\n", :tag => "content\n" }
     end
     
     it "should split the test file" do
       expect_file_content("d\n", "==== source\n", "s\n",
         "==== compilation_expected \n", "p\n",
         "==== output_expected\n", "o\n")
-      @test_file.split_test_file.should == { :description => "d\n",
+      @test_file.split.should == { :description => "d\n",
         :source => "s\n", :compilation_expected => "p\n", :output_expected => "o\n" }
     end
     
     it "should allow spaces in element name" do
       expect_file_content("description\n" , "==== element name\n", "content\n")
-      @test_file.split_test_file.should == {
+      @test_file.split.should == {
         :description => "description\n", :element_name => "content\n" }
     end
     

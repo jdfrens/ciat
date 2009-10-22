@@ -88,10 +88,8 @@ class CIAT::Suite
   end
   
   def create_test(test_file)
-    CIAT::Test.new(test_file,
-      test_file.process_test_file,
-      :processors => test_processors,
-      :feedback => @feedback)
+    CIAT::Test.new(test_file, test_file.process,
+      :processors => test_processors, :feedback => @feedback)
   end
   
   def test_processors #:nodoc:

@@ -17,15 +17,15 @@ class CIAT::TestFile #:nodoc:all
     File.dirname(@test_file)
   end
   
-  def process_test_file #:nodoc:
+  def process #:nodoc:
     elements = empty_elements_hash
-    split_test_file.each do |name, contents|
+    split.each do |name, contents|
       elements[name] = CIAT::TestElement.new(name, filename(name), contents)
     end
     elements
   end
   
-  def split_test_file #:nodoc:
+  def split #:nodoc:
     tag = :description
     content = ""
     raw_elements = {}

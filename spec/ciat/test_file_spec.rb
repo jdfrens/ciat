@@ -56,7 +56,7 @@ describe CIAT::TestFile do
     end
     
     def expect_file_content(*content)
-      @test_file.should_receive(:read_test_file).and_return(content)
+      @test_file.should_receive(:read).and_return(content)
     end
   end
 end

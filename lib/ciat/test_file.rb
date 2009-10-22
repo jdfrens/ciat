@@ -17,10 +17,6 @@ class CIAT::TestFile #:nodoc:all
     File.dirname(@test_file)
   end
   
-  def read_test_file
-    File.readlines(@test_file)
-  end  
-  
   def process_test_file #:nodoc:
     elements = empty_elements_hash
     split_test_file.each do |name, contents|
@@ -33,7 +29,7 @@ class CIAT::TestFile #:nodoc:all
     tag = :description
     content = ""
     raw_elements = {}
-    read_test_file.each do |line|
+    read.each do |line|
       if line =~ /^==== ((\w|\s)+?)\W*$/
         raw_elements[tag] = content
         tag = $1.gsub(" ", "_").to_sym
@@ -50,6 +46,10 @@ class CIAT::TestFile #:nodoc:all
   # Helpers
   #
   private
+  
+  def read
+    File.readlines(@test_file)
+  end  
   
   def empty_elements_hash
     Hash.new do |hash, name|

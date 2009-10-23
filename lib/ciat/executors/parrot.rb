@@ -17,7 +17,7 @@ module CIAT
       include CIAT::Processors::BasicProcessing
       include CIAT::Differs::HtmlDiffer
 
-      attr_accessor :processor_kind
+      attr_accessor :kind
       attr_accessor :description
       attr_accessor :libraries
       attr_accessor :light
@@ -32,7 +32,7 @@ module CIAT
       #   for the command-line arguments (if any) (default: "Command-line
       #   arguments").
       def initialize()
-        self.processor_kind = CIAT::Processors::Interpreter.new
+        self.kind = CIAT::Processors::Interpreter.new
         self.description = "Parrot virtual machine"
         self.libraries = []
         self.light = CIAT::TrafficLight.new

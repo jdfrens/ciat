@@ -21,7 +21,7 @@ module CIAT
 
       # The traffic light to indicate the success or failure of the processor.
       attr_accessor :light
-      attr_accessor :processor_kind
+      attr_accessor :kind
       attr_accessor :compiler_class
       attr_accessor :descriptions
       attr_accessor :description
@@ -38,7 +38,7 @@ module CIAT
       def initialize(classpath, compiler_class)
         @classpath = classpath
         @compiler_class = compiler_class
-        self.processor_kind = CIAT::Processors::Compiler.new
+        self.kind = CIAT::Processors::Compiler.new
         self.descriptions = {}
         self.description = "compiler (implemented in Java)"
         self.light = TrafficLight.new

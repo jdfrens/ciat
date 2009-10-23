@@ -25,7 +25,7 @@ describe CIAT::Executors::Parrot do
   
   it "should have settable options" do
     CIAT::Executors::Parrot.new do |executor|
-      executor.processor_kind = mock("processor kind")
+      executor.kind = mock("processor kind")
       executor.description = mock("description")
       executor.libraries = mock("libraries")
       executor.light = mock("light")

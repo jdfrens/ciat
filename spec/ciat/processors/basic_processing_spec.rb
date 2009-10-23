@@ -117,13 +117,12 @@ describe CIAT::Processors::BasicProcessing do
   
   describe "computing a diff" do
     it "should compute a diff in HTML" do
-      test, processor_kind, result = 
+      test, kind, result = 
         mock("test"), mock("processor kind"), mock("result")
       output_name = mock("output name")
 
-      @processor.should_receive(:processor_kind).any_number_of_times.
-        and_return(processor_kind)
-      processor_kind.should_receive(:output_name).any_number_of_times.
+      @processor.should_receive(:kind).any_number_of_times.and_return(kind)
+      kind.should_receive(:output_name).any_number_of_times.
         and_return(output_name)
       original_file = expect_element_as_file(test, output_name)
       generated_file = expect_element_as_file(test, output_name, :generated)
@@ -147,7 +146,7 @@ describe CIAT::Processors::BasicProcessing do
       mock("kind"), mock("hash"), mock("light"), mock("setting")
     names = mock("names")
     
-    @processor.should_receive(:processor_kind).and_return(kind)
+    @processor.should_receive(:kind).and_return(kind)
     kind.should_receive(:element_name_hash).and_return(hash)
     @processor.should_receive(:light).and_return(light)
     light.should_receive(:setting).and_return(setting)
@@ -161,7 +160,7 @@ describe CIAT::Processors::BasicProcessing do
     kind, element, name = mock("kind"), mock("element"), mock("name")
     filename = mock("filename")
     
-    @processor.should_receive(:processor_kind).and_return(kind)
+    @processor.should_receive(:kind).and_return(kind)
     kind.should_receive(:input_name).and_return(name)
     test.should_receive(:element).with(name).and_return(element)
     element.should_receive(:as_file).and_return(filename)
@@ -174,7 +173,7 @@ describe CIAT::Processors::BasicProcessing do
     kind, element, name = mock("kind"), mock("element"), mock("name")
     filename = mock("filename")
     
-    @processor.should_receive(:processor_kind).and_return(kind)
+    @processor.should_receive(:kind).and_return(kind)
     kind.should_receive(:output_name).and_return(name)
     test.should_receive(:element).with(name, :generated).and_return(element)
     element.should_receive(:as_file).and_return(filename)
@@ -187,7 +186,7 @@ describe CIAT::Processors::BasicProcessing do
     kind, element, name = mock("kind"), mock("element"), mock("name")
     filename = mock("filename")
     
-    @processor.should_receive(:processor_kind).and_return(kind)
+    @processor.should_receive(:kind).and_return(kind)
     kind.should_receive(:output_name).and_return(name)
     test.should_receive(:element).with(name, :error).and_return(element)
     element.should_receive(:as_file).and_return(filename)

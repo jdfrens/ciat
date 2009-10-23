@@ -15,7 +15,7 @@ describe CIAT::Executors::Java do
 
   it "should have settable options" do
     CIAT::Executors::Java.new(mock("classpath"), mock("interpreter class")) do |executor|
-      executor.processor_kind = mock("processor kind")
+      executor.kind = mock("processor kind")
       executor.description = mock("description")
       executor.light = mock("light")
     end

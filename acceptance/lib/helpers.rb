@@ -29,7 +29,7 @@ end
 
 def parrot_executor(kind)
   CIAT::Executors::Parrot.new do |executor|
-    executor.processor_kind = kind
+    executor.kind = kind
   end
 end
 

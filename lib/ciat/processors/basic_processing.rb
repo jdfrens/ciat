@@ -34,9 +34,9 @@ module CIAT::Processors
     # Compares the expected and generated executions.
     def diff(test)
       html_diff(
-        test.element(processor_kind.output_name).as_file,
-        test.element(processor_kind.output_name, :generated).as_file, 
-        test.element(processor_kind.output_name, :diff).as_file)
+        test.element(kind.output_name).as_file,
+        test.element(kind.output_name, :generated).as_file, 
+        test.element(kind.output_name, :diff).as_file)
     end
     
     def relevant_elements(test)
@@ -46,19 +46,19 @@ module CIAT::Processors
     end
   
     def relevant_element_names
-      processor_kind.element_name_hash[light.setting]
+      kind.element_name_hash[light.setting]
     end
     
     def input_file(test)
-      test.element(processor_kind.input_name).as_file
+      test.element(kind.input_name).as_file
     end
 
     def output_file(test)
-      test.element(processor_kind.output_name, :generated).as_file
+      test.element(kind.output_name, :generated).as_file
     end
 
     def error_file(test)
-      test.element(processor_kind.output_name, :error).as_file
+      test.element(kind.output_name, :error).as_file
     end
   end
 end

@@ -7,7 +7,7 @@ module CIAT
       include CIAT::Differs::HtmlDiffer
 
       # Traffic light
-      attr_accessor :processor_kind
+      attr_accessor :kind
       attr_accessor :description
       attr_accessor :light
 
@@ -19,7 +19,7 @@ module CIAT
       def initialize(classpath, interpreter_class)
         @classpath = classpath
         @interpreter_class = interpreter_class
-        self.processor_kind = CIAT::Processors::Interpreter.new
+        self.kind = CIAT::Processors::Interpreter.new
         self.description = "in-Java interpreter"
         self.light = CIAT::TrafficLight.new
         yield self if block_given?

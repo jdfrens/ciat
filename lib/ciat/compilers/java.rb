@@ -19,11 +19,8 @@ module CIAT
       include CIAT::Processors::BasicProcessing
       include CIAT::Differs::HtmlDiffer
 
-      # The traffic light to indicate the success or failure of the processor.
       attr_accessor :light
       attr_accessor :kind
-      attr_accessor :compiler_class
-      attr_accessor :descriptions
       attr_accessor :description
       
       # Constructs a "Java compiler" object.  +classpath+ is the complete
@@ -39,7 +36,6 @@ module CIAT
         @classpath = classpath
         @compiler_class = compiler_class
         self.kind = CIAT::Processors::Compiler.new
-        self.descriptions = {}
         self.description = "compiler (implemented in Java)"
         self.light = TrafficLight.new
         yield self if block_given?

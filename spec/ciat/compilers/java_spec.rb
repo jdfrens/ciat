@@ -16,7 +16,6 @@ describe CIAT::Compilers::Java do
   it "should have settable options" do
     CIAT::Compilers::Java.new(mock("classpath"), mock("compiler class")) do |compiler|
       compiler.kind = mock("processor kind")
-      compiler.descriptions = mock("descriptions")
       compiler.description = mock("description")
       compiler.light = mock("light")
     end

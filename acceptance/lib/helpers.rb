@@ -28,7 +28,9 @@ def interpreter
 end
 
 def parrot_executor(kind)
-  CIAT::Executors::Parrot.new(:processor_kind => kind)
+  CIAT::Executors::Parrot.new do |executor|
+    executor.processor_kind = kind
+  end
 end
 
 #

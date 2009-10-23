@@ -23,8 +23,19 @@ describe CIAT::Executors::Parrot do
     end
   end
   
+  it "should have settable options" do
+    CIAT::Executors::Parrot.new do |executor|
+      executor.processor_kind = mock("processor kind")
+      executor.description = mock("description")
+      executor.libraries = mock("libraries")
+      executor.light = mock("light")
+    end
+  end
+  
   it "should use system libraries" do
-    executor = CIAT::Executors::Parrot.new(:libraries => ["/usr/local/foo", "../bar"])
+    executor = CIAT::Executors::Parrot.new do |e|
+      e.libraries = ["/usr/local/foo", "../bar"]
+    end
     executor.executable.should == "parrot -L/usr/local/foo -L../bar"
   end
 end

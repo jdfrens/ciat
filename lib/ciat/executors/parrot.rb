@@ -17,9 +17,10 @@ module CIAT
       include CIAT::Processors::BasicProcessing
       include CIAT::Differs::HtmlDiffer
 
-      # Traffic light
-      attr :light, true
-      attr_reader :processor_kind
+      attr_accessor :processor_kind
+      attr_accessor :description
+      attr_accessor :libraries
+      attr_accessor :light
 
       # Creates a Parrot executor.
       #
@@ -30,12 +31,12 @@ module CIAT
       #   report
       #   for the command-line arguments (if any) (default: "Command-line
       #   arguments").
-      def initialize(options={})
-        @processor_kind = options[:processor_kind] ||   
-          CIAT::Processors::Interpreter.new
-        @description = options[:description] || "Parrot virtual machine"
-        @libraries = options[:libraries] || []
-        @light = CIAT::TrafficLight.new
+      def initialize()
+        self.processor_kind = CIAT::Processors::Interpreter.new
+        self.description = "Parrot virtual machine"
+        self.libraries = []
+        self.light = CIAT::TrafficLight.new
+        yield self if block_given?
       end
       
       # Provides a description of the processor.

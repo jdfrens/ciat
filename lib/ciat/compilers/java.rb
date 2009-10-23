@@ -20,8 +20,11 @@ module CIAT
       include CIAT::Differs::HtmlDiffer
 
       # The traffic light to indicate the success or failure of the processor.
-      attr :light, true
-      attr_reader :processor_kind
+      attr_accessor :light
+      attr_accessor :processor_kind
+      attr_accessor :compiler_class
+      attr_accessor :descriptions
+      attr_accessor :description
       
       # Constructs a "Java compiler" object.  +classpath+ is the complete
       # classpath to execute the compiler.  +compiler_class+ is the fully
@@ -32,13 +35,14 @@ module CIAT
       # Possible options:
       # * <code>description</code> specifies a descriptive name for your
       #   compiler; used in the HTML report.
-      def initialize(classpath, compiler_class, options={})
-        @processor_kind = options[:processor_kind] || CIAT::Processors::Compiler.new
+      def initialize(classpath, compiler_class)
         @classpath = classpath
         @compiler_class = compiler_class
-        @descriptions = {}
-        @description = options[:description] || "compiler (implemented in Java)"
-        @light = options[:light] || TrafficLight.new
+        self.processor_kind = CIAT::Processors::Compiler.new
+        self.descriptions = {}
+        self.description = "compiler (implemented in Java)"
+        self.light = TrafficLight.new
+        yield self if block_given?
       end
 
       # Return a description of the processor.

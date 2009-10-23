@@ -12,16 +12,19 @@ describe CIAT::Executors::Java do
       CIAT::Executors::Java.should include(CIAT::Differs::HtmlDiffer)
     end
   end
-  
-  before(:each) do
+
+  it "should have settable options" do
+    CIAT::Executors::Java.new(mock("classpath"), mock("interpreter class")) do |executor|
+      executor.processor_kind = mock("processor kind")
+      executor.description = mock("description")
+      executor.light = mock("light")
+    end
+  end
+  it "should have an executable" do
     @classpath = mock("classpath", :to_s => 'the classpath')
     @interpreter_class = mock("interpreter", :to_s => 'the interpreter')
-    @test_file = mock('test file')
-    @elements = mock('elements')
+    
     @executor = CIAT::Executors::Java.new(@classpath, @interpreter_class)
-  end
-  
-  it "should have an executable" do
     @executor.executable.should == "java -cp 'the classpath' the interpreter"
   end
   

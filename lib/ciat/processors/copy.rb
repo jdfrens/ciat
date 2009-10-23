@@ -3,7 +3,7 @@ module CIAT
     # A simple processor that just simply copies the code from one file to the other
     # using the Unix +cp+ command.
     class Copy
-      attr :light, true
+      attr_accessor :light
       
       def initialize(original, copy)
         @original = original

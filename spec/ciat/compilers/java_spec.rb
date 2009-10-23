@@ -13,14 +13,22 @@ describe CIAT::Compilers::Java do
     end
   end
   
-  before(:each) do
+  it "should have settable options" do
+    CIAT::Compilers::Java.new(mock("classpath"), mock("compiler class")) do |compiler|
+      compiler.processor_kind = mock("processor kind")
+      compiler.descriptions = mock("descriptions")
+      compiler.description = mock("description")
+      compiler.light = mock("light")
+    end
+  end
+  
+  it "should have an executable" do
     @test_file = mock('test file')
     @classpath = mock("classpath")
     @compiler_class = mock("compiler class")
     @compiler = CIAT::Compilers::Java.new(@classpath, @compiler_class)
-  end
 
-  it "should have an executable" do
-    @compiler.executable.should == "java -cp '#{@classpath}' #{@compiler_class}"
+    @compiler.executable.should == 
+      "java -cp '#{@classpath}' #{@compiler_class}"
   end
 end

@@ -8,7 +8,10 @@ def copy_compiler
 end
 
 def java_compiler(type)
-  CIAT::Compilers::Java.new('./java', type + 'Compiler')
+  CIAT::Executors::Java.new('./java', type + 'Compiler') do |compiler|
+    compiler.kind = CIAT::Processors::Compiler.new
+    compiler.description = "compiler (implemented in Java)"
+  end
 end
 
 def java_interpreter(type)

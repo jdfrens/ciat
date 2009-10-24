@@ -16,7 +16,7 @@ describe "report" do
     @size = mock("size")
     
     @recursion.stub!(:render).with("test_numbers", :counter => @counter, :size => @size)
-    @recursion.stub!(:new_path?).with(:anything).and_return(false)
+    @recursion.stub!(:new_grouping?).with(:anything).and_return(false)
     
     @erb = ERB.new(File.read("lib/templates/report.html.erb"))
   end

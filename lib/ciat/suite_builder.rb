@@ -32,7 +32,7 @@ class CIAT::SuiteBuilder
   
   def build_feedback
     CIAT::Feedback::Composite.new(
-        options[:feedback] || default_feedback(options),
+        options[:feedback] || default_feedback,
         CIAT::Feedback::ReturnStatus.new
       )
   end

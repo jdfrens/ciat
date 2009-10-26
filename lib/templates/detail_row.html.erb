@@ -1,9 +1,10 @@
 <tr class="details" style="display:none">
   <td colspan="<%= result.processors.size + 1 %>">
 	
-	<% result.processors.each do |processor| %>
-	  <h3>Results from <%= processor.describe %></h3>
-		<%= render "detail_row/elements", :elements => processor.relevant_elements(result) %>
+	<% result.subresults.each do |subresult| %>
+	  <h3>Results from <%= subresult.processor.describe %></h3>
+		<%= render "detail_row/elements", 
+			:elements => subresult.relevant_elements %>
 	<% end %>
 
 </tr>

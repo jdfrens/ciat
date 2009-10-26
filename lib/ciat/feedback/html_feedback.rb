@@ -39,7 +39,13 @@ module CIAT::Feedback
       results = suite.results
       size = suite.size
       counter = @counter
-      ERB.new(template).result(binding)
+      erb.result(binding)
+    end
+    
+    def erb
+      e = ERB.new(template)
+      e.filename = "report.html.erb"
+      e
     end
 
     def template #:nodoc:

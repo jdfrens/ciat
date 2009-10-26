@@ -15,12 +15,12 @@ module CIAT
     # If none is provided, no command-line arguments are used.
     class Parrot
       include CIAT::Processors::BasicProcessing
+      include CIAT::Processors::ShellCommand
       include CIAT::Differs::HtmlDiffer
 
       attr_accessor :kind
       attr_accessor :description
       attr_accessor :libraries
-      attr_accessor :light
 
       # Creates a Parrot executor.
       #
@@ -35,7 +35,6 @@ module CIAT
         self.kind = CIAT::Processors::Interpreter.new
         self.description = "Parrot virtual machine"
         self.libraries = []
-        self.light = CIAT::TrafficLight.new
         yield self if block_given?
       end
       

@@ -1,7 +1,7 @@
 Compiled by copying, executor fails expectation.
 ==== source
-just copy me
+whatever
 ==== compilation
-just copy me
+Hello, whatever.
 ==== execution
 but this won't match!

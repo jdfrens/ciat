@@ -4,9 +4,9 @@
 	  <%= result.element(:description).content %>
 	  </a>
   </td>
-	<% result.processors.each do |processor| %>
-	  <td class="<%= processor.light.setting %>">
-	    <%= light_to_word(processor.light) %>
-		</td>
+	<% result.subresults.each do |subresult| %>
+	  <td class="<%= subresult.light.setting %>">
+	    <%= light_to_word(subresult.light) %>
+	  </td>
 	<% end %>
 </tr>

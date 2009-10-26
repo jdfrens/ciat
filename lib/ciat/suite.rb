@@ -3,6 +3,7 @@ require 'ciat/feedback/composite'
 require 'ciat/feedback/feedback_counter'
 require 'ciat/feedback/return_status'
 require 'ciat/suite_builder'
+require 'ciat/subtest'
 
 # = A Suite of Tests
 #
@@ -88,12 +89,6 @@ class CIAT::Suite
   end
   
   def create_test(test_file)
-    CIAT::Test.new(test_file, test_file.process,
-      :processors => test_processors, :feedback => @feedback)
+    CIAT::Test.new(test_file, @processors, @feedback)
   end
-  
-  def test_processors #:nodoc:
-    @processors.map { |processor| processor.for_test }
-  end
-
 end

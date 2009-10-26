@@ -1,40 +1,51 @@
 require 'set'
+require 'ciat/test_result'
+require 'ciat/subtest_result'
 
 class CIAT::Test
   attr_reader :processors
-  attr_reader :elements
 
-  def initialize(test_file, elements, options={}) #:nodoc:
+  def initialize(test_file, processors, feedback) #:nodoc:
     @test_file = test_file
-    @elements = elements
-    @processors = options[:processors]
-    @feedback = options[:feedback]
+    @processors = processors
+    @feedback = feedback
+  end
+  
+  def elements
+    @elements ||= @test_file.process
   end
   
   def filename
     @test_file.filename(:ciat)
   end
   
+  def run
+    @subresults = run_processors
+    report_lights
+    CIAT::TestResult.new(self, @subresults)
+  end
+  
   def grouping
     @test_file.grouping
   end
   
-  def run
-    run_processors
-    report_lights
-    self
-  end
-  
   def run_processors #:nodoc:
-    processors.each do |processor|
-      processor.process(self)
-      break unless processor.light.green?
+    previous = CIAT::TrafficLight.new(:green)
+    processors.map do |processor|
+      if previous.green?
+        previous = processor.process(self)
+        fail "whoa!" unless previous.class == CIAT::TrafficLight
+        CIAT::SubtestResult.new(self, previous, processor)
+      else
+        CIAT::SubtestResult.new(self, CIAT::TrafficLight.new(:unset), processor)
+      end
     end
   end
   
   def report_lights #:nodoc:
-    processors.each do |processor|
-      @feedback.processor_result(processor)
+    @subresults.each do |subresult|
+      # TODO: rename processor_result to subtest_result or finished_subtest
+      @feedback.processor_result(subresult)
     end
   end
 

@@ -1,7 +1,5 @@
-Testing foo with Java compiler and cat executor.
+Testing foo with Java compiler.
 ==== source
 foo
 ==== compilation
-Hello, foo.
-==== execution
 Hello, foo.

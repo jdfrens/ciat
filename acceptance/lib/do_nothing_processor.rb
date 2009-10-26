@@ -5,7 +5,7 @@ class DoNothingProcessor
     @light = CIAT::TrafficLight.new(setting)
   end
 
-  def for_test
+  def kind
     self
   end
   
@@ -15,6 +15,10 @@ class DoNothingProcessor
   
   def process(crate)
     crate
+  end
+  
+  def element_name_hash
+    Hash.new([])
   end
   
   def relevant_elements(crate)

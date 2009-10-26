@@ -1,15 +1,16 @@
+require 'ciat/processors/shell_command'
+
 module CIAT
   module Executors
     # Executor class for Java interpreters.
     #
     class Java
+      include CIAT::Processors::ShellCommand
       include CIAT::Processors::BasicProcessing
-      include CIAT::Differs::HtmlDiffer
 
       # Traffic light
       attr_accessor :kind
       attr_accessor :description
-      attr_accessor :light
 
       # Creates a Java executor.
       #
@@ -21,7 +22,6 @@ module CIAT
         @interpreter_class = interpreter_class
         self.kind = CIAT::Processors::Interpreter.new
         self.description = "in-Java interpreter"
-        self.light = CIAT::TrafficLight.new
         yield self if block_given?
       end
       

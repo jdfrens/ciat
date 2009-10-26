@@ -3,10 +3,6 @@ require 'ciat/feedback/feedback_counter'
 #
 # Compilers & Executors
 #
-def copy_compiler
-  CIAT::Processors::Copy.new(:source, :compilation)
-end
-
 def java_compiler(type)
   CIAT::Executors::Java.new('./java', type + 'Compiler') do |compiler|
     compiler.kind = CIAT::Processors::Compiler.new

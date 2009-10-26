@@ -53,7 +53,9 @@ module CIAT::ERBHelpers
   # Recursively renders another template.  If it's possible to write your own
   # templates for reports, this will probably play a key role.
   def render(file, locals)
-    ERB.new(read(file)).result(CIAT::TemplateBinder.new(locals).get_binding)
+    erb = ERB.new(read(file))
+    erb.filename = file
+    erb.result(CIAT::TemplateBinder.new(locals).get_binding)
   end
   
   private

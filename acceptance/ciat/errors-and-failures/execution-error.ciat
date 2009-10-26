@@ -2,6 +2,6 @@ Compiled by copying, executor errors.
 ==== source
 compile me!
 ==== compilation
-compile me!
+Hello, compile me!.
 ==== execution
 this should be the error output

@@ -1,30 +1,22 @@
-module CIAT::Processors
-  module BasicProcessing    
-    # Produces a clone for an individual test.
-    def for_test
-      copy = clone
-      copy.light = light.clone
-      copy
-    end
+require 'ciat/differs/html_differ'
 
+module CIAT::Processors
+  module BasicProcessing
+    include CIAT::Differs::HtmlDiffer
+    
     # Executes the program, and diffs the output.
     def process(test)
       # TODO: verify required elements
       # TODO: handle optional element
       if execute(test)
         if diff(test)
-          light.green!
+          CIAT::TrafficLight.new(:green)
         else
-          light.red!
+          CIAT::TrafficLight.new(:red)
         end
       else
-        light.yellow!
+        CIAT::TrafficLight.new(:yellow)
       end
-      test
-    end
-    
-    def execute(test)
-      system "#{executable} '#{input_file(test)}' #{command_line_args(test)} > '#{output_file(test)}' 2> '#{error_file(test)}'"
     end
     
     def command_line_args(test) #:nodoc:
@@ -37,16 +29,6 @@ module CIAT::Processors
         test.element(kind.output_name).as_file,
         test.element(kind.output_name, :generated).as_file, 
         test.element(kind.output_name, :diff).as_file)
-    end
-    
-    def relevant_elements(test)
-      relevant_element_names.
-        select { |name| test.element?(name) }.
-        map { |name| test.element(name) }
-    end
-  
-    def relevant_element_names
-      kind.element_name_hash[light.setting]
     end
     
     def input_file(test)

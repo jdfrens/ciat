@@ -4,8 +4,6 @@ $:.unshift(File.join(File.dirname(__FILE__), "..", "lib")).
 require 'fileutils'
 
 require 'ciat'
-require 'ciat/compilers/java'
-require 'ciat/processors/copy'
 require 'ciat/executors/java'
 require 'ciat/executors/parrot'
 require 'ciat/feedback/composite'
@@ -38,28 +36,20 @@ end
 
 # *************************************************************
 # tasks to exercise CIAT itself
-task :exercise_ciat => [:simple,
-                        :less_simple,
+task :exercise_ciat => [:less_simple,
                         :subfolders,
                         :errors_and_failures]
-                        
-CIAT::RakeTask.new(:simple) do |task|
-  task.processors << copy_compiler
-  task.files = ['ciat/simple.ciat']
-  task.feedback = feedback(1, [:green])
-end
     
 CIAT::RakeTask.new(:less_simple) do |task|
   task.processors << java_compiler("Hello")
-  task.processors << copy_executor
   task.folder = 'ciat/less-simple'
-  task.feedback = feedback(2, [:green, :green, :green, :green],
+  task.feedback = feedback(2, [:green, :green],
                     :report_filename => 'less-simple.html',
                     :report_title => 'Less Simple Tests')
 end
 
 CIAT::RakeTask.new(:subfolders) do |task|
-  task.processors << copy_compiler
+  task.processors << java_compiler("Hello")
   task.folder = 'ciat/subfolders'
   task.feedback = feedback(3, [:green, :green, :green],
                     :report_filename => 'subfolders.html',
@@ -91,7 +81,7 @@ task :errors_and_failures do
   
   deliberate_failure do
     suite = CIAT::Suite.new(
-      :processors => [copy_compiler, DoNothingProcessor.new(:yellow)],
+      :processors => [java_compiler("Hello"), DoNothingProcessor.new(:yellow)],
       :files => 'ciat/errors-and-failures/execution-error.ciat',
       :feedback => feedback(1, [:green, :yellow],
                     :report_filename => 'execution-error.html',
@@ -102,7 +92,7 @@ task :errors_and_failures do
   
   deliberate_failure do
     suite = CIAT::Suite.new(
-      :processors => [copy_compiler, DoNothingProcessor.new(:red)],
+      :processors => [java_compiler("Hello"), DoNothingProcessor.new(:red)],
       :files => 'ciat/errors-and-failures/execution-fail.ciat',
       :feedback => feedback(1, [:green, :red],
                     :report_filename => 'execution-fail.html',

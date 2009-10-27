@@ -15,7 +15,6 @@ module CIAT
     # If none is provided, no command-line arguments are used.
     class Parrot
       include CIAT::Processors::BasicProcessing
-      include CIAT::Processors::ShellCommand
       include CIAT::Differs::HtmlDiffer
 
       attr_accessor :kind

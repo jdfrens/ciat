@@ -32,8 +32,8 @@ module CIAT
         nil
       end
       
-      def processor_result(processor)
-        case processor.light.setting
+      def report_subresult(subresult)
+        case subresult.light.setting
         when :red
           increment_failure_count
         when :yellow

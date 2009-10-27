@@ -1,6 +1,6 @@
 require 'set'
 require 'ciat/test_result'
-require 'ciat/subtest_result'
+require 'ciat/subresult'
 
 class CIAT::Test
   attr_reader :processors
@@ -20,9 +20,7 @@ class CIAT::Test
   end
   
   def run
-    @subresults = run_processors
-    report_lights
-    CIAT::TestResult.new(self, @subresults)
+    CIAT::TestResult.new(self, run_processors)
   end
   
   def grouping
@@ -30,25 +28,23 @@ class CIAT::Test
   end
   
   def run_processors #:nodoc:
-    previous = CIAT::TrafficLight.new(:green)
+    light = CIAT::TrafficLight::GREEN
     processors.map do |processor|
-      if previous.green?
-        previous = processor.process(self)
-        fail "whoa!" unless previous.class == CIAT::TrafficLight
-        CIAT::SubtestResult.new(self, previous, processor)
+      if light.green?
+        light = processor.process(self)
+        subresult(processor, light)
       else
-        CIAT::SubtestResult.new(self, CIAT::TrafficLight.new(:unset), processor)
+        subresult(processor)
       end
     end
   end
   
-  def report_lights #:nodoc:
-    @subresults.each do |subresult|
-      # TODO: rename processor_result to subtest_result or finished_subtest
-      @feedback.processor_result(subresult)
-    end
+  def subresult(processor, light = CIAT::TrafficLight::UNSET)
+    subresult = CIAT::Subresult.new(self, light, processor)
+    @feedback.report_subresult(subresult)
+    subresult
   end
-
+  
   def element(*names)
     elements[names.compact.join("_").to_sym]
   end

@@ -5,7 +5,7 @@ class DoNotProcessExecutor
     @light = CIAT::TrafficLight.new
   end
   
-  def for_test
+  def kind
     self
   end
   
@@ -15,6 +15,10 @@ class DoNotProcessExecutor
   
   def process(crate)
     raise("**** should not run this executor!!!")
+  end
+  
+  def element_name_hash
+    Hash.new([])
   end
 
   def relevant_elements(crate)

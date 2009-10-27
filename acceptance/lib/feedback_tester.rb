@@ -5,7 +5,7 @@ class FeedbackTester
     @lights = []
   end
   
-  def processor_result(processor)
+  def report_subresult(processor)
     @lights << processor.light.setting
   end
   

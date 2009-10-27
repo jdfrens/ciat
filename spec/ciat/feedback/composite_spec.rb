@@ -16,13 +16,13 @@ describe CIAT::Feedback::Composite do
     @feedback.post_tests(suite)
   end
   
-  it "should report a processor light" do
-    processor = mock("processor")
+  it "should report a light" do
+    subresult = mock("subresult")
     
     @subfeedbacks.each do |feedback|
-      feedback.should_receive(:processor_result).with(processor)
+      feedback.should_receive(:report_subresult).with(subresult)
     end
 
-    @feedback.processor_result(processor)
+    @feedback.report_subresult(subresult)
   end
 end

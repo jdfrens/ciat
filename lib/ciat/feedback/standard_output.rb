@@ -21,7 +21,7 @@ module CIAT
         print ".\n"
       end
       
-      def processor_result(processor)
+      def report_subresult(processor)
         putc LIGHT_OUTPUTS[processor.light.setting]
       end
     end

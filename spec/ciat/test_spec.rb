@@ -6,74 +6,94 @@ describe CIAT::Test do
     @test_file = mock("test file")
     @processors = [mock("p 0"), mock("p 1"), mock("p 2")]
     @differ = mock("differ")
-    @lights = [mock("light 0"), mock("light 1"), mock("light 2")]
     @feedback = mock("feedback")
-    @test = CIAT::Test.new(@test_file, mock("elements"),
-      :processors => @processors,
-      :differ => @differ,
-      :feedback => @feedback)
-    @processors[0].should_receive(:light).
-      any_number_of_times.and_return(@lights[0])
-    @processors[1].should_receive(:light).
-      any_number_of_times.and_return(@lights[1])
-    @processors[2].should_receive(:light).
-      any_number_of_times.and_return(@lights[2])
+    @test = CIAT::Test.new(@test_file, @processors, @feedback)
   end
 
   describe "running a test" do
     it "should run a complete test" do
-      @test.should_receive(:run_processors)
-      @test.should_receive(:report_lights)
+      subresults = mock("subresults")
+      result = mock("result")
       
-      @test.run.should == @test
+      @test.should_receive(:run_processors).and_return(subresults)
+      CIAT::TestResult.should_receive(:new).with(@test, subresults).
+        and_return(result)
+      
+      @test.run.should == result
     end
   end
 
   describe "running processors" do
+    before(:each) do
+      @subresults = [mock("subresult 0"), 
+        mock("subresult 1"), mock("subresult 2")]
+    end
+    
     it "should run just the first processor" do
-      @processors[0].should_receive(:process).with(@test)
-      @lights[0].should_receive(:green?).and_return(false)
+      light = mock("light", :green? => false)
       
-      @test.run_processors
+      @processors[0].should_receive(:process).with(@test).
+        and_return(light)
+      @test.should_receive(:subresult).with(@processors[0], light).
+        and_return(@subresults[0])
+      @test.should_receive(:subresult).with(@processors[1]).
+        and_return(@subresults[1])
+      @test.should_receive(:subresult).with(@processors[2]).
+        and_return(@subresults[2])
+      
+      @test.run_processors.should == @subresults
     end
 
     it "should run just the first two processors" do
-      @processors[0].should_receive(:process).with(@test)
-      @lights[0].should_receive(:green?).and_return(true)
-      @processors[1].should_receive(:process).with(@test)
-      @lights[1].should_receive(:green?).and_return(false)
+      lights = [mock("light 0", :green? => true), 
+                mock("light 1", :green? => false)]
       
-      @test.run_processors
+      @processors[0].should_receive(:process).with(@test).
+        and_return(lights[0])
+      @test.should_receive(:subresult).with(@processors[0], lights[0]).
+        and_return(@subresults[0])
+      @processors[1].should_receive(:process).with(@test).
+        and_return(lights[1])
+      @test.should_receive(:subresult).with(@processors[1], lights[1]).
+        and_return(@subresults[1])
+      @test.should_receive(:subresult).with(@processors[2]).
+        and_return(@subresults[2])
+      
+      @test.run_processors.should == @subresults
     end
 
     it "should run just all processors" do
-      @processors[0].should_receive(:process).with(@test)
-      @lights[0].should_receive(:green?).and_return(true)
-      @processors[1].should_receive(:process).with(@test)
-      @lights[1].should_receive(:green?).and_return(true)
-      @processors[2].should_receive(:process).with(@test)
-      @lights[2].should_receive(:green?).and_return(true)
+      lights = [mock("light 0", :green? => true),
+                mock("light 1", :green? => true), mock("light 2")]
+
+      @processors[0].should_receive(:process).with(@test).
+        and_return(lights[0])
+      @test.should_receive(:subresult).with(@processors[0], lights[0]).
+        and_return(@subresults[0])
+      @processors[1].should_receive(:process).with(@test).
+        and_return(lights[1])
+      @test.should_receive(:subresult).with(@processors[1], lights[1]).
+        and_return(@subresults[1])
+      @processors[2].should_receive(:process).with(@test).
+        and_return(lights[2])
+      @test.should_receive(:subresult).with(@processors[2], lights[2]).
+        and_return(@subresults[2])
       
-      @test.run_processors
+      @test.run_processors.should == @subresults
     end
   end
   
-  describe "reporting lights" do
-    it "should report no lights when there are no processors" do
-      @test.should_receive(:processors).and_return([])
-      
-      @test.report_lights
-    end
+  it "should processor subresult" do
+    light, processor = mock("light"), mock("processor")
+    subresult = mock("subresult")
     
-    it "should report all lights of processors" do
-      @feedback.should_receive(:processor_result).with(@processors[0])
-      @feedback.should_receive(:processor_result).with(@processors[1])
-      @feedback.should_receive(:processor_result).with(@processors[2])
-      
-      @test.report_lights
-    end
-  end
+    CIAT::Subresult.should_receive(:new).with(@test, light, processor).
+      and_return(subresult)
+    @feedback.should_receive(:report_subresult).with(subresult)
 
+    @test.subresult(processor, light).should == subresult
+  end
+  
   describe "processing elements" do
     before(:each) do
       @elements = mock("elements")

@@ -1,11 +1,8 @@
-require 'ciat/processors/shell_command'
-
 module CIAT
   module Executors
     # Executor class for Java interpreters.
     #
     class Java
-      include CIAT::Processors::ShellCommand
       include CIAT::Processors::BasicProcessing
 
       # Traffic light

@@ -11,7 +11,7 @@ module CIAT::Feedback
       end
     end
     
-    def processor_result(processor)
+    def report_subresult(processor)
       @failure ||= processor.light.yellow? || processor.light.red?
     end
     

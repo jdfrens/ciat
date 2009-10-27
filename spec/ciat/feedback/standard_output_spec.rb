@@ -77,28 +77,28 @@ describe CIAT::Feedback::StandardOutput do
       expect_light(:green)
       @feedback.should_receive(:putc).with(".")
       
-      @feedback.processor_result(@processor)
+      @feedback.report_subresult(@processor)
     end
     
     it "should report a red light" do
       expect_light(:red)
       @feedback.should_receive(:putc).with("F")
       
-      @feedback.processor_result(@processor)
+      @feedback.report_subresult(@processor)
     end
     
     it "should report a yellow light" do      
       expect_light(:yellow)
       @feedback.should_receive(:putc).with("E")
 
-      @feedback.processor_result(@processor)
+      @feedback.report_subresult(@processor)
     end
 
     it "should report an unset light" do      
       expect_light(:unset)
       @feedback.should_receive(:putc).with("-")
       
-      @feedback.processor_result(@processor)
+      @feedback.report_subresult(@processor)
     end
     
     def expect_light(setting)

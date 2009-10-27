@@ -13,8 +13,8 @@ module CIAT::Feedback
       @feedbacks.each { |feedback| feedback.post_tests(suite) }
     end
   
-    def processor_result(processor)
-      @feedbacks.each { |feedback| feedback.processor_result(processor) }
+    def report_subresult(subresult)
+      @feedbacks.each { |feedback| feedback.report_subresult(subresult) }
     end
   end
 end

@@ -1,3 +1,4 @@
+require 'rake'
 require 'ciat/differs/html_differ'
 
 module CIAT::Processors
@@ -10,12 +11,20 @@ module CIAT::Processors
       # TODO: handle optional element
       if execute(test)
         if diff(test)
-          CIAT::TrafficLight.new(:green)
+          CIAT::TrafficLight::GREEN
         else
-          CIAT::TrafficLight.new(:red)
+          CIAT::TrafficLight::RED
         end
       else
-        CIAT::TrafficLight.new(:yellow)
+        CIAT::TrafficLight::YELLOW
+      end
+    end
+
+    def execute(test)
+      RakeFileUtils.verbose(false) do
+        sh "#{executable} '#{input_file(test)}' #{command_line_args(test)} > '#{output_file(test)}' 2> '#{error_file(test)}'" do |ok, result|
+          return ok
+        end
       end
     end
     

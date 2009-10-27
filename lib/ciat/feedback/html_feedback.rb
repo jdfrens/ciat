@@ -23,7 +23,7 @@ module CIAT::Feedback
       FileUtils.cp(File.join(File.dirname(__FILE__), "..", "..", "data", "prototype.js"), suite.output_folder)
     end
   
-    def processor_result(processor)
+    def report_subresult(processor)
       nil
     end
   
@@ -39,10 +39,10 @@ module CIAT::Feedback
       results = suite.results
       size = suite.size
       counter = @counter
-      erb.result(binding)
+      build_erb.result(binding)
     end
     
-    def erb
+    def build_erb
       e = ERB.new(template)
       e.filename = "report.html.erb"
       e

@@ -3,7 +3,6 @@ require 'ciat/feedback/composite'
 require 'ciat/feedback/feedback_counter'
 require 'ciat/feedback/return_status'
 require 'ciat/suite_builder'
-require 'ciat/subtest'
 
 # = A Suite of Tests
 #

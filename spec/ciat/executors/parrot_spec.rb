@@ -28,7 +28,6 @@ describe CIAT::Executors::Parrot do
       executor.kind = mock("processor kind")
       executor.description = mock("description")
       executor.libraries = mock("libraries")
-      executor.light = mock("light")
     end
   end
   

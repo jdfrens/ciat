@@ -34,13 +34,12 @@ describe CIAT::Feedback::HtmlFeedback do
   it "should generate html" do
     suite = mock("suite")
     erb_template, binding = mock("erb_template"), mock("binding")
-    filename, results = mock("filename")
+    filename = mock("filename")
     
     suite.should_receive(:results).and_return(mock("results"))
     suite.should_receive(:processors).and_return(mock("processors"))
     suite.should_receive(:size).and_return(mock("size"))
-    @feedback.should_receive(:template).and_return(filename)
-    ERB.should_receive(:new).with(filename).and_return(erb_template)
+    @feedback.should_receive(:build_erb).and_return(erb_template)
     @feedback.should_receive(:binding).with().and_return(binding)
     erb_template.should_receive(:result).with(binding)
     

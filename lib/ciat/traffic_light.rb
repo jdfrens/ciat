@@ -1,9 +1,15 @@
 class CIAT::TrafficLight
+  
   attr_reader :setting
   
   def initialize(setting = :unset) #:nodoc:
     @setting = setting
   end
+  
+  GREEN = CIAT::TrafficLight.new(:green)
+  RED = CIAT::TrafficLight.new(:red)
+  YELLOW = CIAT::TrafficLight.new(:yellow)
+  UNSET = CIAT::TrafficLight.new(:unset)
   
   def unset?
     @setting == :unset

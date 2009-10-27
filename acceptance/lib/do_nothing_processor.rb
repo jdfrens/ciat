@@ -13,8 +13,8 @@ class DoNothingProcessor
     "Do-Nothing Processor with #{light.setting} light"
   end
   
-  def process(crate)
-    crate
+  def process(test)
+    @light
   end
   
   def element_name_hash

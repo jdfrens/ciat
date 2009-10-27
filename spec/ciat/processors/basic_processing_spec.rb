@@ -12,37 +12,32 @@ describe CIAT::Processors::BasicProcessing do
   describe "processing" do
     before(:each) do
       @test = mock("test")
-      @light = mock("light")
-      @processor.should_receive(:light).any_number_of_times.and_return(@light)
     end
     
     it "should execute and diff normally" do
       @processor.should_receive(:execute).with(@test).and_return(true)
       @processor.should_receive(:diff).with(@test).and_return(true)
-      @light.should_receive(:green!)
       
-      @processor.process(@test).should == @test
+      @processor.process(@test).should == CIAT::TrafficLight::GREEN
     end
 
     it "should execute with an error" do
       @processor.should_receive(:execute).with(@test).and_return(false)
-      @light.should_receive(:yellow!)
       
-      @processor.process(@test).should == @test
+      @processor.process(@test).should == CIAT::TrafficLight::YELLOW
     end
 
     it "should execute normally and diff with a failure" do
       @processor.should_receive(:execute).with(@test).and_return(true)
       @processor.should_receive(:diff).with(@test).and_return(false)
-      @light.should_receive(:red!)
       
-      @processor.process(@test).should == @test
+      @processor.process(@test).should == CIAT::TrafficLight::RED
     end
   end
   
   describe "executing a processor for a test" do
     it "should put together and execute a shell command" do
-      test, result = mock("test"), mock("result")
+      test, ok, result = mock("test"), mock("ok"), mock("result")
       
       @processor.should_receive(:executable).and_return("[executable]")
       @processor.should_receive(:input_file).with(test).
@@ -53,43 +48,12 @@ describe CIAT::Processors::BasicProcessing do
         and_return("[output]")
       @processor.should_receive(:error_file).with(test).
         and_return("[error]") 
-      @processor.should_receive(:system).
+      @processor.should_receive(:sh).
         with("[executable] '[input]' [args] > '[output]' 2> '[error]'").
-        and_return(result)
+        and_yield(ok, result)
       
-      @processor.execute(test).should eql(result)
+      @processor.execute(test).should == ok
     end
-  end
-
-  it "should look up relevant elements" do
-    test = mock("test")
-    names = [mock("name 0"), mock("name 1"), mock("name 2")]
-    elements = [mock("element 0"), mock("element 1"), mock("element 2")]
-    
-    @processor.should_receive(:relevant_element_names).and_return(names)
-    test.should_receive(:element?).with(names[0]).and_return(true)
-    test.should_receive(:element).with(names[0]).and_return(elements[0])
-    test.should_receive(:element?).with(names[1]).and_return(true)
-    test.should_receive(:element).with(names[1]).and_return(elements[1])
-    test.should_receive(:element?).with(names[2]).and_return(true)
-    test.should_receive(:element).with(names[2]).and_return(elements[2])
-    
-    @processor.relevant_elements(test).should == elements
-  end
-
-  it "should look up only provided, relevant elements" do
-    test = mock("test")
-    names = [mock("name 0"), mock("name 1"), mock("name 2")]
-    elements = [mock("element 0"), mock("element 2")]
-    
-    @processor.should_receive(:relevant_element_names).and_return(names)
-    test.should_receive(:element?).with(names[0]).and_return(true)
-    test.should_receive(:element).with(names[0]).and_return(elements[0])
-    test.should_receive(:element?).with(names[1]).and_return(false)
-    test.should_receive(:element?).with(names[2]).and_return(true)
-    test.should_receive(:element).with(names[2]).and_return(elements[1])
-    
-    @processor.relevant_elements(test).should == elements
   end
   
   describe "handling command-line arguments" do
@@ -139,20 +103,6 @@ describe CIAT::Processors::BasicProcessing do
       element.should_receive(:as_file).and_return(filename)
       filename
     end
-  end
-  
-  it "should have relevant element names" do
-    kind, hash, light, setting = 
-      mock("kind"), mock("hash"), mock("light"), mock("setting")
-    names = mock("names")
-    
-    @processor.should_receive(:kind).and_return(kind)
-    kind.should_receive(:element_name_hash).and_return(hash)
-    @processor.should_receive(:light).and_return(light)
-    light.should_receive(:setting).and_return(setting)
-    hash.should_receive(:[]).with(setting).and_return(names)
-    
-    @processor.relevant_element_names.should eql(names)
   end
   
   it "should get filename of input" do

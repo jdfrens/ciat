@@ -63,6 +63,7 @@ describe CIAT::ERBHelpers do
     ERB.should_receive(:new).with(template).and_return(erb)
     CIAT::TemplateBinder.should_receive(:new).with(locals).and_return(binder)
     binder.should_receive(:get_binding).and_return(bindings)
+    erb.should_receive(:filename=).with("phile.html.erb")
     erb.should_receive(:result).with(bindings).and_return(result)
     
     @helper.render("phile.html.erb", locals).should == result

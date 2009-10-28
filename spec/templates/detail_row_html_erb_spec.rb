@@ -13,24 +13,25 @@ describe "detail row of test report" do
     @result = mock('result')
     @test_file = mock('test file')
     @recursion = mock('recursion')
-    @erb = ERB.new(File.read("lib/templates/detail_row.html.erb"))
+    @erb = build_erb("lib/templates/detail_row.html.erb")
 
     @result.should_receive(:test_file).
       any_number_of_times.and_return(@test_file)
   end
   
-  it "should work with no processors" do
-    @result.should_receive(:processors).at_least(:once).and_return([])
+  it "should work with no subresults" do
+    @result.should_receive(:subresults).at_least(:once).and_return([])
     
     doc = process_erb
     doc.should have_colspan(1)
   end
 
   it "should work with one processor" do
-    processor = mock('processor')
+    subresult = mock('subresult')
     
-    @result.should_receive(:processors).any_number_of_times.and_return([processor])
-    expect_red_or_green(processor, "The Processor", "fake elements")
+    @result.should_receive(:subresults).
+      any_number_of_times.and_return([subresult])
+    expect_red_or_green(subresult, "The Processor", "fake elements")
 
     doc = process_erb
     doc.should have_description("h3", "Results from The Processor")
@@ -38,12 +39,13 @@ describe "detail row of test report" do
   end
   
   it "should work with many processors" do
-    processors = [mock('processor 0'), mock('processor 1'), mock('processor 2')]
+    subresults = [mock('subresult 0'), mock('subresult 1'), mock('subresult 2')]
     
-    @result.should_receive(:processors).any_number_of_times.and_return(processors)
-    expect_red_or_green(processors[0], "Processor 0", "fake elements 0")
-    expect_red_or_green(processors[1], "Processor 1", "fake elements 1")
-    expect_red_or_green(processors[2], "Processor 2", "fake elements 2")
+    @result.should_receive(:subresults).
+      any_number_of_times.and_return(subresults)
+    expect_red_or_green(subresults[0], "Processor 0", "fake elements 0")
+    expect_red_or_green(subresults[1], "Processor 1", "fake elements 1")
+    expect_red_or_green(subresults[2], "Processor 2", "fake elements 2")
 
     doc = process_erb
     doc.should have_description("h3", "Results from Processor 0")
@@ -54,11 +56,12 @@ describe "detail row of test report" do
     doc.should have_fake(:elements, "fake elements 2")
   end
   
-  def expect_red_or_green(processor, description, rendered_elements)
-    elements = mock('elements')
+  def expect_red_or_green(subresult, description, rendered_elements)
+    processor, elements = mock('processor'), mock('elements')
 
+    subresult.should_receive(:processor).and_return(processor)
     processor.should_receive(:describe).with().and_return(description)
-    processor.should_receive(:relevant_elements).and_return(elements)
+    subresult.should_receive(:relevant_elements).and_return(elements)
     @recursion.should_receive(:render).
       with("detail_row/elements", :elements => elements).
       and_return(fake(:elements, rendered_elements))

@@ -10,6 +10,12 @@ $:.unshift(File.dirname(__FILE__) + '/../lib')
 require 'ciat'
 
 module ERBHelpers
+  def build_erb(filename)
+    erb = ERB.new(File.read(filename))
+    erb.filename = File.expand_path(filename)
+    erb
+  end
+  
   def process_erb
     Hpricot(erb.result(binding))
   end

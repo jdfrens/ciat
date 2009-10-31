@@ -1,31 +1,38 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::Suite do
-  before(:each) do
-    @processors = mock("processors")
-    @feedback = mock("feedback")
-  end
+  include MockHelpers
   
   it "should construct with suite builder" do
     options = mock("options")
     suite_builder = mock("suite builder")
+    processors, output_folder, test_files, feedback =
+      mock("processors"), mock("output folder"),
+      mock("test files"), mock("feedback")
+    suite = mock("suite")
     
     CIAT::SuiteBuilder.should_receive(:new).
       with(options).and_return(suite_builder)
-    suite_builder.should_receive(:build_processors)
-    suite_builder.should_receive(:build_output_folder)
-    suite_builder.should_receive(:build_test_files)
-    suite_builder.should_receive(:build_feedback)
+    suite_builder.should_receive(:build_processors).and_return(processors)
+    suite_builder.should_receive(:build_output_folder).
+      and_return(output_folder)
+    suite_builder.should_receive(:build_test_files).and_return(test_files)
+    suite_builder.should_receive(:build_feedback).and_return(feedback)
+    CIAT::Suite.should_receive(:new).
+      with(processors, output_folder, test_files, feedback).and_return(suite)
       
-    CIAT::Suite.new(options)
+    CIAT::Suite.build(options).should == suite
   end
     
   describe "the top-level function to run the tests" do
     before(:each) do
-      @processors = [mock("processor 0"), mock("processor 1"), mock("processor 2")]
+      @processors = array_of_mocks(3, "processor")
+      @output_folder = mock("output folder")
+      @test_files = array_of_mocks(3, "test file")
+      @feedback = mock("feedback")
       @suite = CIAT::Suite.new(
-        :processors => @processors, 
-        :feedback => @feedback)
+                  @processors, @output_folder, @test_files, @feedback
+                  )
     end
     
     it "should have a size based on the number of test files" do
@@ -34,24 +41,14 @@ describe CIAT::Suite do
       @suite.size.should == 42
     end
 
-    it "should run tests on no test files" do    
-      @feedback.should_receive(:pre_tests).with(@suite)
-      @feedback.should_receive(:post_tests).with(@suite)
-    
-      @suite.run.should == []
-      @suite.results.should == []
-    end
-  
     it "should run tests on test files" do
       folder = "THE_FOLDER"
-      test_files = [mock("test file 1"), mock("test file 2")]
-      elements = [mock("element 1"), mock("element 2")]
-      results = [mock("result 1"), mock("result 2")]
+      results = array_of_mocks(3, "result")
 
       @feedback.should_receive(:pre_tests).with(@suite)
-      @suite.should_receive(:test_files).with().and_return(test_files)
-      expect_create_and_run_test(test_files[0], results[0])
-      expect_create_and_run_test(test_files[1], results[1])
+      expect_create_and_run_test(@test_files[0], results[0])
+      expect_create_and_run_test(@test_files[1], results[1])
+      expect_create_and_run_test(@test_files[2], results[2])
       @feedback.should_receive(:post_tests).with(@suite)
     
       @suite.run.should == results

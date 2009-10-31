@@ -1,6 +1,9 @@
 class CIAT::TestFile #:nodoc:all
     
   def initialize(test_file, output_folder)
+    unless File.exists?(test_file)
+      raise IOError.new(test_file + " does not exist")
+    end
     @test_file = test_file
     @output_folder = output_folder
   end

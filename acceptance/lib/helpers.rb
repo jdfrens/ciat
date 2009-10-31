@@ -58,12 +58,17 @@ def feedback(size, expected_lights, options={})
     )
 end
 
-def deliberate_failure
+def deliberate_failure(expected_class, expected_message=nil)
   ooops = false
   begin
     yield
     ooops = true
-  rescue RuntimeError => e
+  rescue Exception => e
+    if expected_class != e.class
+      raise RuntimeError, "expected #{expected_class}, but got #{e.class} (#{e})", e.backtrace
+    elsif expected_message && expected_message != e.to_s
+      raise e
+    end
   end
   fail "Should have failed at the end" if ooops  
 end

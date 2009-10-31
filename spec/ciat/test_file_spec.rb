@@ -2,6 +2,8 @@ require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::TestFile do
   before(:each) do
+    File.should_receive(:exists?).with(anything).
+      any_number_of_times.and_return(true)
     @test_file = CIAT::TestFile.new(mock("filename"), mock("output folder"))
   end
   
@@ -63,6 +65,8 @@ end
 
 describe CIAT::TestFile, "generating actual file names" do
   before(:each) do
+    File.should_receive(:exists?).with(anything).
+      any_number_of_times.and_return(true)
     @output_folder = "outie"
     @test_file = CIAT::TestFile.new("ciat/phile.ciat", @output_folder)
   end
@@ -77,5 +81,16 @@ describe CIAT::TestFile, "generating actual file names" do
   
   it "should work with multiple modifiers" do
     @test_file.filename("one", "two", "three").should == "outie/ciat/phile_one_two_three"
+  end
+end
+
+describe CIAT::TestFile, "constructor errors" do
+  it "should complain about a missing file" do
+    File.should_receive(:exists?).
+      with("does-not-exist.ciat").and_return(false)
+    
+    lambda {
+      CIAT::TestFile.new("does-not-exist.ciat", nil)
+    }.should raise_error(IOError)
   end
 end

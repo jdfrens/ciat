@@ -1,0 +1,6 @@
+Let's test an error from Parrot.
+==== source
+10
+==== execution error
+error:imcc:syntax error, unexpected INTC ('10')
+	in file 'temp.pir' line 1

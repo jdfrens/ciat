@@ -42,7 +42,7 @@ class CIAT::RakeTask
   def define
     desc "Run CIAT tests" + (@name==:test ? "" : ", #{@name}")
     task @name do
-      suite = CIAT::Suite.new(
+      suite = CIAT::Suite.build(
         :processors => @processors,
         :files => @files,
         :feedback => @feedback,

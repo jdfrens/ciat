@@ -41,6 +41,14 @@ module ERBHelpers
   end  
 end
 
+module MockHelpers
+  def array_of_mocks(count, name)
+    (1..count).to_a.map do |i|
+      mock(name + " " + i.to_s)
+    end
+  end
+end
+
 module CustomDetailRowMatchers
   class HaveColSpan
     def initialize(expected)

@@ -61,14 +61,22 @@ class CIAT::Suite
   attr_reader :test_files
   attr_reader :results
   
-  # Constructs a suite of CIAT tests.  See the instructions above for possible
+  # Builds a suite of CIAT tests.  See the instructions above for possible
   # values for the +options+.
-  def initialize(options = {})
+  def self.build(options = {})
     builder = CIAT::SuiteBuilder.new(options)
-    @processors = builder.build_processors
-    @output_folder = builder.build_output_folder
-    @test_files = builder.build_test_files
-    @feedback = builder.build_feedback
+    CIAT::Suite.new(
+      builder.build_processors,
+      builder.build_output_folder,
+      builder.build_test_files,
+      builder.build_feedback)
+  end
+  
+  def initialize(processors, output_folder, test_files, feedback)
+    @processors = processors
+    @output_folder = output_folder
+    @test_files = test_files
+    @feedback = feedback
   end
     
   # Returns the number of tests in the suite.

@@ -1,21 +1,21 @@
 require File.dirname(__FILE__) + '/../../spec_helper.rb'
 
-require 'ciat/executors/parrot'
+require 'ciat/processors/parrot'
 
-describe CIAT::Executors::Parrot do
+describe CIAT::Processors::Parrot do
   describe "mixins" do
     it "should use basic processing module" do
-      CIAT::Executors::Parrot.should include(CIAT::Processors::BasicProcessing)
+      CIAT::Processors::Parrot.should include(CIAT::Processors::BasicProcessing)
     end
 
     it "should use basic processing module" do
-      CIAT::Executors::Parrot.should include(CIAT::Differs::HtmlDiffer)
+      CIAT::Processors::Parrot.should include(CIAT::Differs::HtmlDiffer)
     end
   end
   
   describe "default executor" do
     before(:each) do
-      @executor = CIAT::Executors::Parrot.new
+      @executor = CIAT::Processors::Parrot.new
     end
 
     it "should have an executable" do
@@ -24,7 +24,7 @@ describe CIAT::Executors::Parrot do
   end
   
   it "should have settable options" do
-    CIAT::Executors::Parrot.new do |executor|
+    CIAT::Processors::Parrot.new do |executor|
       executor.kind = mock("processor kind")
       executor.description = mock("description")
       executor.libraries = mock("libraries")
@@ -32,7 +32,7 @@ describe CIAT::Executors::Parrot do
   end
   
   it "should use system libraries" do
-    executor = CIAT::Executors::Parrot.new do |e|
+    executor = CIAT::Processors::Parrot.new do |e|
       e.libraries = ["/usr/local/foo", "../bar"]
     end
     executor.executable.should == "parrot -L/usr/local/foo -L../bar"

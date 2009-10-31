@@ -1,5 +1,7 @@
-== 0.4.9 **** IN PROGRESS *****
-* Many refactorings
+== 0.4.9 2009-10-30
+* 2 major refactorings
+  * Java and Parrot "executors" are now "processors".
+* Couple minor refactorings
   * Removed Cargo class
   * Reworked Crate class (as TestFile)
 

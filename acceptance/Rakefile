@@ -4,8 +4,8 @@ $:.unshift(File.join(File.dirname(__FILE__), "..", "lib")).
 require 'fileutils'
 
 require 'ciat'
-require 'ciat/executors/java'
-require 'ciat/executors/parrot'
+require 'ciat/processors/java'
+require 'ciat/processors/parrot'
 require 'ciat/feedback/composite'
 
 require 'do_not_process_executor'

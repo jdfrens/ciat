@@ -1,5 +1,5 @@
 module CIAT
-  module Executors
+  module Processors
     # Executor class for Parrot programs.  This will execute PIR or PASM code
     # using the +parrot+ executable.
     #

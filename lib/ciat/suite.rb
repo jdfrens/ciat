@@ -47,8 +47,8 @@ require 'ciat/suite_builder'
 #
 # You can create your own processors.  Each processor needs to specify which
 # test elements it wants or will accept, which files it wants checked, and how
-# it should be executed.    See CIAT::Compilers::Java and
-# CIAT::Executors::Parrot (to learn how to use them and how to write others).
+# it should be executed.    See CIAT::Processors::Java and
+# CIAT::Processors::Parrot (to learn how to use them and how to write others).
 #
 # == Test File
 #

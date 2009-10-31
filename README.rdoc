@@ -69,8 +69,8 @@ When the "Parrot executor" is run on the compilation, it'll also pass in <code>8
 This sample +Rakefile+ will pull everything together:
 
   require 'ciat'
-  require 'ciat/compilers/java'
-  require 'ciat/executors/parrot'
+  require 'ciat/processors/java'
+  require 'ciat/processors/parrot'
 
   def compiler
     classpath = Dir.glob('../lib/*.jar').join(':') + ":../bin"
@@ -78,7 +78,7 @@ This sample +Rakefile+ will pull everything together:
   end
 
   def executor
-    CIAT::Executors::Parrot.new
+    CIAT::Processors::Parrot.new
   end
 
   CIAT::RakeTask.new do |t|
@@ -97,7 +97,7 @@ documentation for CIAT::RakeTask for more information.
 
 * Pronounce "CIAT" as "dog".  (See this funny video[http://www.youtube.com/watch?v=tyQvjKqXA0Y].)
 * Must have +diff+ executable.
-* You have to provide your own target-code executors (e.g., +parrot+ for the
+* You have to provide your own target-code processors (e.g., +parrot+ for the
   Parrot Virtual Machine, +spim+ for MIPS emulation, etc.)
 
 

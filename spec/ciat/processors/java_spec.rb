@@ -1,20 +1,20 @@
 require File.dirname(__FILE__) + '/../../spec_helper.rb'
 
-require 'ciat/executors/java'
+require 'ciat/processors/java'
 
-describe CIAT::Executors::Java do
+describe CIAT::Processors::Java do
   describe "mixins" do
     it "should use basic processing module" do
-      CIAT::Executors::Java.should include(CIAT::Processors::BasicProcessing)
+      CIAT::Processors::Java.should include(CIAT::Processors::BasicProcessing)
     end
 
     it "should use HTML differ" do
-      CIAT::Executors::Java.should include(CIAT::Differs::HtmlDiffer)
+      CIAT::Processors::Java.should include(CIAT::Differs::HtmlDiffer)
     end
   end
 
   it "should have settable options" do
-    CIAT::Executors::Java.new(mock("classpath"), mock("interpreter class")) do |executor|
+    CIAT::Processors::Java.new(mock("classpath"), mock("interpreter class")) do |executor|
       executor.kind = mock("processor kind")
       executor.description = mock("description")
     end
@@ -24,8 +24,8 @@ describe CIAT::Executors::Java do
     @classpath = mock("classpath", :to_s => 'the classpath')
     @interpreter_class = mock("interpreter", :to_s => 'the interpreter')
     
-    @executor = CIAT::Executors::Java.new(@classpath, @interpreter_class)
-    @executor.executable.should == "java -cp 'the classpath' the interpreter"
+    @processor = CIAT::Processors::Java.new(@classpath, @interpreter_class)
+    @processor.executable.should == "java -cp 'the classpath' the interpreter"
   end
   
 end

@@ -1,5 +1,5 @@
 module CIAT
-  module Executors
+  module Processors
     # Executor class for Java interpreters.
     #
     class Java

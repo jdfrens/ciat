@@ -3,7 +3,7 @@ require 'rake/clean'
 require 'rake/rdoctask'
 require 'spec/rake/spectask'
 
-task :default => :specs
+task :default => :spec
 
 desc "Run all examples"
 Spec::Rake::SpecTask.new(:spec) do |t|

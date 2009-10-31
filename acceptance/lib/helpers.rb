@@ -1,21 +1,17 @@
 require 'ciat/feedback/feedback_counter'
 
 #
-# Compilers & Executors
+# Processors
 #
 def java_compiler(type)
-  CIAT::Executors::Java.new('./java', type + 'Compiler') do |compiler|
+  CIAT::Processors::Java.new('./java', type + 'Compiler') do |compiler|
     compiler.kind = CIAT::Processors::Compiler.new
     compiler.description = "compiler (implemented in Java)"
   end
 end
 
 def java_interpreter(type)
-  CIAT::Executors::Java.new('./java', type + 'Interpreter')
-end
-
-def copy_executor
-  CIAT::Processors::Copy.new(:compilation_generated, :execution)
+  CIAT::Processors::Java.new('./java', type + 'Interpreter')
 end
 
 def compilation_interpreter
@@ -27,7 +23,7 @@ def interpreter
 end
 
 def parrot_executor(kind)
-  CIAT::Executors::Parrot.new do |executor|
+  CIAT::Processors::Parrot.new do |executor|
     executor.kind = kind
   end
 end

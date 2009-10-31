@@ -1,9 +1,8 @@
 $:.unshift(File.dirname(__FILE__)) unless
   $:.include?(File.dirname(__FILE__)) || $:.include?(File.expand_path(File.dirname(__FILE__)))
 
-# Loads in the basic files needed to use CIAT.  Compilers and Executors have
-# to be required separately. CIAT::Suite is the class you really want to look
-# at.
+# Loads in the basic files needed to use CIAT.  Processors have to be required
+# separately. CIAT::Suite is the class you really want to look at.
 module CIAT; end
 
 require 'ciat/rake_task'

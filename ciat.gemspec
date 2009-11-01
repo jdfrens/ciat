@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{ciat}
-  s.version = "0.4.8"
+  s.version = "0.4.9"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Jeremy D. Frens", "Mark Van Holstyn"]
-  s.date = %q{2009-10-23}
+  s.date = %q{2009-10-30}
   s.description = %q{CIAT (pronounced "dog") is a library of Ruby and rake code to make writing acceptance tests for compilers and interpreters easier (despite their implementation, source, and target languages).}
   s.email = %q{jdfrens@gmail.com}
   s.extra_rdoc_files = [
@@ -17,11 +17,8 @@ Gem::Specification.new do |s|
   ]
   s.files = [
     "lib/ciat.rb",
-     "lib/ciat/compilers/java.rb",
      "lib/ciat/differs/html_differ.rb",
      "lib/ciat/erb_helpers.rb",
-     "lib/ciat/executors/java.rb",
-     "lib/ciat/executors/parrot.rb",
      "lib/ciat/feedback/composite.rb",
      "lib/ciat/feedback/feedback_counter.rb",
      "lib/ciat/feedback/html_feedback.rb",
@@ -32,15 +29,29 @@ Gem::Specification.new do |s|
      "lib/ciat/processors/basic_processing.rb",
      "lib/ciat/processors/compilation_interpreter.rb",
      "lib/ciat/processors/compiler.rb",
-     "lib/ciat/processors/copy.rb",
      "lib/ciat/processors/interpreter.rb",
+     "lib/ciat/processors/java.rb",
+     "lib/ciat/processors/parrot.rb",
      "lib/ciat/rake_task.rb",
+     "lib/ciat/subresult.rb",
      "lib/ciat/suite.rb",
      "lib/ciat/suite_builder.rb",
      "lib/ciat/test.rb",
      "lib/ciat/test_element.rb",
      "lib/ciat/test_file.rb",
-     "lib/ciat/traffic_light.rb"
+     "lib/ciat/test_result.rb",
+     "lib/ciat/traffic_light.rb",
+     "lib/data/ciat.css",
+     "lib/data/elements.yml",
+     "lib/data/prototype.js",
+     "lib/templates/detail_row.html.erb",
+     "lib/templates/detail_row/elements.html.erb",
+     "lib/templates/elements/diff.html.erb",
+     "lib/templates/elements/plain.html.erb",
+     "lib/templates/group_header.html.erb",
+     "lib/templates/report.html.erb",
+     "lib/templates/summary_row.html.erb",
+     "lib/templates/test_numbers.html.erb"
   ]
   s.homepage = %q{http://github.com/jdfrens/ciat}
   s.rdoc_options = ["--charset=UTF-8", "--title", "CIAT -- Compiler and Interpreter Acceptance Tester", "--main", "README.txt", "--line-numbers"]
@@ -48,16 +59,17 @@ Gem::Specification.new do |s|
   s.rubygems_version = %q{1.3.5}
   s.summary = %q{Acceptance tester for compilers and interpreters}
   s.test_files = [
-    "spec/ciat/compilers/java_spec.rb",
-     "spec/ciat/erb_helpers_spec.rb",
-     "spec/ciat/executors/java_spec.rb",
-     "spec/ciat/executors/parrot_spec.rb",
+    "spec/ciat/erb_helpers_spec.rb",
      "spec/ciat/feedback/composite_spec.rb",
      "spec/ciat/feedback/feedback_counter_spec.rb",
      "spec/ciat/feedback/html_feedback_spec.rb",
      "spec/ciat/feedback/return_status_spec.rb",
      "spec/ciat/feedback/standard_output_spec.rb",
      "spec/ciat/processors/basic_processing_spec.rb",
+     "spec/ciat/processors/java_spec.rb",
+     "spec/ciat/processors/parrot_spec.rb",
+     "spec/ciat/subresult_spec.rb",
+     "spec/ciat/suite_builder_spec.rb",
      "spec/ciat/suite_spec.rb",
      "spec/ciat/test_element_spec.rb",
      "spec/ciat/test_file_spec.rb",

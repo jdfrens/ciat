@@ -43,7 +43,7 @@ begin
     gemspec.authors  = ["Jeremy D. Frens", "Mark Van Holstyn"]
     gemspec.rdoc_options <<
       '--title' << 'CIAT -- Compiler and Interpreter Acceptance Tester' <<
-      '--main' << 'README.txt' <<
+      '--main' << 'README.rdoc' <<
       '--line-numbers'
   end
   Jeweler::GemcutterTasks.new

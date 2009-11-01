@@ -1,3 +1,10 @@
+== 0.5.0 2009-
+* 1 major feature
+  * Added ability to expect errors from a processor and to expect particular
+		error messages.
+* 1 minor fix
+  * Using "README.rdoc" in the gem specification.
+
 == 0.4.9 2009-10-30
 * 2 major refactorings
   * Java and Parrot "executors" are now "processors".

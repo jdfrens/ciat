@@ -22,7 +22,7 @@ describe CIAT::Test do
       @test.run.should == result
     end
   end
-
+  
   describe "running processors" do
     before(:each) do
       @subresults = [mock("subresult 0"), 
@@ -83,12 +83,14 @@ describe CIAT::Test do
     end
   end
   
-  it "should processor subresult" do
-    light, processor = mock("light"), mock("processor")
+  it "should build and report subresult" do
+    path_kind, light, processor = 
+      mock("path kind"), mock("light"), mock("processor")
     subresult = mock("subresult")
     
-    CIAT::Subresult.should_receive(:new).with(@test, light, processor).
-      and_return(subresult)
+    processor.should_receive(:path_kind).with(@test).and_return(path_kind)
+    CIAT::Subresult.should_receive(:new).
+      with(@test, path_kind, light, processor).and_return(subresult)
     @feedback.should_receive(:report_subresult).with(subresult)
 
     @test.subresult(processor, light).should == subresult

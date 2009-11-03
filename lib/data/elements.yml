@@ -7,7 +7,7 @@ compilation:
 compilation_generated:
   description: compilation
   template: plain
-compilation_error:
+compilation_error_generated:
   description: error from compilation
   template: plain
 compilation_diff:
@@ -19,7 +19,7 @@ execution:
 execution_generated:
   description: execution
   template: plain
-execution_error:
+execution_error_generated:
   description: error from execution
   template: plain
 execution_diff:

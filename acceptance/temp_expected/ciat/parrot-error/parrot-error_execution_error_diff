@@ -1,0 +1,5 @@
+<tr class="green"><td>1</td><td><pre>error:imcc:syntax error, unexpected INTC ('10')
+	in file 'temp/ciat/parrot-error/parrot-error_source' line 1
+</pre></td><td>1</td><td><pre>error:imcc:syntax error, unexpected INTC ('10')
+	in file 'temp/ciat/parrot-error/parrot-error_source' line 1
+</pre></td></tr>

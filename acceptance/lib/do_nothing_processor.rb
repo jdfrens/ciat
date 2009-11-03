@@ -13,6 +13,14 @@ class DoNothingProcessor
     "Do-Nothing Processor with #{light.setting} light"
   end
   
+  def happy_path?(test)
+    true
+  end
+  
+  def path_kind(test)
+    :happy
+  end
+  
   def process(test)
     @light
   end

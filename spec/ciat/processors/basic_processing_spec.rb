@@ -35,9 +35,61 @@ describe CIAT::Processors::BasicProcessing do
     end
   end
   
+  it "should determine a happy path" do
+    test = mock("test")
+    result = mock("result")
+    
+    @processor.stub_chain(:kind, :happy_path_element).and_return(:foobar)
+    test.should_receive(:element?).with(:foobar).and_return(result)
+    
+    @processor.happy_path?(test).should == result
+  end
+  
+  describe "path kind" do
+    it "should indicate happy path as path kind" do
+      test = mock("test")
+    
+      @processor.should_receive(:happy_path?).with(test).and_return(true)
+    
+      @processor.path_kind(test).should == :happy
+    end
+
+    it "should indicate sad path as path kind" do
+      test = mock("test")
+    
+      @processor.should_receive(:happy_path?).with(test).and_return(false)
+    
+      @processor.path_kind(test).should == :sad
+    end
+  end
+  
   describe "executing a processor for a test" do
-    it "should put together and execute a shell command" do
-      test, ok, result = mock("test"), mock("ok"), mock("result")
+    it "should run successful command line for happy path" do
+      test, kind = mock("test"), mock("kind")
+      result = mock("result")
+      
+      @processor.should_receive(:command_line).and_return("[command line]")
+      @processor.should_receive(:happy_path?).with(test).and_return(true)
+      @processor.should_receive(:sh).with("[command line]").
+        and_yield(true, result)
+      
+      @processor.execute(test).should be_true
+    end
+    
+    it "should run erroring command line for happy path" do
+      test, kind = mock("test"), mock("kind")
+      result = mock("result")
+      
+      @processor.should_receive(:command_line).and_return("[command line]")
+      @processor.should_receive(:happy_path?).with(test).and_return(true)
+      @processor.should_receive(:sh).with("[command line]").
+        and_yield(false, result)
+      
+      @processor.execute(test).should be_false
+    end
+    
+    it "should prepare a command line" do
+      test = mock("test")
       
       @processor.should_receive(:executable).and_return("[executable]")
       @processor.should_receive(:input_file).with(test).
@@ -48,11 +100,9 @@ describe CIAT::Processors::BasicProcessing do
         and_return("[output]")
       @processor.should_receive(:error_file).with(test).
         and_return("[error]") 
-      @processor.should_receive(:sh).
-        with("[executable] '[input]' [args] > '[output]' 2> '[error]'").
-        and_yield(ok, result)
-      
-      @processor.execute(test).should == ok
+        
+      @processor.command_line(test).should ==
+        "[executable] '[input]' [args] > '[output]' 2> '[error]'"
     end
   end
   
@@ -80,17 +130,36 @@ describe CIAT::Processors::BasicProcessing do
   end
   
   describe "computing a diff" do
-    it "should compute a diff in HTML" do
+    it "should compute a diff in HTML for normal output" do
       test, kind, result = 
         mock("test"), mock("processor kind"), mock("result")
       output_name = mock("output name")
 
+      @processor.should_receive(:happy_path?).with(test).and_return(true)
       @processor.should_receive(:kind).any_number_of_times.and_return(kind)
       kind.should_receive(:output_name).any_number_of_times.
         and_return(output_name)
       original_file = expect_element_as_file(test, output_name)
       generated_file = expect_element_as_file(test, output_name, :generated)
       diff_file = expect_element_as_file(test, output_name, :diff)
+      @processor.should_receive(:html_diff).
+        with(original_file, generated_file, diff_file).and_return(result)
+    
+      @processor.diff(test).should eql(result)
+    end
+
+    it "should compute a diff in HTML for error output" do
+      test, kind, result = 
+        mock("test"), mock("processor kind"), mock("result")
+      error_name = mock("error name")
+
+      @processor.should_receive(:happy_path?).with(test).and_return(false)
+      @processor.should_receive(:kind).any_number_of_times.and_return(kind)
+      kind.should_receive(:error_name).any_number_of_times.
+        and_return(error_name)
+      original_file = expect_element_as_file(test, error_name)
+      generated_file = expect_element_as_file(test, error_name, :generated)
+      diff_file = expect_element_as_file(test, error_name, :diff)
       @processor.should_receive(:html_diff).
         with(original_file, generated_file, diff_file).and_return(result)
     
@@ -115,10 +184,10 @@ describe CIAT::Processors::BasicProcessing do
     test.should_receive(:element).with(name).and_return(element)
     element.should_receive(:as_file).and_return(filename)
     
-    @processor.input_file(test).should eql(filename)
+    @processor.input_file(test).should == filename
   end
 
-  it "should get filename of input" do
+  it "should get filename of output" do
     test = mock("test")
     kind, element, name = mock("kind"), mock("element"), mock("name")
     filename = mock("filename")
@@ -128,19 +197,20 @@ describe CIAT::Processors::BasicProcessing do
     test.should_receive(:element).with(name, :generated).and_return(element)
     element.should_receive(:as_file).and_return(filename)
     
-    @processor.output_file(test).should eql(filename)
+    @processor.output_file(test).should == filename
   end
 
-  it "should get filename of input" do
+  it "should get filename of error" do
     test = mock("test")
     kind, element, name = mock("kind"), mock("element"), mock("name")
     filename = mock("filename")
     
     @processor.should_receive(:kind).and_return(kind)
-    kind.should_receive(:output_name).and_return(name)
-    test.should_receive(:element).with(name, :error).and_return(element)
+    kind.should_receive(:error_name).and_return(name)
+    test.should_receive(:element).
+      with(name, :generated).and_return(element)
     element.should_receive(:as_file).and_return(filename)
     
-    @processor.error_file(test).should eql(filename)
+    @processor.error_file(test).should == filename
   end
 end

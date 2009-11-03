@@ -40,7 +40,8 @@ class CIAT::Test
   end
   
   def subresult(processor, light = CIAT::TrafficLight::UNSET)
-    subresult = CIAT::Subresult.new(self, light, processor)
+    subresult = CIAT::Subresult.new(self,
+      processor.path_kind(self), light, processor)
     @feedback.report_subresult(subresult)
     subresult
   end

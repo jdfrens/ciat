@@ -13,6 +13,14 @@ class DoNotProcessExecutor
     "Should not be executed!"
   end
   
+  def happy_path?(test)
+    true
+  end
+  
+  def path_kind(test)
+    :happy
+  end
+  
   def process(crate)
     raise("**** should not run this executor!!!")
   end

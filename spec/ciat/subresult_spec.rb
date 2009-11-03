@@ -3,10 +3,11 @@ require File.dirname(__FILE__) + '/../spec_helper'
 describe CIAT::Subresult do
   before(:each) do
     @elements = mock("elements")
+    @path_kind = mock("path kind")
     @light = mock("light")
     @processor = mock("processor")
     
-    @subtest_result = CIAT::Subresult.new(@elements, @light, @processor)
+    @subtest_result = CIAT::Subresult.new(@elements, @path_kind, @light, @processor)
   end
   
   it "should look up relevant elements" do

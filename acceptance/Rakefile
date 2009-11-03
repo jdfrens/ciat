@@ -57,7 +57,7 @@ CIAT::RakeTask.new(:subfolders) do |task|
 end
     
 task :errors_and_failures do
-  deliberate_failure(RuntimeError) do
+  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
       :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
       :files => 'ciat/errors-and-failures/compile-error.ciat',
@@ -68,7 +68,7 @@ task :errors_and_failures do
     suite.run
   end
   
-  deliberate_failure(RuntimeError) do
+  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
       :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
       :files => 'ciat/errors-and-failures/compile-fail.ciat',
@@ -79,7 +79,7 @@ task :errors_and_failures do
     suite.run
   end
   
-  deliberate_failure(RuntimeError) do
+  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello"), DoNothingProcessor.new(:yellow)],
       :files => 'ciat/errors-and-failures/execution-error.ciat',
@@ -90,7 +90,7 @@ task :errors_and_failures do
     suite.run
   end
   
-  deliberate_failure(RuntimeError) do
+  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello"), DoNothingProcessor.new(:red)],
       :files => 'ciat/errors-and-failures/execution-fail.ciat',
@@ -116,7 +116,7 @@ end
 # *************************************************************
 # task to exercise implemented-in-Java compilers
 task :exercise_java do
-  deliberate_failure(RuntimeError) do
+  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello")],
       :folder => 'ciat/java',
@@ -130,7 +130,7 @@ end
 # *************************************************************
 # task to exercise implemented-in-Java interpreter
 task :exercise_java_interpreter do
-  deliberate_failure(RuntimeError) do
+  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
       :processors => [java_interpreter("Hello")],
       :folder => 'ciat/java-interpreter',
@@ -143,7 +143,7 @@ end
 
 # *************************************************************
 # task to exercise Parrot interpreter
-task :exercise_parrot => [:good_parrot]
+task :exercise_parrot => [:good_parrot, :parrot_deliberate_error]
 
 CIAT::RakeTask.new(:good_parrot) do |task|
   task.processors << parrot_executor(interpreter)
@@ -151,12 +151,11 @@ CIAT::RakeTask.new(:good_parrot) do |task|
   task.feedback = feedback(1, [:green], :report_filename => 'parrot.html')
 end
 
-# WIP
-# CIAT::RakeTask.new(:error_parrot) do |task|
-#   task.processors << parrot_executor(interpreter)
-#   task.folder = 'ciat/parrot-error'
-#   task.feedback = feedback(1, [:green], :report_filename => 'parrot-error.html')  
-# end
+CIAT::RakeTask.new(:parrot_deliberate_error) do |task|
+  task.processors << parrot_executor(interpreter)
+  task.folder = 'ciat/parrot-error'
+  task.feedback = feedback(1, [:green], :report_filename => 'parrot-error.html')  
+end
 
 # *************************************************************
 # task to exercise Java compiler and Parrot executor

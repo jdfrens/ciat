@@ -1,6 +1,8 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 describe CIAT::Test do
+  include MockHelpers
+  
   before(:each) do
     @filename = mock("filename")
     @test_file = mock("test file")
@@ -25,61 +27,51 @@ describe CIAT::Test do
   
   describe "running processors" do
     before(:each) do
-      @subresults = [mock("subresult 0"), 
-        mock("subresult 1"), mock("subresult 2")]
+      @subresults = array_of_mocks(3, "subresult")
     end
     
     it "should run just the first processor" do
-      light = mock("light", :green? => false)
-      
-      @processors[0].should_receive(:process).with(@test).
-        and_return(light)
-      @test.should_receive(:subresult).with(@processors[0], light).
-        and_return(@subresults[0])
-      @test.should_receive(:subresult).with(@processors[1]).
-        and_return(@subresults[1])
-      @test.should_receive(:subresult).with(@processors[2]).
-        and_return(@subresults[2])
+      expect_not_green(@processors[0], @subresults[0])
+      expect_unset(@processors[1], @subresults[1])
+      expect_unset(@processors[2], @subresults[2])
       
       @test.run_processors.should == @subresults
     end
-
+    
     it "should run just the first two processors" do
-      lights = [mock("light 0", :green? => true), 
-                mock("light 1", :green? => false)]
-      
-      @processors[0].should_receive(:process).with(@test).
-        and_return(lights[0])
-      @test.should_receive(:subresult).with(@processors[0], lights[0]).
-        and_return(@subresults[0])
-      @processors[1].should_receive(:process).with(@test).
-        and_return(lights[1])
-      @test.should_receive(:subresult).with(@processors[1], lights[1]).
-        and_return(@subresults[1])
-      @test.should_receive(:subresult).with(@processors[2]).
-        and_return(@subresults[2])
+      expect_green(@processors[0], @subresults[0])
+      expect_not_green(@processors[1], @subresults[1])
+      expect_unset(@processors[2], @subresults[2])
       
       @test.run_processors.should == @subresults
     end
 
-    it "should run just all processors" do
-      lights = [mock("light 0", :green? => true),
-                mock("light 1", :green? => true), mock("light 2")]
-
-      @processors[0].should_receive(:process).with(@test).
-        and_return(lights[0])
-      @test.should_receive(:subresult).with(@processors[0], lights[0]).
-        and_return(@subresults[0])
-      @processors[1].should_receive(:process).with(@test).
-        and_return(lights[1])
-      @test.should_receive(:subresult).with(@processors[1], lights[1]).
-        and_return(@subresults[1])
-      @processors[2].should_receive(:process).with(@test).
-        and_return(lights[2])
-      @test.should_receive(:subresult).with(@processors[2], lights[2]).
-        and_return(@subresults[2])
-      
+    it "should run all processors" do
+      expect_green(@processors[0], @subresults[0])
+      expect_green(@processors[1], @subresults[1])
+      expect_green(@processors[2], @subresults[2])
+            
       @test.run_processors.should == @subresults
+    end
+
+    def expect_green(processor, subresult)
+      light = mock("light", :green? => true)
+      processor.should_receive(:process).with(@test).and_return(light)
+      @test.should_receive(:subresult).with(processor, light).
+        and_return(subresult)
+      subresult.should_receive(:light).and_return(light)
+    end
+    
+    def expect_not_green(processor, subresult)
+      light = mock("light", :green? => false)
+      processor.should_receive(:process).with(@test).and_return(light)
+      @test.should_receive(:subresult).with(processor, light).
+        and_return(subresult)
+      subresult.should_receive(:light).and_return(light)
+    end
+    
+    def expect_unset(processor, subresult)
+      @test.should_receive(:subresult).with(processor).and_return(subresult)
     end
   end
   

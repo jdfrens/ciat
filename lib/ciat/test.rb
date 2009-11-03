@@ -28,15 +28,18 @@ class CIAT::Test
   end
   
   def run_processors #:nodoc:
-    light = CIAT::TrafficLight::GREEN
-    processors.map do |processor|
-      if light.green?
-        light = processor.process(self)
-        subresult(processor, light)
-      else
-        subresult(processor)
-      end
+    processors_iterator = processors.clone
+    subresults = []
+    until processors_iterator.empty?
+      processor = processors_iterator.shift
+      subresults << subresult(processor, processor.process(self))
+      break unless subresults.last.light.green?
     end
+    until processors_iterator.empty?
+      processor = processors_iterator.shift
+      subresults << subresult(processor)
+    end
+    subresults
   end
   
   def subresult(processor, light = CIAT::TrafficLight::UNSET)

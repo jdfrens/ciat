@@ -11,12 +11,12 @@ describe "detail row of test report" do
   
   before(:each) do
     @result = mock('result')
-    @test_file = mock('test file')
+    @ciat_file = mock('ciat file')
     @recursion = mock('recursion')
     @erb = build_erb("lib/templates/detail_row.html.erb")
 
-    @result.should_receive(:test_file).
-      any_number_of_times.and_return(@test_file)
+    @result.should_receive(:ciat_file).
+      any_number_of_times.and_return(@ciat_file)
   end
   
   it "should work with no subresults" do

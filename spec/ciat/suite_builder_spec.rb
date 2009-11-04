@@ -17,23 +17,23 @@ describe CIAT::SuiteBuilder do
     it "should make test files" do
       files = array_of_mocks(3, "files")
       output_folder = mock("output folder")
-      test_files = array_of_mocks(3, "test file")
+      ciat_files = array_of_mocks(3, "ciat file")
 
       @default_builder.should_receive(:build_output_folder).
         at_least(:once).and_return(output_folder)
-      CIAT::TestFile.should_receive(:new).
-        with(files[0], output_folder).and_return(test_files[0])
-      CIAT::TestFile.should_receive(:new).
-        with(files[1], output_folder).and_return(test_files[1])
-      CIAT::TestFile.should_receive(:new).
-        with(files[2], output_folder).and_return(test_files[2])
+      CIAT::CiatFile.should_receive(:new).
+        with(files[0], output_folder).and_return(ciat_files[0])
+      CIAT::CiatFile.should_receive(:new).
+        with(files[1], output_folder).and_return(ciat_files[1])
+      CIAT::CiatFile.should_receive(:new).
+        with(files[2], output_folder).and_return(ciat_files[2])
     
-      @default_builder.make_test_files(files).should == test_files
+      @default_builder.make_ciat_files(files).should == ciat_files
     end
 
     it "should complain if no test files to make" do
       lambda {
-        @default_builder.make_test_files([])
+        @default_builder.make_ciat_files([])
       }.should raise_error(IOError)
     end
   end
@@ -41,30 +41,30 @@ describe CIAT::SuiteBuilder do
   describe "getting and processing test files" do
     it "should get filename from filenames option" do
       files = mock("files")
-      test_files = mock("test files")
+      ciat_files = mock("ciat files")
       
       options[:files] = files
-      @default_builder.should_receive(:make_test_files).
-        with(files).and_return(test_files)
+      @default_builder.should_receive(:make_ciat_files).
+        with(files).and_return(ciat_files)
         
-      @default_builder.build_test_files.should == test_files
+      @default_builder.build_ciat_files.should == ciat_files
     end
     
     it "should get filenames from folder" do
       input_folder, pattern = mock("input folder"), mock("pattern")
       files = mock("files")
       output_folder = mock("output folder")
-      test_files = mock("test files")
+      ciat_files = mock("ciat files")
       
       options[:folder] = input_folder
       options[:pattern] = pattern
       File.should_receive(:join).with(input_folder, "**", pattern).
         and_return("the full path")
       Dir.should_receive(:[]).with("the full path").and_return(files)
-      @default_builder.should_receive(:make_test_files).
-        with(files).and_return(test_files)
+      @default_builder.should_receive(:make_ciat_files).
+        with(files).and_return(ciat_files)
       
-      @default_builder.build_test_files.should == test_files      
+      @default_builder.build_ciat_files.should == ciat_files      
     end
   end
 end

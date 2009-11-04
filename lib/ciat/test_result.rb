@@ -11,11 +11,11 @@ class CIAT::TestResult
   end
   
   def processors
-    @test.processors
+    @subresults.map { |subresult| subresult.processor }
   end
   
   def filename
-    @test.filename
+    @test.filename(:ciat)
   end
   
   def element(*args)

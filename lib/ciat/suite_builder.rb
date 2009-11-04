@@ -17,22 +17,22 @@ class CIAT::SuiteBuilder
     options[:output_folder] || OUTPUT_FOLDER
   end
   
-  def build_test_files
+  def build_ciat_files
     if options[:files]
-      make_test_files(options[:files])
+      make_ciat_files(options[:files])
     else  
       folder = options[:folder] || "ciat"
       pattern = options[:pattern] || "*.ciat"
-      make_test_files(Dir[File.join(folder, "**", pattern)])
+      make_ciat_files(Dir[File.join(folder, "**", pattern)])
     end
   end
   
-  def make_test_files(filenames)
+  def make_ciat_files(filenames)
     if filenames.empty?
       raise IOError.new("no test files specified")
     end
     filenames.map do |filename|
-      CIAT::TestFile.new(filename, build_output_folder)
+      CIAT::CiatFile.new(filename, build_output_folder)
     end
   end
   

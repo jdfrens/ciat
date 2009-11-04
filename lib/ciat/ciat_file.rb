@@ -1,23 +1,35 @@
-class CIAT::TestFile #:nodoc:all
+class CIAT::CiatFile #:nodoc:all
     
-  def initialize(test_file, output_folder)
-    unless File.exists?(test_file)
-      raise IOError.new(test_file + " does not exist")
+  def initialize(ciat_file, output_folder)
+    unless File.exists?(ciat_file)
+      raise IOError.new(ciat_file + " does not exist")
     end
-    @test_file = test_file
+    @ciat_file = ciat_file
     @output_folder = output_folder
+  end
+
+  def elements
+    @elements ||= process
+  end
+  
+  def element(*names)
+    elements[names.compact.join("_").to_sym]
+  end
+  
+  def element?(*names)
+    elements.has_key?(names.compact.join("_").to_sym)
   end
 
   def filename(*modifiers)
     if modifiers == [:ciat]
-      @test_file
+      @ciat_file
     else
       File.join(@output_folder, [stub, *modifiers].compact.join("_"))
     end
   end
   
   def grouping
-    File.dirname(@test_file)
+    File.dirname(@ciat_file)
   end
   
   def process #:nodoc:
@@ -51,7 +63,7 @@ class CIAT::TestFile #:nodoc:all
   private
   
   def read
-    File.readlines(@test_file)
+    File.readlines(@ciat_file)
   end  
   
   def empty_elements_hash
@@ -61,6 +73,6 @@ class CIAT::TestFile #:nodoc:all
   end
   
   def stub
-    @test_file.gsub(File.extname(@test_file), "")
+    @ciat_file.gsub(File.extname(@ciat_file), "")
   end
 end

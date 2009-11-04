@@ -5,34 +5,26 @@ require 'ciat/subresult'
 class CIAT::Test
   attr_reader :processors
 
-  def initialize(test_file, processors, feedback) #:nodoc:
-    @test_file = test_file
+  def initialize(ciat_file, processors, feedback) #:nodoc:
+    @ciat_file = ciat_file
     @processors = processors
     @feedback = feedback
   end
-  
-  def elements
-    @elements ||= @test_file.process
-  end
-  
-  def filename
-    @test_file.filename(:ciat)
-  end
-  
+    
   def run
-    CIAT::TestResult.new(self, run_processors)
+    CIAT::TestResult.new(@ciat_file, run_subtests)
   end
   
   def grouping
-    @test_file.grouping
+    @ciat_file.grouping
   end
   
-  def run_processors #:nodoc:
+  def run_subtests #:nodoc:
     processors_iterator = processors.clone
     subresults = []
     until processors_iterator.empty?
       processor = processors_iterator.shift
-      subresults << subresult(processor, processor.process(self))
+      subresults << subresult(processor, processor.process(@ciat_file))
       break unless subresults.last.light.green?
     end
     until processors_iterator.empty?
@@ -43,17 +35,9 @@ class CIAT::Test
   end
   
   def subresult(processor, light = CIAT::TrafficLight::UNSET)
-    subresult = CIAT::Subresult.new(self,
-      processor.path_kind(self), light, processor)
+    subresult = CIAT::Subresult.new(@ciat_file,
+      processor.path_kind(@ciat_file), light, processor)
     @feedback.report_subresult(subresult)
     subresult
-  end
-  
-  def element(*names)
-    elements[names.compact.join("_").to_sym]
-  end
-  
-  def element?(*names)
-    elements.has_key?(names.compact.join("_").to_sym)
   end
 end

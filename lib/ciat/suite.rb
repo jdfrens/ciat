@@ -58,7 +58,7 @@ class CIAT::Suite
   
   attr_reader :processors
   attr_reader :output_folder
-  attr_reader :test_files
+  attr_reader :ciat_files
   attr_reader :results
   
   # Builds a suite of CIAT tests.  See the instructions above for possible
@@ -68,34 +68,34 @@ class CIAT::Suite
     CIAT::Suite.new(
       builder.build_processors,
       builder.build_output_folder,
-      builder.build_test_files,
+      builder.build_ciat_files,
       builder.build_feedback)
   end
   
-  def initialize(processors, output_folder, test_files, feedback)
+  def initialize(processors, output_folder, ciat_files, feedback)
     @processors = processors
     @output_folder = output_folder
-    @test_files = test_files
+    @ciat_files = ciat_files
     @feedback = feedback
   end
     
   # Returns the number of tests in the suite.
   def size
-    test_files.size
+    ciat_files.size
   end
   
   # Runs all of the tests in the suite, and returns the results.  The results
   # are also available through #results.
   def run
     @feedback.pre_tests(self)
-    @results = test_files.
-      map { |test_file| create_test(test_file) }.
+    @results = ciat_files.
+      map { |ciat_file| create_test(ciat_file) }.
       map { |test| test.run }
     @feedback.post_tests(self)
     @results
   end
   
-  def create_test(test_file)
-    CIAT::Test.new(test_file, @processors, @feedback)
+  def create_test(ciat_file)
+    CIAT::Test.new(ciat_file, @processors, @feedback)
   end
 end

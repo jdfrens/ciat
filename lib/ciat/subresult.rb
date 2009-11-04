@@ -16,7 +16,7 @@ class CIAT::Subresult
   end
   
   def relevant_element_names
-    # TODO: work in @path_kind
+    # FIXME: work in @path_kind
     @processor.kind.element_name_hash[@light.setting]
   end
 end

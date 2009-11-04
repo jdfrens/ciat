@@ -9,13 +9,11 @@ describe "element output in detail row" do
   attr_reader :erb
   attr_reader :recursion
   attr_reader :processor  
-  attr_reader :ciat_file # TODO: really?  public?
   attr_reader :elements
   
   before(:each) do
     @recursion = mock("recursion")
     @processor = mock('processor')
-    @ciat_file = mock("ciat file")
     @erb = ERB.new(File.read("lib/templates/detail_row/elements.html.erb"))
   end
 

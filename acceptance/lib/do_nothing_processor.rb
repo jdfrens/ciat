@@ -29,8 +29,7 @@ class DoNothingProcessor
     Hash.new([])
   end
   
-  def relevant_elements(crate)
-    # TODO: maybe return an element?
+  def relevant_elements(ignored)
     []
   end
 end

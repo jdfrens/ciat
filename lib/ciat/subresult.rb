@@ -1,12 +1,16 @@
 class CIAT::Subresult
   attr_reader :light
-  attr_reader :processor
+  attr_reader :subtest
   
-  def initialize(elements, path_kind, light, processor)
+  def initialize(elements, path_kind, light, subtest)
     @elements = elements
     @path_kind = path_kind
     @light = light
-    @processor = processor
+    @subtest = subtest
+  end
+  
+  def processor
+    subtest.processor
   end
   
   def relevant_elements
@@ -17,7 +21,6 @@ class CIAT::Subresult
   
   def relevant_element_names
     # FIXME: work in @path_kind
-    # TODO: @processor should be @subtest (eventually)
-    @processor.processor.kind.element_name_hash[@light.setting]
+    processor.kind.element_name_hash[@light.setting]
   end
 end

@@ -28,7 +28,7 @@ describe CIAT::Test do
   describe "running processors" do
     before(:each) do
       @subtests = array_of_mocks(3, "subtests")
-      @test.should_receive(:subtests).and_return(@subtests)
+      @test.should_receive(:make_subtests).and_return(@subtests)
       @subresults = array_of_mocks(3, "subresult")
     end
     

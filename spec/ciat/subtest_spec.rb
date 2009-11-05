@@ -1,10 +1,10 @@
-require File.dirname(__FILE__) + '/../../spec_helper'
+require File.dirname(__FILE__) + '/../spec_helper'
 
-describe CIAT::Processors::BasicProcessing do
+describe CIAT::Subtest do
   before(:each) do
     @ciat_file = mock("ciat file")
     @processor = mock("processor")
-    @subtest = CIAT::Processors::BasicProcessing.new(@ciat_file, @processor)
+    @subtest = CIAT::Subtest.new(@ciat_file, @processor)
   end
   
   describe "processing" do

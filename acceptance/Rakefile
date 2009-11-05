@@ -8,8 +8,6 @@ require 'ciat/processors/java'
 require 'ciat/processors/parrot'
 require 'ciat/feedback/composite'
 
-require 'do_not_process_executor'
-require 'do_nothing_processor'
 require 'feedback_tester'
 require 'blowup_feedback'
 require 'helpers'
@@ -59,7 +57,7 @@ end
 task :errors_and_failures do
   deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
-      :processors => [DoNothingProcessor.new(:yellow), DoNotProcessExecutor.new],
+      :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/compile-error.ciat',
       :feedback => feedback(1, [:yellow, :unset],
                     :report_filename => 'compile-error.html',
@@ -70,7 +68,7 @@ task :errors_and_failures do
   
   deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
-      :processors => [DoNothingProcessor.new(:red), DoNotProcessExecutor.new],
+      :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/compile-fail.ciat',
       :feedback => feedback(1, [:red, :unset],
                     :report_filename => 'compile-fail.html',
@@ -81,7 +79,7 @@ task :errors_and_failures do
   
   deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
-      :processors => [java_compiler("Hello"), DoNothingProcessor.new(:yellow)],
+      :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/execution-error.ciat',
       :feedback => feedback(1, [:green, :yellow],
                     :report_filename => 'execution-error.html',
@@ -92,7 +90,7 @@ task :errors_and_failures do
   
   deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
     suite = CIAT::Suite.build(
-      :processors => [java_compiler("Hello"), DoNothingProcessor.new(:red)],
+      :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/execution-fail.ciat',
       :feedback => feedback(1, [:green, :red],
                     :report_filename => 'execution-fail.html',

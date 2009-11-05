@@ -22,7 +22,7 @@ All</a>
 <tr id="header">
 <th>Description</th>
 <th>Compiler (Implemented In Java)</th>
-<th>Do-Nothing Processor With Yellow Light</th>
+<th>In-Java Interpreter</th>
 </tr>
 <tr>
 <td colspan="3"><strong>ciat / errors-and-failures</strong></td>
@@ -45,7 +45,7 @@ source code</h4>
 <tr>
 <td>
 <pre class="code">
-compile me!
+compile me for an execution error!
 </pre></td>
 </tr>
 </table>
@@ -58,12 +58,37 @@ compilation</h4>
 <tr>
 <td>
 <pre class="code">
-Hello, compile me!.
+Hello, compile me for an execution error!.
 </pre></td>
 </tr>
 </table>
 </div>
-<h3>Results from Do-Nothing Processor with yellow light</h3>
+<h3>Results from in-Java interpreter</h3>
+<div class="source">
+<h4 title="temp/ciat/errors-and-failures/execution-error_source">
+source code</h4>
+<table summary="table for source code">
+<tr>
+<td>
+<pre class="code">
+compile me for an execution error!
+</pre></td>
+</tr>
+</table>
+</div>
+<div class="execution_error_generated">
+<h4 title=
+"temp/ciat/errors-and-failures/execution-error_execution_error_generated">
+error from execution</h4>
+<table summary="table for error from execution">
+<tr>
+<td>
+<pre class="code">
+The HelloInterpreter will not greet 'error' under any circumstances.
+</pre></td>
+</tr>
+</table>
+</div>
 </td>
 </tr>
 </table>

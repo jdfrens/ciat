@@ -3,8 +3,6 @@ module CIAT
     # Executor class for Java interpreters.
     #
     class Java
-      include CIAT::Processors::BasicProcessing
-
       # Traffic light
       attr_accessor :kind
       attr_accessor :description

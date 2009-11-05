@@ -22,7 +22,7 @@ All</a>
 <tr id="header">
 <th>Description</th>
 <th>Compiler (Implemented In Java)</th>
-<th>Do-Nothing Processor With Red Light</th>
+<th>In-Java Interpreter</th>
 </tr>
 <tr>
 <td colspan="3"><strong>ciat / errors-and-failures</strong></td>
@@ -63,7 +63,44 @@ Hello, whatever.
 </tr>
 </table>
 </div>
-<h3>Results from Do-Nothing Processor with red light</h3>
+<h3>Results from in-Java interpreter</h3>
+<div class="source">
+<h4 title="temp/ciat/errors-and-failures/execution-fail_source">
+source code</h4>
+<table summary="table for source code">
+<tr>
+<td>
+<pre class="code">
+whatever
+</pre></td>
+</tr>
+</table>
+</div>
+<div class="execution_diff">
+<h4 title=
+"temp/ciat/errors-and-failures/execution-fail_execution_diff">
+execution diff</h4>
+<table class="diff" summary="table for execution diff">
+<tr>
+<th></th>
+<th>Expected</th>
+<th></th>
+<th>Generated</th>
+</tr>
+<tr class="yellow">
+<td>1</td>
+<td>
+<pre>
+but this won't match!
+</pre></td>
+<td>1</td>
+<td>
+<pre>
+Hello, whatever.
+</pre></td>
+</tr>
+</table>
+</div>
 </td>
 </tr>
 </table>

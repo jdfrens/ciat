@@ -1,6 +1,7 @@
 require 'set'
 require 'ciat/test_result'
 require 'ciat/subresult'
+require 'ciat/processors/basic_processing'
 
 class CIAT::Test
   attr_reader :processors
@@ -20,7 +21,8 @@ class CIAT::Test
   end
   
   def run_subtests #:nodoc:
-    processors_iterator = processors.clone
+    # TODO: rename variable
+    processors_iterator = subtests
     subresults = []
     until processors_iterator.empty?
       processor = processors_iterator.shift
@@ -32,6 +34,12 @@ class CIAT::Test
       subresults << subresult(processor)
     end
     subresults
+  end
+  
+  def subtests
+    processors.map do |processor|
+      CIAT::Processors::BasicProcessing.new(@ciat_file, processor)
+    end
   end
   
   def subresult(processor, light = CIAT::TrafficLight::UNSET)

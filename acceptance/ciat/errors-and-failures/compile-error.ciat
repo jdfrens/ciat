@@ -1,7 +1,7 @@
 To be run by the error compiler.
 ==== source
-Source is actually ignored.
+error
 ==== compilation
-This compiler always quits with an error.
+The "error" source will cause the compiler to error out.
 ==== execution
-NONE
+Nothing get executed because the compiler fails, so it doesn't matter what I write here.

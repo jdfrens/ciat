@@ -31,7 +31,7 @@ describe CIAT::Subresult do
       mock("kind"), mock("hash"), mock("setting")
     names = mock("names")
     
-    @processor.should_receive(:kind).and_return(kind)
+    @processor.stub_chain(:processor, :kind).and_return(kind)
     kind.should_receive(:element_name_hash).and_return(hash)
     @light.should_receive(:setting).and_return(setting)
     hash.should_receive(:[]).with(setting).and_return(names)

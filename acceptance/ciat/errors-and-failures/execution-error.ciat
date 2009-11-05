@@ -1,7 +1,7 @@
 Compiled by copying, executor errors.
 ==== source
-compile me!
+compile me for an execution error!
 ==== compilation
-Hello, compile me!.
+Hello, compile me for an execution error!.
 ==== execution
-this should be the error output
+The word "error" in the compilation will cause the interpreter to error.

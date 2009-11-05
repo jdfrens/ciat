@@ -14,9 +14,6 @@ module CIAT
     # is executed.
     # If none is provided, no command-line arguments are used.
     class Parrot
-      include CIAT::Processors::BasicProcessing
-      include CIAT::Differs::HtmlDiffer
-
       attr_accessor :kind
       attr_accessor :description
       attr_accessor :libraries

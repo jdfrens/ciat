@@ -27,51 +27,53 @@ describe CIAT::Test do
   
   describe "running processors" do
     before(:each) do
+      @subtests = array_of_mocks(3, "subtests")
+      @test.should_receive(:subtests).and_return(@subtests)
       @subresults = array_of_mocks(3, "subresult")
     end
     
     it "should run just the first processor" do
-      expect_not_green(@processors[0], @subresults[0])
-      expect_unset(@processors[1], @subresults[1])
-      expect_unset(@processors[2], @subresults[2])
+      expect_not_green(@subtests[0], @subresults[0])
+      expect_unset(@subtests[1], @subresults[1])
+      expect_unset(@subtests[2], @subresults[2])
       
       @test.run_subtests.should == @subresults
     end
     
     it "should run just the first two processors" do
-      expect_green(@processors[0], @subresults[0])
-      expect_not_green(@processors[1], @subresults[1])
-      expect_unset(@processors[2], @subresults[2])
+      expect_green(@subtests[0], @subresults[0])
+      expect_not_green(@subtests[1], @subresults[1])
+      expect_unset(@subtests[2], @subresults[2])
       
       @test.run_subtests.should == @subresults
     end
 
     it "should run all processors" do
-      expect_green(@processors[0], @subresults[0])
-      expect_green(@processors[1], @subresults[1])
-      expect_green(@processors[2], @subresults[2])
+      expect_green(@subtests[0], @subresults[0])
+      expect_green(@subtests[1], @subresults[1])
+      expect_green(@subtests[2], @subresults[2])
             
       @test.run_subtests.should == @subresults
     end
 
-    def expect_green(processor, subresult)
+    def expect_green(subtest, subresult)
       light = mock("light", :green? => true)
-      processor.should_receive(:process).with(@ciat_file).and_return(light)
-      @test.should_receive(:subresult).with(processor, light).
+      subtest.should_receive(:process).with(@ciat_file).and_return(light)
+      @test.should_receive(:subresult).with(subtest, light).
         and_return(subresult)
       subresult.should_receive(:light).and_return(light)
     end
     
-    def expect_not_green(processor, subresult)
+    def expect_not_green(subtest, subresult)
       light = mock("light", :green? => false)
-      processor.should_receive(:process).with(@ciat_file).and_return(light)
-      @test.should_receive(:subresult).with(processor, light).
+      subtest.should_receive(:process).with(@ciat_file).and_return(light)
+      @test.should_receive(:subresult).with(subtest, light).
         and_return(subresult)
       subresult.should_receive(:light).and_return(light)
     end
     
-    def expect_unset(processor, subresult)
-      @test.should_receive(:subresult).with(processor).and_return(subresult)
+    def expect_unset(subtest, subresult)
+      @test.should_receive(:subresult).with(subtest).and_return(subresult)
     end
   end
   

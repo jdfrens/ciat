@@ -10,6 +10,10 @@ def java_compiler(type)
   end
 end
 
+def yellow_processor
+  CIAT::Processors::Java.new('./java', "YellowProcessor")
+end
+
 def java_interpreter(type)
   CIAT::Processors::Java.new('./java', type + 'Interpreter')
 end

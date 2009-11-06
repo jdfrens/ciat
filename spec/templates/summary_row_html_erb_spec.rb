@@ -1,10 +1,12 @@
 require File.dirname(__FILE__) + '/../spec_helper.rb'
 
 require 'hpricot'
+require 'webrat'
 
 describe "summary row of test report" do
   include ERBHelpers
   include CustomDetailRowMatchers
+  include Webrat::Matchers
   
   attr_reader :erb
   attr_reader :recursion
@@ -67,7 +69,8 @@ describe "summary row of test report" do
       
   def expect_description(text)
     description = mock("description")
-    @result.should_receive(:element).with(:description).and_return(description)
+    @result.should_receive(:element).
+      with(:description).and_return(description)
     description.should_receive(:content).and_return(text)
   end
   

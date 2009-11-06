@@ -1,6 +1,6 @@
 class CIAT::Processors::Interpreter
   def relevant_elements(color, path)
-    element_name_hash[color]
+    element_name_hash[path][color]
   end
   
   def happy_path_element
@@ -22,10 +22,18 @@ class CIAT::Processors::Interpreter
   private
   def element_name_hash
     {
-      :green => [:source, :command_line, :execution_generated],
-      :yellow => [:source, :command_line, :execution_error_generated],
-      :red => [:source, :command_line, :execution_diff],
-      :unset => []
+      :happy => {
+        :green => [:source, :command_line, :execution_generated],
+        :yellow => [:source, :command_line, :execution_error_generated],
+        :red => [:source, :command_line, :execution_diff],
+        :unset => []
+      },
+      :sad => {
+        :green => [:source, :command_line, :execution_error_generated],
+        :yellow => [],
+        :red => [],
+        :unset => []
+      }
     }
   end
 end

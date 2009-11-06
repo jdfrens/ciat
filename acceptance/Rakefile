@@ -1,6 +1,7 @@
 $:.unshift(File.join(File.dirname(__FILE__), "..", "lib")).
   unshift(File.join(File.dirname(__FILE__), "lib"))
 
+require 'spec/rake/spectask'
 require 'fileutils'
 
 require 'ciat'
@@ -13,14 +14,17 @@ require 'blowup_feedback'
 require 'helpers'
 
 desc "Cleans the output directory, compiles the Java code, runs tests"
-task :default => [:clean_start, :compile_java,
-                  :exercise_ciat,
-                  :exercise_java,
-                  :exercise_java_interpreter,
-                  :exercise_parrot,
-                  :exercise_java_and_parrot] do
-  check_output_files
-end
+task :default => :full_exercise
+
+Spec::Rake::SpecTask.new
+task :spec => :full_exercise
+
+task :full_exercise => [:clean_start, :compile_java,
+                        :exercise_ciat,
+                        :exercise_java,
+                        :exercise_java_interpreter,
+                        :exercise_parrot,
+                        :exercise_java_and_parrot]
 
 task :compile_java do
   unless system("cd java ; javac *.java")

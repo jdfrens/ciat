@@ -58,7 +58,7 @@ describe CIAT::Test do
 
     def expect_green(subtest, subresult)
       light = mock("light", :green? => true)
-      subtest.should_receive(:process).with(@ciat_file).and_return(light)
+      subtest.should_receive(:process).with().and_return(light)
       @test.should_receive(:subresult).with(subtest, light).
         and_return(subresult)
       subresult.should_receive(:light).and_return(light)
@@ -66,7 +66,7 @@ describe CIAT::Test do
     
     def expect_not_green(subtest, subresult)
       light = mock("light", :green? => false)
-      subtest.should_receive(:process).with(@ciat_file).and_return(light)
+      subtest.should_receive(:process).with().and_return(light)
       @test.should_receive(:subresult).with(subtest, light).
         and_return(subresult)
       subresult.should_receive(:light).and_return(light)
@@ -78,16 +78,15 @@ describe CIAT::Test do
   end
   
   it "should build and report subresult" do
-    path_kind, light, processor = 
-      mock("path kind"), mock("light"), mock("processor")
+    path_kind, light, subtest = 
+      mock("path kind"), mock("light"), mock("subtest")
     subresult = mock("subresult")
     
-    processor.should_receive(:path_kind).
-      with(@ciat_file).and_return(path_kind)
+    subtest.should_receive(:path_kind).and_return(path_kind)
     CIAT::Subresult.should_receive(:new).
-      with(@ciat_file, path_kind, light, processor).and_return(subresult)
+      with(@ciat_file, path_kind, light, subtest).and_return(subresult)
     @feedback.should_receive(:report_subresult).with(subresult)
 
-    @test.subresult(processor, light).should == subresult
+    @test.subresult(subtest, light).should == subresult
   end
 end

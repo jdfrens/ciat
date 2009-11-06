@@ -5,9 +5,9 @@ describe CIAT::Subresult do
     @elements = mock("elements")
     @path_kind = mock("path kind")
     @light = mock("light")
-    @processor = mock("processor")
+    @subtest = mock("subtest")
     
-    @subtest_result = CIAT::Subresult.new(@elements, @path_kind, @light, @processor)
+    @subresult = CIAT::Subresult.new(@elements, @path_kind, @light, @subtest)
   end
   
   it "should look up relevant elements" do
@@ -15,7 +15,7 @@ describe CIAT::Subresult do
     names = [mock("name 0"), mock("name 1"), mock("name 2")]
     relevants = [mock("element 0"), mock("element 1"), mock("element 2")]
     
-    @subtest_result.should_receive(:relevant_element_names).and_return(names)
+    @subresult.should_receive(:relevant_element_names).and_return(names)
     @elements.should_receive(:element?).with(names[0]).and_return(true)
     @elements.should_receive(:element).with(names[0]).and_return(relevants[0])
     @elements.should_receive(:element?).with(names[1]).and_return(true)
@@ -23,19 +23,21 @@ describe CIAT::Subresult do
     @elements.should_receive(:element?).with(names[2]).and_return(true)
     @elements.should_receive(:element).with(names[2]).and_return(relevants[2])
     
-    @subtest_result.relevant_elements.should == relevants
+    @subresult.relevant_elements.should == relevants
   end
   
   it "should have relevant element names" do
-    kind, hash, setting = 
-      mock("kind"), mock("hash"), mock("setting")
+    kind = mock("kind")
+    setting, path_kind = mock("setting"), mock("path kind")
     names = mock("names")
-    
-    @processor.stub_chain(:processor, :kind).and_return(kind)
-    kind.should_receive(:element_name_hash).and_return(hash)
+
+    # processor.kind.relevant_elements(@light.setting, @subtest.path_kind)    
     @light.should_receive(:setting).and_return(setting)
-    hash.should_receive(:[]).with(setting).and_return(names)
+    @subtest.should_receive(:path_kind).and_return(path_kind)
+    @subtest.stub_chain(:processor, :kind).and_return(kind)
+    kind.should_receive(:relevant_elements).
+      with(setting, path_kind).and_return(names)
     
-    @subtest_result.relevant_element_names.should == names
+    @subresult.relevant_element_names.should == names
   end
 end

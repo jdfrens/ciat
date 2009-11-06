@@ -20,7 +20,6 @@ class CIAT::Subresult
   end
   
   def relevant_element_names
-    # FIXME: work in @path_kind
-    processor.kind.element_name_hash[@light.setting]
+    processor.kind.relevant_elements(@light.setting, @subtest.path_kind)
   end
 end

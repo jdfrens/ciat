@@ -25,7 +25,7 @@ class CIAT::Test
     subresults = []
     until subtests.empty?
       subtest = subtests.shift
-      subresults << subresult(subtest, subtest.process(@ciat_file))
+      subresults << subresult(subtest, subtest.process)
       break unless subresults.last.light.green?
     end
     until subtests.empty?
@@ -40,9 +40,9 @@ class CIAT::Test
     end
   end
   
-  def subresult(processor, light = CIAT::TrafficLight::UNSET)
+  def subresult(subtest, light = CIAT::TrafficLight::UNSET)
     subresult = CIAT::Subresult.new(@ciat_file,
-      processor.path_kind(@ciat_file), light, processor)
+      subtest.path_kind, light, subtest)
     @feedback.report_subresult(subresult)
     subresult
   end

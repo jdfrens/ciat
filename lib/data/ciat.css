@@ -35,6 +35,18 @@
   margin: 0;
 }
 
-.details h4, .details h3 {
-  margin: 0;
+.details table, .details p {
+  margin-left: 10px;
+}
+
+tr.details td {
+  padding-bottom: 10px;
+}
+
+.details h3 {
+  margin: 20px 10px 10px 10px;
+}
+
+.details h4 {
+  margin: 10px;
 }

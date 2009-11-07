@@ -25,6 +25,10 @@ task :full_exercise => [:clean_start, :compile_java,
                         :exercise_java_interpreter,
                         :exercise_parrot,
                         :exercise_java_and_parrot]
+                        
+task :view do
+  sh "open #{Dir["temp/*.html"].join(" ")}"
+end
 
 task :compile_java do
   unless system("cd java ; javac *.java")

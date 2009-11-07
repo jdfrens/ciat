@@ -15,4 +15,8 @@ describe "parrot-error" do
   it "should show the error output" do
     @doc.should have_selector(".execution_error_generated")
   end
+  
+  it "should describe a sad path" do
+    @doc.should have_selector("h3", :content => "sad path")
+  end
 end

@@ -22,9 +22,10 @@ describe "summary row of test report" do
     expect_description("the description")
     @result.should_receive(:subresults).at_least(:once).and_return([])
     
-    doc = process_erb
-    doc.should have_description("the description")
-    doc.should have_none("/tr/td[2]")
+    process_erb.should have_selector("body") do |body|
+      body.should have_selector("a", :content => "the description")
+      body.should have_selector("td", :count => 1)
+    end
   end
 
   it "should work with one processor" do
@@ -37,9 +38,11 @@ describe "summary row of test report" do
     expect_light(subresult, :light_setting, "the light")
   
     doc = process_erb
-    doc.should have_description("one proc description")
-    doc.should have_light(:light_setting, "the light")
-    doc.should have_none("/tr/td[3]")
+    doc.should have_selector("body") do |body|
+      body.should have_selector("a", :content => "one proc description")
+      body.should have_selector(".light_setting", :content => "the light")
+      body.should have_selector("td", :count => 2)      
+    end
   end
   
   it "should work with many processors" do
@@ -52,12 +55,13 @@ describe "summary row of test report" do
     expect_light(subresults[1], :light1, "word 1")
     expect_light(subresults[2], :light2, "word 2")
   
-    doc = process_erb
-    doc.should have_description("description three")
-    doc.should have_light(:light0, "word 0")
-    doc.should have_light(:light1, "word 1")
-    doc.should have_light(:light2, "word 2")
-    doc.should have_none("/tr/td[5]")
+    process_erb.should have_selector("body") do |body|
+      body.should have_selector("a", :content => "description three")
+      body.should have_light(:light0, "word 0")
+      body.should have_light(:light1, "word 1")
+      body.should have_light(:light2, "word 2")
+      body.should have_selector("td", :count => 4)
+    end
   end
   
   def expect_light(subresult, setting, word)

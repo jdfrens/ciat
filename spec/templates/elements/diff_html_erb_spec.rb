@@ -5,6 +5,7 @@ require 'hpricot'
 describe "checked-files output in detail row" do
   include ERBHelpers
   include CustomDetailRowMatchers
+  include Webrat::Matchers
   
   attr_reader :erb
   attr_reader :element
@@ -21,8 +22,9 @@ describe "checked-files output in detail row" do
     @element.should_receive(:describe).at_least(:once).and_return("the description")
     @element.should_receive(:content).and_return("the diff")
     
-    doc = process_erb
-    doc.should have_description("h4", "the description")
-    doc.should have_diff_table("the diff")
+    process_erb.should have_selector("body") do |body|
+      body.should have_selector("h4", :content => "the description")
+      body.should have_diff_table("the diff")
+    end
   end
 end

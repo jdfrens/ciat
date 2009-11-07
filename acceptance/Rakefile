@@ -16,8 +16,8 @@ require 'helpers'
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => :full_exercise
 
-Spec::Rake::SpecTask.new
-task :spec => :full_exercise
+Spec::Rake::SpecTask.new(:acceptance)
+task :acceptance => :full_exercise
 
 task :full_exercise => [:clean_start, :compile_java,
                         :exercise_ciat,

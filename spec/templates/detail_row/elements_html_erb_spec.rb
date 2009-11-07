@@ -5,6 +5,7 @@ require 'hpricot'
 describe "element output in detail row" do
   include ERBHelpers
   include CustomDetailRowMatchers
+  include Webrat::Matchers
   
   attr_reader :erb
   attr_reader :recursion
@@ -14,14 +15,14 @@ describe "element output in detail row" do
   before(:each) do
     @recursion = mock("recursion")
     @processor = mock('processor')
-    @erb = ERB.new(File.read("lib/templates/detail_row/elements.html.erb"))
+    @erb = build_erb("lib/templates/detail_row/elements.html.erb")
   end
 
   it "should handle no elements" do
     @elements = []
     
     doc = process_erb
-    doc.should have_inner_html("", /\s*/)
+    doc.should_not have_selector(fake_selector)
   end
   
   it "should process one used element" do

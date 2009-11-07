@@ -1,5 +1,6 @@
 class CIAT::Subresult
   attr_reader :light
+  attr_reader :path_kind
   attr_reader :subtest
   
   def initialize(elements, path_kind, light, subtest)

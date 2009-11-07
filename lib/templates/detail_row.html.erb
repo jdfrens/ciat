@@ -2,7 +2,7 @@
   <td colspan="<%= result.subresults.size + 1 %>">
 	
 	<% result.subresults.each do |subresult| %>
-	  <h3>Results from <%= subresult.processor.describe %></h3>
+	  <h3>Results from <%= subresult.processor.describe %> (<%= subresult.path_kind %> path)</h3>
 		<%= render "detail_row/elements", 
 			:elements => subresult.relevant_elements %>
 	<% end %>

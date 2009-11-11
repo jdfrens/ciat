@@ -10,11 +10,10 @@ require 'ciat/processors/parrot'
 require 'ciat/feedback/composite'
 
 require 'feedback_tester'
-require 'blowup_feedback'
 require 'helpers'
 
 desc "Cleans the output directory, compiles the Java code, runs tests"
-task :default => :full_exercise
+task :default => :acceptance
 
 Spec::Rake::SpecTask.new(:acceptance)
 task :acceptance => :full_exercise

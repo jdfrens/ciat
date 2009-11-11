@@ -33,20 +33,6 @@ def parrot_executor(kind)
 end
 
 #
-# Output file checking
-#
-def check_output_files
-  puts "Checking output files."
-  Dir["**/*.html"].each do |file|
-    puts "tidy -mq #{file}"
-    system "tidy -mq #{file}"
-  end
-  unless system("diff -r temp_expected/ temp/ > acceptance.diff")
-    raise("**** diff failed!")
-  end
-end
-
-#
 # Feedback
 #
 def feedback(size, expected_lights, options={})

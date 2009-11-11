@@ -1,12 +1,12 @@
 shared_examples_for "Any element namer" do
   describe "element-name hash" do
-    [:red, :yellow, :green, :unset].each do |color|
+    [CIAT::TrafficLight::RED, CIAT::TrafficLight::YELLOW, CIAT::TrafficLight::GREEN, CIAT::TrafficLight::UNSET].each do |light|
       [:happy, :sad].each do |path|
-        it "should compute relevant elements for #{color} light and #{path} path" do
-          @namer.relevant_elements(color, path).should be_an_instance_of(Array)
+        it "should compute relevant elements for #{light.color} light and #{path} path" do
+          @namer.relevant_elements(light, path).should_not be_nil
         end
       end
-    end
+    end    
   end
   
   it "should have an output name" do

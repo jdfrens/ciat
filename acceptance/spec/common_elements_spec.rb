@@ -1,5 +1,6 @@
 require 'rubygems'
 require 'webrat'
+require 'spec_helper'
 
 describe "confirm the common elements in the HTML documents" do
   include Webrat::Matchers
@@ -9,9 +10,7 @@ describe "confirm the common elements in the HTML documents" do
   end
   
   before(:each) do
-    @docs = all_html_files.map do |file|
-      Webrat::XML.html_document(open(file).readlines)
-    end
+    @docs = all_html_files.map { |file| webrat_document(file) }
   end
   
   it "should include prototype javascript" do

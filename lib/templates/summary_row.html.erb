@@ -1,11 +1,13 @@
-<tr class="summary">
+<tr id="summary_<%= filename_to_id(result.filename) %>" class="summary">
 	<td>
-	  <a href="#" onclick="$(this).up('tr').next().toggle(); return false;" title="<%= result.filename %>">
+	  <a href="#"
+			onclick="$(this).up('tr').next().toggle(); return false;"
+			title="<%= result.filename %>">
 	  <%= result.element(:description).content %>
 	  </a>
   </td>
 	<% result.subresults.each do |subresult| %>
-	  <td class="<%= subresult.light.setting %>">
+	  <td class="<%= subresult.light.color %>">
 	    <%= light_to_word(subresult.light) %>
 	  </td>
 	<% end %>

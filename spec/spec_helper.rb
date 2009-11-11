@@ -29,6 +29,10 @@ module ERBHelpers
     prefix
   end
   
+  def filename_to_id(filename)
+    filename
+  end
+  
   def title(text)
     text
   end

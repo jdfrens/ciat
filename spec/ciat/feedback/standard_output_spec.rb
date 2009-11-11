@@ -66,43 +66,41 @@ describe CIAT::Feedback::StandardOutput do
     end
   end
   
-  describe "reporting on a processor" do
+  describe "reporting on a subresult" do
     before(:each) do
-      @light = mock("light")
-      @processor = mock("processor")
-      @processor.should_receive(:light).at_least(:once).and_return(@light)
+      @subresult = mock("subresult")
     end
     
     it "should report a green light" do
-      expect_light(:green)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::GREEN)
       @feedback.should_receive(:putc).with(".")
       
-      @feedback.report_subresult(@processor)
+      @feedback.report_subresult(@subresult)
     end
     
     it "should report a red light" do
-      expect_light(:red)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::RED)
       @feedback.should_receive(:putc).with("F")
       
-      @feedback.report_subresult(@processor)
+      @feedback.report_subresult(@subresult)
     end
     
     it "should report a yellow light" do      
-      expect_light(:yellow)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::YELLOW)
       @feedback.should_receive(:putc).with("E")
 
-      @feedback.report_subresult(@processor)
+      @feedback.report_subresult(@subresult)
     end
 
     it "should report an unset light" do      
-      expect_light(:unset)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::UNSET)
       @feedback.should_receive(:putc).with("-")
       
-      @feedback.report_subresult(@processor)
-    end
-    
-    def expect_light(setting)
-      @light.should_receive(:setting).at_least(:once).and_return(setting)
+      @feedback.report_subresult(@subresult)
     end
   end
   

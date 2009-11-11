@@ -5,8 +5,8 @@ class FeedbackTester
     @lights = []
   end
   
-  def report_subresult(processor)
-    @lights << processor.light.setting
+  def report_subresult(subresult)
+    @lights << subresult.light.color.to_sym
   end
   
   def pre_tests(suite)

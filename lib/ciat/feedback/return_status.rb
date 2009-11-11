@@ -11,11 +11,15 @@ module CIAT::Feedback
       end
     end
     
-    def report_subresult(processor)
-      @failure ||= processor.light.yellow? || processor.light.red?
+    def report_subresult(subresult)
+      @failure ||= subresult_failure?(subresult, subresult.light)
     end
     
     private
+    def subresult_failure?(subresult, light)
+      light.yellow? || light.red?
+    end
+    
     def failure?
       @failure
     end

@@ -1,4 +1,5 @@
-<tr class="details" style="display:none">
+<tr id="details_<%= filename_to_id(result.filename) %>"
+		class="details" style="display:none">
   <td colspan="<%= result.subresults.size + 1 %>">
 	
 	<% result.subresults.each do |subresult| %>

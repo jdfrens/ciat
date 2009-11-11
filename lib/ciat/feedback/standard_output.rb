@@ -3,7 +3,11 @@ module CIAT
     # This feedback class sends some simple messages to the screen about the
     # progress of a CIAT::Suite run.
     class StandardOutput
-      LIGHT_OUTPUTS = { :green => ".", :red => "F", :yellow => "E", :unset => "-" }
+      LIGHT_OUTPUTS = {
+        CIAT::TrafficLight::GREEN => ".", 
+        CIAT::TrafficLight::RED => "F", 
+        CIAT::TrafficLight::YELLOW => "E", 
+        CIAT::TrafficLight::UNSET => "-" }
       
       def initialize(counter)
         @counter = counter
@@ -22,7 +26,7 @@ module CIAT
       end
       
       def report_subresult(processor)
-        putc LIGHT_OUTPUTS[processor.light.setting]
+        putc LIGHT_OUTPUTS[processor.light]
       end
     end
   end

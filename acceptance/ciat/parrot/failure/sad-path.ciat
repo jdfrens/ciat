@@ -1,0 +1,6 @@
+Testing a sad path through the Parrot VM results in a failure.
+==== source
+10
+==== execution error
+error:imcc:syntax error, unexpected INTC ('174981723981723')
+	in file 'temp/ciat/parrot-error/parrot-error_source' line 1

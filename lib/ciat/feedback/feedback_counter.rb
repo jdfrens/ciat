@@ -33,10 +33,10 @@ module CIAT
       end
       
       def report_subresult(subresult)
-        case subresult.light.setting
-        when :red
+        case subresult.light
+        when CIAT::TrafficLight::RED
           increment_failure_count
-        when :yellow
+        when CIAT::TrafficLight::YELLOW
           increment_error_count
         end
       end

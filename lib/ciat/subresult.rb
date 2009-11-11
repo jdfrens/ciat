@@ -10,6 +10,10 @@ class CIAT::Subresult
     @subtest = subtest
   end
   
+  def happy_path?
+    path_kind == :happy
+  end
+  
   def processor
     subtest.processor
   end
@@ -21,6 +25,6 @@ class CIAT::Subresult
   end
   
   def relevant_element_names
-    processor.kind.relevant_elements(@light.setting, @subtest.path_kind)
+    processor.kind.relevant_elements(@light, @subtest.path_kind)
   end
 end

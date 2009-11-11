@@ -70,5 +70,5 @@ def deliberate_failure(expected_class, expected_message=nil)
       raise e
     end
   end
-  fail "Should have failed at the end" if ooops  
+  fail "Task should have thrown a failure" if ooops  
 end

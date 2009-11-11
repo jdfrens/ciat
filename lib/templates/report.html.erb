@@ -27,11 +27,11 @@
   		</tr>
 
   		<% results.each do |result| %>
-			<% if new_grouping?(result) %>
-				<%= render "group_header", :result => result %>
-			<% end %>
-			<%= render "summary_row", :result => result %>
-			<%= render "detail_row", :result => result %>
+				<% if new_grouping?(result) %>
+					<%= render "group_header", :result => result %>
+				<% end %>
+				<%= render "summary_row", :result => result %>
+				<%= render "detail_row", :result => result %>
   		<% end %>
   	</table>
 	</body>

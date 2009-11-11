@@ -12,6 +12,7 @@ describe "detail row of test report" do
   
   before(:each) do
     @result = mock('result')
+    @result.should_receive(:filename).and_return("foo/bar/filename.ciat")
     @ciat_file = mock('ciat file')
     @recursion = mock('recursion')
     @erb = build_erb("lib/templates/detail_row.html.erb")

@@ -28,15 +28,13 @@ describe CIAT::Subresult do
   
   it "should have relevant element names" do
     kind = mock("kind")
-    setting, path_kind = mock("setting"), mock("path kind")
+    path_kind = mock("path kind")
     names = mock("names")
 
-    # processor.kind.relevant_elements(@light.setting, @subtest.path_kind)    
-    @light.should_receive(:setting).and_return(setting)
     @subtest.should_receive(:path_kind).and_return(path_kind)
     @subtest.stub_chain(:processor, :kind).and_return(kind)
     kind.should_receive(:relevant_elements).
-      with(setting, path_kind).and_return(names)
+      with(@light, path_kind).and_return(names)
     
     @subresult.relevant_element_names.should == names
   end

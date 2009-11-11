@@ -18,7 +18,7 @@ module CIAT::ERBHelpers
 
   # Turns a traffic light in a sentence wrapped in a classed +span+.
   def light_to_sentence(prefix, light)
-  	"<span class=\"#{light.setting}\">#{prefix} " +
+  	"<span class=\"#{light.color}\">#{prefix} " +
   	case
   	when light.red? then "failed"
   	when light.yellow? then "errored"
@@ -28,6 +28,10 @@ module CIAT::ERBHelpers
 	    raise "cannot turn #{light} into a sentence"
   	end +
   	".</span>"
+  end
+  
+  def filename_to_id(filename)
+    filename.gsub(/[\/\-.]/, "_")
   end
 
   # Capitalizes string as a title.

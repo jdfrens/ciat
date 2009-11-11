@@ -1,11 +1,12 @@
 require 'rubygems'
 require 'webrat'
+require 'spec_helper'
 
 describe "parrot-error" do
   include Webrat::Matchers
   
   before(:each) do
-    @doc = Webrat::XML.html_document(open("temp/compile-fail.html").readlines)
+    @doc = webrat_document("temp/compile-fail.html")
   end
 
   it "should show the standard output" do

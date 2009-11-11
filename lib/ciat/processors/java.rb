@@ -1,17 +1,13 @@
 module CIAT
   module Processors
-    # Executor class for Java interpreters.
+    # Processor class for compilers and interpreters implemented in Java (or
+    # on the JVM).
     #
     class Java
-      # Traffic light
       attr_accessor :kind
       attr_accessor :description
 
       # Creates a Java executor.
-      #
-      # Possible options:
-      # * <code>:description</code> is the description used in the HTML report 
-      #   for this processor (default: <code>"Parrot virtual machine"</code>).
       def initialize(classpath, interpreter_class)
         @classpath = classpath
         @interpreter_class = interpreter_class

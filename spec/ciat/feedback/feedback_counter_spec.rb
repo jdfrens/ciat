@@ -9,39 +9,37 @@ describe CIAT::Feedback::FeedbackCounter do
   
   describe "reporting on a processor" do
     before(:each) do
-      @light = mock("light")
       @subresult = mock("subresult")
-      @subresult.should_receive(:light).at_least(:once).and_return(@light)
     end
     
     it "should report a green light" do
-      expect_light(:green)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::GREEN)
       
       @feedback.report_subresult(@subresult)
     end
     
     it "should report a red light" do
-      expect_light(:red)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::RED)
       @feedback.should_receive(:increment_failure_count)
       
       @feedback.report_subresult(@subresult)
     end
     
     it "should report a yellow light" do      
-      expect_light(:yellow)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::YELLOW)
       @feedback.should_receive(:increment_error_count)
 
       @feedback.report_subresult(@subresult)
     end
 
     it "should report an unset light" do      
-      expect_light(:unset)
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::UNSET)
       
       @feedback.report_subresult(@subresult)
-    end
-    
-    def expect_light(setting)
-      @light.should_receive(:setting).at_least(:once).and_return(setting)
     end
   end
   

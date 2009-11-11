@@ -22,10 +22,10 @@ class CIAT::Processors::CompilationInterpreter
   private
   def element_name_hash
     {
-      :green => [:compilation_generated, :execution_generated],
-      :yellow => [:compilation_generated, :execution_error_generated],
-      :red => [:compilation_generated, :execution_diff],
-      :unset => []
+      CIAT::TrafficLight::GREEN => [:compilation_generated, :execution_generated],
+      CIAT::TrafficLight::YELLOW => [:compilation_generated, :execution_error_generated],
+      CIAT::TrafficLight::RED => [:compilation_generated, :execution_diff],
+      CIAT::TrafficLight::UNSET => []
     }
   end
 end

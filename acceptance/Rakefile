@@ -148,19 +148,41 @@ task :exercise_java_interpreter do
 end
 
 # *************************************************************
-# task to exercise Parrot interpreter
-task :exercise_parrot => [:good_parrot, :parrot_deliberate_error]
+desc "task to exercise Parrot interpreter"
+task :exercise_parrot => ["parrot:success", "parrot:error", "parrot:failure"]
 
-CIAT::RakeTask.new(:good_parrot) do |task|
-  task.processors << parrot_executor(interpreter)
-  task.folder = 'ciat/parrot'
-  task.feedback = feedback(1, [:green], :report_filename => 'parrot.html')
-end
+namespace :parrot do
+  desc "exercise the success cases of the Parrot VM"
+  CIAT::RakeTask.new(:success) do |task|
+    task.processors << parrot_executor(interpreter)
+    task.folder = 'ciat/parrot/success'
+    task.feedback = feedback(2, [:green, :green],
+      :report_filename => 'parrot-success.html')
+  end
 
-CIAT::RakeTask.new(:parrot_deliberate_error) do |task|
-  task.processors << parrot_executor(interpreter)
-  task.folder = 'ciat/parrot-error'
-  task.feedback = feedback(1, [:green], :report_filename => 'parrot-error.html')  
+  desc "exercise the error cases of the Parrot VM"
+  task :error do
+    deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
+      suite = CIAT::Suite.build(
+        :processors => [parrot_executor(interpreter)],
+        :folder => 'ciat/parrot/error',
+        :feedback => feedback(1, [:yellow], :report_filename => 'parrot-error.html')
+        )
+      suite.run
+    end
+  end
+
+  desc "exercise the failure cases of the Parrot VM"
+  task :failure do
+    deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
+      suite = CIAT::Suite.build(
+        :processors => [parrot_executor(interpreter)],
+        :folder => 'ciat/parrot/failure',
+        :feedback => feedback(1, [:red], :report_filename => 'parrot-failure.html')  
+        )
+      suite.run
+    end
+  end
 end
 
 # *************************************************************

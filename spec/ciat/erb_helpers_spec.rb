@@ -4,49 +4,44 @@ describe CIAT::ERBHelpers do
   before(:each) do
     @helper = Object.new
     @helper.extend(CIAT::ERBHelpers)
-    
-    @unset = CIAT::TrafficLight.new(:unset)
-    @green = CIAT::TrafficLight.new(:green)
-    @yellow = CIAT::TrafficLight.new(:yellow)
-    @red = CIAT::TrafficLight.new(:red)
   end
   
   describe "converting light to word" do
     it "should handle unset light" do
-      @helper.light_to_word(@unset).should == "n/a"
+      @helper.light_to_word(CIAT::TrafficLight::UNSET).should == "n/a"
     end
     
     it "should handle green light" do
-      @helper.light_to_word(@green).should == "passed"
+      @helper.light_to_word(CIAT::TrafficLight::GREEN).should == "passed"
     end
 
     it "should handle yellow light" do
-      @helper.light_to_word(@yellow).should == "ERROR"
+      @helper.light_to_word(CIAT::TrafficLight::YELLOW).should == "ERROR"
     end
 
     it "should handle red light" do
-      @helper.light_to_word(@red).should == "FAILURE"
+      @helper.light_to_word(CIAT::TrafficLight::RED).should == "FAILURE"
     end
   end
 
   describe "converting light to sentence" do
     it "should handle unset light" do
-      @helper.light_to_sentence("prefix", @unset).should ==
+      @helper.light_to_sentence("prefix", CIAT::TrafficLight::UNSET).should ==
         "<span class=\"unset\">prefix not run.</span>"
     end
     
     it "should handle green light" do
-      @helper.light_to_sentence("prefix", @green).should ==
+      @helper.light_to_sentence("prefix", CIAT::TrafficLight::GREEN).should ==
         "<span class=\"green\">prefix passed.</span>"
     end
 
     it "should handle yellow light" do
-      @helper.light_to_sentence("prefix", @yellow).should ==
+      @helper.light_to_sentence("prefix", CIAT::TrafficLight::YELLOW).should ==
         "<span class=\"yellow\">prefix errored.</span>"
     end
 
     it "should handle red light" do
-      @helper.light_to_sentence("prefix", @red).should ==
+      @helper.light_to_sentence("prefix", CIAT::TrafficLight::RED).should ==
         "<span class=\"red\">prefix failed.</span>"
     end
   end

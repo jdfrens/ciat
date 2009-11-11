@@ -67,7 +67,7 @@ describe "summary row of test report" do
   def expect_light(subresult, setting, word)
     light = mock("mock #{setting}")
     subresult.should_receive(:light).at_least(:once).and_return(light)
-    light.should_receive(:setting).and_return(setting)
+    light.should_receive(:color).and_return(setting)
     light.should_receive(:text).and_return(word)
   end
       

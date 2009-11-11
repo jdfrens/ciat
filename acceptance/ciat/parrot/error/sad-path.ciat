@@ -1,0 +1,6 @@
+Getting an error testing a sad path through the Parrot VM.
+==== source
+.sub main
+.end
+==== execution error
+The program DOES execute, so this error will never be generated!

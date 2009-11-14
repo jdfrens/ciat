@@ -25,6 +25,9 @@ execution_error_generated:
 execution_diff:
   description: execution diff
   template: diff
+execution_error_diff:
+  description: execution error diff
+  template: diff
 command_line:
   description: command-line arguments
   template: plain

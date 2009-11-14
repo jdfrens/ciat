@@ -1,0 +1,5 @@
+In-Java interpreter will not error on this input, but we wish it would.
+==== source
+mistake
+==== execution error
+The HelloInterpreter will not greet 'mistake' under any circumstances.

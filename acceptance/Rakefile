@@ -180,7 +180,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_interpreter("Hello")],
           :folder => 'ciat/java/interpreter/error',
-          :feedback => feedback(1, [:yellow],
+          :feedback => feedback(2, [:yellow, :yellow],
             :report_filename => 'java-interpreter-error.html')
           )
         suite.run
@@ -193,7 +193,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_interpreter("Hello")],
           :folder => 'ciat/java/interpreter/failure',
-          :feedback => feedback(1, [:red],
+          :feedback => feedback(2, [:red, :red],
             :report_filename => 'java-interpreter-failure.html')
           )
         suite.run

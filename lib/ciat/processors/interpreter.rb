@@ -31,8 +31,7 @@ class CIAT::Processors::Interpreter
       :sad => {
         CIAT::TrafficLight::GREEN => [:source, :command_line, :execution_error_generated],
        CIAT::TrafficLight::YELLOW => [:source, :command_line, :execution_generated, :execution_error_generated],
-        # CIAT::TrafficLight::YELLOW => [],
-        CIAT::TrafficLight::RED => [],
+        CIAT::TrafficLight::RED => [:source, :command_line, :execution_error_diff],
         CIAT::TrafficLight::UNSET => []
       }
     }

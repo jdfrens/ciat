@@ -9,7 +9,7 @@ describe "java-interpreter-success.html" do
 
   describe "the success of a happy path" do
     before(:each) do
-      @file = "ciat_java_interpreter_success_basic_success_ciat"
+      @file = "ciat_java_interpreter_success_happy_ciat"
     end
     
     it "should have the appropriate elements" do
@@ -28,7 +28,7 @@ describe "java-interpreter-success.html" do
   
   describe "the success of a sad path" do
     before(:each) do
-      @file = "ciat_java_interpreter_success_basic_sad_path_success_ciat"
+      @file = "ciat_java_interpreter_success_sad_ciat"
     end
     
     it "should have the appropriate elements" do

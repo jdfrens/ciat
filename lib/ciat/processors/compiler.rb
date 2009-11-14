@@ -30,7 +30,7 @@ module CIAT::Processors
           CIAT::TrafficLight::UNSET => []
         },
         :sad => {
-          CIAT::TrafficLight::GREEN => [:source, :compilation_error_generated],
+          CIAT::TrafficLight::GREEN => [:source, :compilation_generated, :compilation_error_generated],
           CIAT::TrafficLight::YELLOW => [:source, :compilation_generated, :compilation_error_generated],
           CIAT::TrafficLight::RED => [:source, :compilation_diff],
           CIAT::TrafficLight::UNSET => []

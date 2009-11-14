@@ -15,14 +15,13 @@ require 'helpers'
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => :acceptance
 
-Spec::Rake::SpecTask.new(:acceptance)
-task :acceptance => :full_exercise
+Spec::Rake::SpecTask.new(:acceptance_spec)
+task :acceptance => [:full_exercise, :acceptance_spec]
 
 task :full_exercise => [:clean_start, :compile_java,
                         :exercise_ciat,
-                        :exercise_java,
-                        :exercise_java_interpreter,
-                        :exercise_parrot,
+                        :java,
+                        :parrot,
                         :exercise_java_and_parrot]
                         
 task :view do
@@ -119,36 +118,107 @@ task :errors_and_failures do
 end
 
 # *************************************************************
-# task to exercise implemented-in-Java compilers
-task :exercise_java do
-  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
-    suite = CIAT::Suite.build(
-      :processors => [java_compiler("Hello")],
-      :folder => 'ciat/java',
-      :feedback => feedback(3, [:green, :yellow, :red],
-                    :report_filename => 'java.html')
-      )
-    suite.run
+# exercise java processors
+desc "exercise all of the Java permutations"
+task :java => [:compile_java, "java:compiler", "java:interpreter"]
+
+namespace :java do
+  desc "exercise the in-Java compiler variations"
+  task :compiler => ["java:compiler:success", "java:compiler:error", "java:compiler:failure"]
+  
+  namespace :compiler do
+    desc "exercise success cases of an in-Java compiler"
+    CIAT::RakeTask.new(:success) do |task|
+      task.processors << java_compiler("Hello")
+      task.folder = 'ciat/java/compiler/success'
+      task.feedback = feedback(1, [:green],
+        :report_filename => 'java-compiler-success.html')
+    end
+    
+    desc "exercise error cases of an in-Java compiler"
+    task :error do
+      deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
+        suite = CIAT::Suite.build(
+          :processors => [java_compiler("Hello")],
+          :folder => 'ciat/java/compiler/error',
+          :feedback => feedback(1, [:yellow],
+            :report_filename => 'java-compiler-error.html')
+          )
+        suite.run
+      end
+    end
+    
+    desc "exercise failure cases of an in-Java compiler"
+    task :failure do
+      deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
+        suite = CIAT::Suite.build(
+          :processors => [java_compiler("Hello")],
+          :folder => 'ciat/java/compiler/failure',
+          :feedback => feedback(1, [:red],
+            :report_filename => 'java-compiler-failure.html')
+          )
+        suite.run
+      end
+    end
+  end
+  
+  desc "exercise the in-Java interpreter variations"
+  task :interpreter => ["java:interpreter:success", "java:interpreter:error", "java:interpreter:failure"]
+  
+  namespace :interpreter do
+    desc "exercise success cases of an in-Java interpreter"
+    CIAT::RakeTask.new(:success) do |task|
+      task.processors << java_interpreter("Hello")
+      task.folder = 'ciat/java/interpreter/success'
+      task.feedback = feedback(2, [:green, :green],
+        :report_filename => 'java-interpreter-success.html')
+    end
+    
+    desc "exercise error cases of an in-Java interpreter"
+    task :error do
+      deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
+        suite = CIAT::Suite.build(
+          :processors => [java_interpreter("Hello")],
+          :folder => 'ciat/java/interpreter/error',
+          :feedback => feedback(1, [:yellow],
+            :report_filename => 'java-interpreter-error.html')
+          )
+        suite.run
+      end
+    end
+    
+    desc "exercise failure cases of an in-Java interpreter"
+    task :failure do
+      deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
+        suite = CIAT::Suite.build(
+          :processors => [java_interpreter("Hello")],
+          :folder => 'ciat/java/interpreter/failure',
+          :feedback => feedback(1, [:red],
+            :report_filename => 'java-interpreter-failure.html')
+          )
+        suite.run
+      end
+    end
   end
 end
 
 # *************************************************************
 # task to exercise implemented-in-Java interpreter
-task :exercise_java_interpreter do
-  deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
-    suite = CIAT::Suite.build(
-      :processors => [java_interpreter("Hello")],
-      :folder => 'ciat/java-interpreter',
-      :feedback => feedback(3, [:green, :yellow, :red],
-                    :report_filename => 'java-interpreter.html')
-      )
-    suite.run
-  end
-end
+# task :exercise_java_interpreter do
+#   deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
+#     suite = CIAT::Suite.build(
+#       :processors => [java_interpreter("Hello")],
+#       :folder => 'ciat/java-interpreter',
+#       :feedback => feedback(3, [:green, :yellow, :red],
+#                     :report_filename => 'java-interpreter.html')
+#       )
+#     suite.run
+#   end
+# end
 
 # *************************************************************
 desc "task to exercise Parrot interpreter"
-task :exercise_parrot => ["parrot:success", "parrot:error", "parrot:failure"]
+task :parrot => ["parrot:success", "parrot:error", "parrot:failure"]
 
 namespace :parrot do
   desc "exercise the success cases of the Parrot VM"

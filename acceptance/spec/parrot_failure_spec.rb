@@ -2,7 +2,7 @@ require 'rubygems'
 require 'webrat'
 require 'spec_helper'
 
-describe "parrot-error" do
+describe "parrot-sad" do
   include Webrat::Matchers
   
   before(:each) do

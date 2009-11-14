@@ -1,0 +1,5 @@
+Simple test to see the in-Java interpreter succeed on a sad path.
+==== source
+error
+==== execution error
+The HelloInterpreter will not greet 'error' under any circumstances.

@@ -1,5 +1,3 @@
-require 'rubygems'
-require 'webrat'
 require 'spec_helper'
 
 describe "parrot-sad" do

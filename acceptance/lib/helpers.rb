@@ -35,12 +35,12 @@ end
 #
 # Feedback
 #
-def feedback(size, expected_lights, options={})
+def feedback(expected_lights, options={})
   counter = CIAT::Feedback::FeedbackCounter.new
   CIAT::Feedback::Composite.new(counter,
     CIAT::Feedback::StandardOutput.new(counter),
     CIAT::Feedback::HtmlFeedback.new(counter, options),
-    FeedbackTester.new(size, expected_lights)
+    FeedbackTester.new(expected_lights.length, expected_lights.flatten)
     )
 end
 

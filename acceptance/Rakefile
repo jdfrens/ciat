@@ -47,7 +47,7 @@ task :exercise_ciat => [:less_simple,
 CIAT::RakeTask.new(:less_simple) do |task|
   task.processors << java_compiler("Hello")
   task.folder = 'ciat/less-simple'
-  task.feedback = feedback(2, [:green, :green],
+  task.feedback = feedback([:green, :green],
                     :report_filename => 'less-simple.html',
                     :report_title => 'Less Simple Tests')
 end
@@ -55,7 +55,7 @@ end
 CIAT::RakeTask.new(:subfolders) do |task|
   task.processors << java_compiler("Hello")
   task.folder = 'ciat/subfolders'
-  task.feedback = feedback(3, [:green, :green, :green],
+  task.feedback = feedback([:green, :green, :green],
                     :report_filename => 'subfolders.html',
                     :report_title => "Subfolder Tests")
 end
@@ -65,7 +65,7 @@ task :errors_and_failures do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/compile-error.ciat',
-      :feedback => feedback(1, [:yellow, :unset],
+      :feedback => feedback([[:yellow, :unset]],
                     :report_filename => 'compile-error.html',
                     :report_title => "Errors during compilation")
       )
@@ -76,7 +76,7 @@ task :errors_and_failures do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/compile-fail.ciat',
-      :feedback => feedback(1, [:red, :unset],
+      :feedback => feedback([[:red, :unset]],
                     :report_filename => 'compile-fail.html',
                     :report_title => "Failures in compilation")
       )
@@ -87,7 +87,7 @@ task :errors_and_failures do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/execution-error.ciat',
-      :feedback => feedback(1, [:green, :yellow],
+      :feedback => feedback([[:green, :yellow]],
                     :report_filename => 'execution-error.html',
                     :report_title => "Errors during execution")
       )
@@ -98,7 +98,7 @@ task :errors_and_failures do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello"), java_interpreter("Hello")],
       :files => 'ciat/errors-and-failures/execution-fail.ciat',
-      :feedback => feedback(1, [:green, :red],
+      :feedback => feedback([[:green, :red]],
                     :report_filename => 'execution-fail.html',
                     :report_title => "Failures in execution")
       )
@@ -109,7 +109,7 @@ task :errors_and_failures do
     suite = CIAT::Suite.build(
       :processors => [java_compiler("Hello")],
       :folder => 'ciat/folder-does-not-exist',
-      :feedback => feedback(0, [],
+      :feedback => feedback([],
                     :report_filename => 'folder-does-not-exist.html',
                     :report_title => "Input Folder Doesn't Exist")
       )
@@ -131,7 +131,7 @@ namespace :java do
     CIAT::RakeTask.new(:success) do |task|
       task.processors << java_compiler("Hello")
       task.folder = 'ciat/java/compiler/success'
-      task.feedback = feedback(1, [:green],
+      task.feedback = feedback([:green],
         :report_filename => 'java-compiler-success.html')
     end
     
@@ -141,7 +141,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_compiler("Hello")],
           :folder => 'ciat/java/compiler/error',
-          :feedback => feedback(1, [:yellow],
+          :feedback => feedback([:yellow],
             :report_filename => 'java-compiler-error.html')
           )
         suite.run
@@ -154,7 +154,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_compiler("Hello")],
           :folder => 'ciat/java/compiler/failure',
-          :feedback => feedback(1, [:red],
+          :feedback => feedback([:red],
             :report_filename => 'java-compiler-failure.html')
           )
         suite.run
@@ -170,7 +170,7 @@ namespace :java do
     CIAT::RakeTask.new(:success) do |task|
       task.processors << java_interpreter("Hello")
       task.folder = 'ciat/java/interpreter/success'
-      task.feedback = feedback(2, [:green, :green],
+      task.feedback = feedback([:green, :green],
         :report_filename => 'java-interpreter-success.html')
     end
     
@@ -180,7 +180,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_interpreter("Hello")],
           :folder => 'ciat/java/interpreter/error',
-          :feedback => feedback(2, [:yellow, :yellow],
+          :feedback => feedback([:yellow, :yellow],
             :report_filename => 'java-interpreter-error.html')
           )
         suite.run
@@ -193,7 +193,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_interpreter("Hello")],
           :folder => 'ciat/java/interpreter/failure',
-          :feedback => feedback(2, [:red, :red],
+          :feedback => feedback([:red, :red],
             :report_filename => 'java-interpreter-failure.html')
           )
         suite.run
@@ -201,20 +201,6 @@ namespace :java do
     end
   end
 end
-
-# *************************************************************
-# task to exercise implemented-in-Java interpreter
-# task :exercise_java_interpreter do
-#   deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
-#     suite = CIAT::Suite.build(
-#       :processors => [java_interpreter("Hello")],
-#       :folder => 'ciat/java-interpreter',
-#       :feedback => feedback(3, [:green, :yellow, :red],
-#                     :report_filename => 'java-interpreter.html')
-#       )
-#     suite.run
-#   end
-# end
 
 # *************************************************************
 desc "task to exercise Parrot interpreter"
@@ -225,7 +211,7 @@ namespace :parrot do
   CIAT::RakeTask.new(:success) do |task|
     task.processors << parrot_executor(interpreter)
     task.folder = 'ciat/parrot/success'
-    task.feedback = feedback(2, [:green, :green],
+    task.feedback = feedback([:green, :green],
       :report_filename => 'parrot-success.html')
   end
 
@@ -235,7 +221,7 @@ namespace :parrot do
       suite = CIAT::Suite.build(
         :processors => [parrot_executor(interpreter)],
         :folder => 'ciat/parrot/error',
-        :feedback => feedback(1, [:yellow], :report_filename => 'parrot-error.html')
+        :feedback => feedback([:yellow], :report_filename => 'parrot-error.html')
         )
       suite.run
     end
@@ -247,7 +233,7 @@ namespace :parrot do
       suite = CIAT::Suite.build(
         :processors => [parrot_executor(interpreter)],
         :folder => 'ciat/parrot/failure',
-        :feedback => feedback(1, [:red], :report_filename => 'parrot-failure.html')  
+        :feedback => feedback([:red], :report_filename => 'parrot-failure.html')  
         )
       suite.run
     end
@@ -260,6 +246,6 @@ CIAT::RakeTask.new(:exercise_java_and_parrot) do |task|
   task.processors << java_compiler("Parrot5")
   task.processors << parrot_executor(compilation_interpreter)
   task.folder = 'ciat/java-parrot'
-  task.feedback = feedback(1, [:green, :green],
+  task.feedback = feedback([[:green, :green]],
                     :report_filename => 'java-parrot.html')
 end

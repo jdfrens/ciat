@@ -4,26 +4,22 @@ module CIAT
     # progress of a CIAT::Suite run.
     class FeedbackCounter
       def initialize
-        @error_count = 0
-        @failure_count = 0
+        @counts = {
+          CIAT::TrafficLight::RED => 0,
+          CIAT::TrafficLight::YELLOW => 0,
+          CIAT::TrafficLight::GREEN => 0,
+          CIAT::TrafficLight::UNSET => 0
+        }
       end
       
       def error_count
-        @error_count
+        @counts[CIAT::TrafficLight::YELLOW]
       end
       
       def failure_count
-        @failure_count
+        @counts[CIAT::TrafficLight::RED]
       end
-      
-      def increment_error_count
-        @error_count += 1
-      end
-      
-      def increment_failure_count
-        @failure_count += 1
-      end
-      
+            
       def pre_tests(suite)
         nil
       end
@@ -33,12 +29,7 @@ module CIAT
       end
       
       def report_subresult(subresult)
-        case subresult.light
-        when CIAT::TrafficLight::RED
-          increment_failure_count
-        when CIAT::TrafficLight::YELLOW
-          increment_error_count
-        end
+        @counts[subresult.light] = @counts[subresult.light] + 1
       end
     end
   end

@@ -7,83 +7,65 @@ describe CIAT::Feedback::FeedbackCounter do
     @feedback = CIAT::Feedback::FeedbackCounter.new
   end
   
-  describe "reporting on a processor" do
-    before(:each) do
-      @subresult = mock("subresult")
-    end
-    
-    it "should report a green light" do
-      @subresult.should_receive(:light).at_least(:once).
-        and_return(CIAT::TrafficLight::GREEN)
-      
-      @feedback.report_subresult(@subresult)
-    end
-    
-    it "should report a red light" do
-      @subresult.should_receive(:light).at_least(:once).
-        and_return(CIAT::TrafficLight::RED)
-      @feedback.should_receive(:increment_failure_count)
-      
-      @feedback.report_subresult(@subresult)
-    end
-    
-    it "should report a yellow light" do      
-      @subresult.should_receive(:light).at_least(:once).
-        and_return(CIAT::TrafficLight::YELLOW)
-      @feedback.should_receive(:increment_error_count)
-
-      @feedback.report_subresult(@subresult)
-    end
-
-    it "should report an unset light" do      
-      @subresult.should_receive(:light).at_least(:once).
-        and_return(CIAT::TrafficLight::UNSET)
-      
-      @feedback.report_subresult(@subresult)
-    end
-  end
-  
-  describe "failure count" do
-    it "should be zero initially" do
-      @feedback.failure_count.should == 0
-    end
-    
-    it "should increment" do
-      @feedback.increment_failure_count
-      
-      @feedback.failure_count.should == 1
-    end
-
-    it "should increment lots" do
-      1000.times { @feedback.increment_failure_count }
-      
-      @feedback.failure_count.should == 1000
-    end
-  end
-
   describe "error count" do
     it "should be zero initially" do
       @feedback.error_count.should == 0
     end
     
-    it "should increment" do
-      @feedback.increment_error_count
+    it "should increment" do      
+      @feedback.report_subresult(yellow_subresult)
       
       @feedback.error_count.should == 1
     end
 
     it "should increment lots" do
-      666.times { @feedback.increment_error_count }
+      666.times { @feedback.report_subresult(yellow_subresult) }
       
       @feedback.error_count.should == 666
     end
+  end
     
-    it "should not interfere with failure count" do
-      666.times { @feedback.increment_failure_count }
-      777.times { @feedback.increment_error_count }
+  describe "failure count" do
+    it "should be zero initially" do
+      @feedback.failure_count.should == 0
+    end
+    
+    it "should increment" do      
+      @feedback.report_subresult(red_subresult)
+      
+      @feedback.failure_count.should == 1
+    end
+
+    it "should increment lots" do
+      666.times { @feedback.report_subresult(red_subresult) }
       
       @feedback.failure_count.should == 666
-      @feedback.error_count.should == 777
     end
+  end
+    
+  it "should keep distinct counts" do
+    666.times { @feedback.report_subresult(yellow_subresult) }
+    777.times { @feedback.report_subresult(red_subresult) }
+    111.times { @feedback.report_subresult(unset_subresult) }
+    444.times { @feedback.report_subresult(green_subresult) }
+    
+    @feedback.failure_count.should == 777
+    @feedback.error_count.should == 666
+  end
+  
+  def red_subresult
+    mock("red subresult", :light => CIAT::TrafficLight::RED)
+  end
+
+  def yellow_subresult
+    mock("yellow subresult", :light => CIAT::TrafficLight::YELLOW)
+  end
+
+  def green_subresult
+    mock("green subresult", :light => CIAT::TrafficLight::GREEN)
+  end
+
+  def unset_subresult
+    mock("unset subresult", :light => CIAT::TrafficLight::UNSET)
   end
 end

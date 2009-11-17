@@ -1,11 +1,9 @@
 class CIAT::TrafficLight
   
-  # attr_reader :setting
-  
   def initialize(setting) #:nodoc:
     @setting = setting
   end
-
+  
   GREEN = CIAT::TrafficLight.new(:green)
   RED = CIAT::TrafficLight.new(:red)
   YELLOW = CIAT::TrafficLight.new(:yellow)

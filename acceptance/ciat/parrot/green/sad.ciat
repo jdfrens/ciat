@@ -3,4 +3,4 @@ Let's test a sad path in the Parrot VM.
 10
 ==== execution error
 error:imcc:syntax error, unexpected INTC ('10')
-	in file 'temp/ciat/parrot/success/sad-path_source' line 1
+	in file 'temp/ciat/parrot/green/sad_source' line 1

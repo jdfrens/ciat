@@ -25,13 +25,13 @@ class CIAT::Processors::Interpreter
       :happy => {
         CIAT::TrafficLight::GREEN => [:source, :command_line, :execution_generated],
         CIAT::TrafficLight::YELLOW => [:source, :command_line, :execution_generated, :execution_error_generated],
-        CIAT::TrafficLight::RED => [:source, :command_line, :execution_diff],
+        CIAT::TrafficLight::RED => [:source, :command_line, :execution_diff, :execution_error_generated],
         CIAT::TrafficLight::UNSET => []
       },
       :sad => {
         CIAT::TrafficLight::GREEN => [:source, :command_line, :execution_error_generated],
-       CIAT::TrafficLight::YELLOW => [:source, :command_line, :execution_generated, :execution_error_generated],
-        CIAT::TrafficLight::RED => [:source, :command_line, :execution_error_diff],
+       CIAT::TrafficLight::YELLOW => [:source, :command_line, :execution_error_generated, :execution_generated],
+        CIAT::TrafficLight::RED => [:source, :command_line, :execution_error_diff, :execution_generated],
         CIAT::TrafficLight::UNSET => []
       }
     }

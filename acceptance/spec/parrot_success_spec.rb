@@ -12,15 +12,10 @@ describe "parrot-success.html" do
       @file = "ciat_parrot_success_command_line_ciat"
     end
     
-    it "should have the appropriate elements" do
-      @doc.should have_selector("#details_#{@file} .execution_generated")
-      @doc.should_not have_selector("#details_#{@file} .execution_error_generated")
-    end
-
+    it_should_have_only_the_elements ".source", ".execution_generated"
+    
     it "should describe a happy path" do
-      @doc.should have_selector("#details_ciat_parrot_success_command_line_ciat") do |row|
-        row.should have_selector("h3", :content => "happy path")
-      end
+      @doc.should indicate_a_happy_path
     end
   end
 end

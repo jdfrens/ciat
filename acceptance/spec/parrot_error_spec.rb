@@ -7,15 +7,16 @@ describe "parrot-error" do
     @doc = webrat_document("temp/parrot-error.html")
   end
 
-  it "should show the standard output" do
-    @doc.should have_selector("#details_ciat_parrot_error_sad_path_ciat .execution_generated")
-  end
+  describe "sad path" do
+    before(:each) do
+      @file = "ciat_parrot_error_sad_path_ciat"
+    end
+    
+    it_should_have_only_the_elements ".execution_generated", 
+      ".execution_error_generated"
   
-  it "should show the error output" do
-    @doc.should have_selector("#details_ciat_parrot_error_sad_path_ciat .execution_error_generated")
-  end
-  
-  it "should describe a sad path" do
-    @doc.should have_selector("#details_ciat_parrot_error_sad_path_ciat h3", :content => "sad path")
+    it "should describe a sad path" do
+      @doc.should indicate_sad_path
+    end
   end
 end

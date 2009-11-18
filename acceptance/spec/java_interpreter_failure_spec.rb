@@ -14,6 +14,7 @@ describe "java-interpreter-failure.html" do
     
     it "should have the appropriate elements" do
       @doc.should have_element(".execution_diff")
+      @doc.should have_element(".execution_error_generated")
     end
     
     it "should not have the irrelevant elements" do
@@ -34,11 +35,11 @@ describe "java-interpreter-failure.html" do
     
     it "should have the appropriate elements" do
       @doc.should have_element(".execution_error_diff")
+      @doc.should have_element(".execution_generated")
     end
     
     it "should not have the irrelevant elements" do
       @doc.should_not have_element(".execution_error_generated")
-      @doc.should_not have_element(".execution_generated")
     end
     
     it "should describe a sad path" do

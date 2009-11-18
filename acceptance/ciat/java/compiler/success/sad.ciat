@@ -1,0 +1,5 @@
+Simple test to see the in-Java compiler succeed in generating an error.
+==== source
+error
+==== compilation error
+The HelloCompiler will not greet 'error' under any circumstances.

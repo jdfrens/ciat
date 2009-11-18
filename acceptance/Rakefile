@@ -131,7 +131,7 @@ namespace :java do
     CIAT::RakeTask.new(:success) do |task|
       task.processors << java_compiler("Hello")
       task.folder = 'ciat/java/compiler/success'
-      task.feedback = feedback([:green],
+      task.feedback = feedback([:green, :green],
         :report_filename => 'java-compiler-success.html')
     end
     

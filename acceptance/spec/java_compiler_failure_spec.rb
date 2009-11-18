@@ -1,18 +1,18 @@
 require 'spec_helper'
 
-describe "java-interpreter-error.html" do
+describe "java-compiler-failure.html" do
   include Webrat::Matchers
   
   before(:each) do
-    @doc = webrat_document("temp/java-interpreter-error.html")
+    @doc = webrat_document("temp/java-compiler-failure.html")
   end
 
   describe "the errors of a happy path" do
     before(:each) do
-      @file = "ciat_java_interpreter_error_happy_ciat"
+      @file = "ciat_java_compiler_failure_happy_ciat"
     end
     
-    it_should_have_only_the_elements ".execution_generated",
+    it_should_have_only_the_elements ".execution_diff",
       ".execution_error_generated"
     
     it "should describe a happy path" do
@@ -23,14 +23,12 @@ describe "java-interpreter-error.html" do
   
   describe "the errors of a sad path" do
     before(:each) do
-      @file = "ciat_java_interpreter_error_sad_ciat"
+      @file = "ciat_java_compiler_failure_sad_ciat"
     end
+
+    it_should_have_only_the_elements ".execution_error_diff",
+      ".execution_generated"
     
-    it "should have the appropriate elements" do
-      @doc.should have_element(".execution_error_generated")
-      @doc.should have_element(".execution_generated")
-    end
-  
     it "should describe a sad path" do
       @doc.should indicate_sad_path 
     end

@@ -1,0 +1,5 @@
+In-Java compiler will not error on this input.
+==== source
+a fantastic error
+==== compilation error
+The HelloCompiler will not greet 'a fantastic error' under any circumstances.

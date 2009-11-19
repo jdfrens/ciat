@@ -5,7 +5,7 @@ describe "java-compiler-green.html" do
   
   folder "java", "compiler", "green"
   
-  describe "a green happy path" do
+  describe "a happy path" do
     happy_path
     
     it_should_have_only_the_elements "source", "compilation_generated"
@@ -16,7 +16,7 @@ describe "java-compiler-green.html" do
   end
   
   
-  describe "a green sad path" do
+  describe "a sad path" do
     sad_path
     
     it_should_have_only_the_elements "source", "compilation_error_generated"

@@ -1,0 +1,6 @@
+In-Java compiler will error on this input, but the expected error message
+won't match.
+==== source
+error
+==== compilation error
+Hello, error, you cutie.

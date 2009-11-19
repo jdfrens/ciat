@@ -1,4 +1,4 @@
-$:.unshift(File.join(File.dirname(__FILE__), "..", "lib")).
+$:.unshift(File.join(File.dirname(__FILE__), "fakelib")).
   unshift(File.join(File.dirname(__FILE__), "lib"))
 
 require 'spec/rake/spectask'
@@ -18,7 +18,16 @@ task :default => :acceptance
 Spec::Rake::SpecTask.new(:acceptance_spec)
 task :acceptance => [:full_exercise, :acceptance_spec]
 
-task :full_exercise => [:clean_start, :compile_java,
+namespace :acceptance do
+  desc "Run the acceptance tests with rcov"
+  Spec::Rake::SpecTask.new(:rcov) do |t|
+    t.spec_files = FileList['spec/**/*_spec.rb']
+    t.rcov = true
+    t.rcov_opts = ['--exclude', 'spec', '--include-file', 'jdfrens']
+  end
+end
+
+task :full_exercise => [:clean_start, :compile,
                         :exercise_ciat,
                         :java,
                         :parrot,
@@ -28,7 +37,7 @@ task :view do
   sh "open #{Dir["temp/*.html"].join(" ")}"
 end
 
-task :compile_java do
+task :compile do
   unless system("cd java ; javac *.java")
     raise "Java files failed to compile!"
   end
@@ -120,7 +129,7 @@ end
 # *************************************************************
 # exercise java processors
 desc "exercise all of the Java permutations"
-task :java => [:compile_java, "java:compiler", "java:interpreter"]
+task :java => ["compile", "java:compiler", "java:interpreter"]
 
 namespace :java do
   desc "exercise the in-Java compiler variations"
@@ -141,7 +150,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_compiler("Hello")],
           :folder => 'ciat/java/compiler/yellow',
-          :feedback => feedback([:yellow],
+          :feedback => feedback([:yellow, :yellow],
             :report_filename => 'java-compiler-yellow.html')
           )
         suite.run
@@ -154,7 +163,7 @@ namespace :java do
         suite = CIAT::Suite.build(
           :processors => [java_compiler("Hello")],
           :folder => 'ciat/java/compiler/red',
-          :feedback => feedback([:red],
+          :feedback => feedback([:red, :red],
             :report_filename => 'java-compiler-red.html')
           )
         suite.run

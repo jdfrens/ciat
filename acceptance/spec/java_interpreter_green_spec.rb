@@ -1,24 +1,14 @@
 require 'spec_helper'
 
-describe "java-interpreter-success.html" do
+describe "java-interpreter-green.html" do
   include Webrat::Matchers
   
-  before(:each) do
-    @doc = webrat_document("temp/java-interpreter-success.html")
-  end
+  folder "java", "interpreter", "green"
 
-  describe "the success of a happy path" do
-    before(:each) do
-      @file = "ciat_java_interpreter_success_happy_ciat"
-    end
+  describe "a green, happy path" do
+    happy_path
     
-    it "should have the appropriate elements" do
-      @doc.should have_element(".execution_generated")
-    end
-    
-    it "should not have unnecessary elements" do
-      @doc.should_not have_element(".execution_error_generated")
-    end
+    it_should_have_only_the_elements "source", "execution_generated"
 
     it "should describe a happy path" do
       @doc.should indicate_happy_path
@@ -26,18 +16,10 @@ describe "java-interpreter-success.html" do
   end
   
   
-  describe "the success of a sad path" do
-    before(:each) do
-      @file = "ciat_java_interpreter_success_sad_ciat"
-    end
+  describe "a green sad path" do
+    sad_path
     
-    it "should have the appropriate elements" do
-      @doc.should have_element(".execution_error_generated")
-    end
-    
-    it "should not have the unnecessary elements" do
-      @doc.should_not have_element(".execution_generated")
-    end
+    it_should_have_only_the_elements "source", "execution_error_generated"
 
     it "should describe a sad path" do
       @doc.should indicate_sad_path 

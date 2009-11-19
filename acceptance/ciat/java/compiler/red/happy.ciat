@@ -1,5 +1,6 @@
-In-Java compiler will error on this input.
+Compilation does not match in-Java compiler's output.
 ==== source
-error
+failure
 ==== compilation
-Hello, error.
+Hello, failure.
+And goodbye!

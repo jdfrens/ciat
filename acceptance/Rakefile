@@ -124,38 +124,38 @@ task :java => [:compile_java, "java:compiler", "java:interpreter"]
 
 namespace :java do
   desc "exercise the in-Java compiler variations"
-  task :compiler => ["java:compiler:success", "java:compiler:error", "java:compiler:failure"]
+  task :compiler => ["java:compiler:green", "java:compiler:yellow", "java:compiler:red"]
   
   namespace :compiler do
-    desc "exercise success cases of an in-Java compiler"
-    CIAT::RakeTask.new(:success) do |task|
+    desc "exercise green cases of an in-Java compiler"
+    CIAT::RakeTask.new(:green) do |task|
       task.processors << java_compiler("Hello")
-      task.folder = 'ciat/java/compiler/success'
+      task.folder = 'ciat/java/compiler/green'
       task.feedback = feedback([:green, :green],
-        :report_filename => 'java-compiler-success.html')
+        :report_filename => 'java-compiler-green.html')
     end
     
-    desc "exercise error cases of an in-Java compiler"
-    task :error do
+    desc "exercise yellow cases of an in-Java compiler"
+    task :yellow do
       deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
         suite = CIAT::Suite.build(
           :processors => [java_compiler("Hello")],
-          :folder => 'ciat/java/compiler/error',
+          :folder => 'ciat/java/compiler/yellow',
           :feedback => feedback([:yellow],
-            :report_filename => 'java-compiler-error.html')
+            :report_filename => 'java-compiler-yellow.html')
           )
         suite.run
       end
     end
     
-    desc "exercise failure cases of an in-Java compiler"
-    task :failure do
+    desc "exercise red cases of an in-Java compiler"
+    task :red do
       deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
         suite = CIAT::Suite.build(
           :processors => [java_compiler("Hello")],
-          :folder => 'ciat/java/compiler/failure',
+          :folder => 'ciat/java/compiler/red',
           :feedback => feedback([:red],
-            :report_filename => 'java-compiler-failure.html')
+            :report_filename => 'java-compiler-red.html')
           )
         suite.run
       end
@@ -163,38 +163,38 @@ namespace :java do
   end
   
   desc "exercise the in-Java interpreter variations"
-  task :interpreter => ["java:interpreter:success", "java:interpreter:error", "java:interpreter:failure"]
+  task :interpreter => ["java:interpreter:green", "java:interpreter:yellow", "java:interpreter:red"]
   
   namespace :interpreter do
-    desc "exercise success cases of an in-Java interpreter"
-    CIAT::RakeTask.new(:success) do |task|
+    desc "exercise green cases of an in-Java interpreter"
+    CIAT::RakeTask.new(:green) do |task|
       task.processors << java_interpreter("Hello")
-      task.folder = 'ciat/java/interpreter/success'
+      task.folder = 'ciat/java/interpreter/green'
       task.feedback = feedback([:green, :green],
-        :report_filename => 'java-interpreter-success.html')
+        :report_filename => 'java-interpreter-green.html')
     end
     
-    desc "exercise error cases of an in-Java interpreter"
-    task :error do
+    desc "exercise yellow cases of an in-Java interpreter"
+    task :yellow do
       deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
         suite = CIAT::Suite.build(
           :processors => [java_interpreter("Hello")],
-          :folder => 'ciat/java/interpreter/error',
+          :folder => 'ciat/java/interpreter/yellow',
           :feedback => feedback([:yellow, :yellow],
-            :report_filename => 'java-interpreter-error.html')
+            :report_filename => 'java-interpreter-yellow.html')
           )
         suite.run
       end
     end
     
-    desc "exercise failure cases of an in-Java interpreter"
-    task :failure do
+    desc "exercise red cases of an in-Java interpreter"
+    task :red do
       deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
         suite = CIAT::Suite.build(
           :processors => [java_interpreter("Hello")],
-          :folder => 'ciat/java/interpreter/failure',
+          :folder => 'ciat/java/interpreter/red',
           :feedback => feedback([:red, :red],
-            :report_filename => 'java-interpreter-failure.html')
+            :report_filename => 'java-interpreter-red.html')
           )
         suite.run
       end
@@ -204,36 +204,36 @@ end
 
 # *************************************************************
 desc "task to exercise Parrot interpreter"
-task :parrot => ["parrot:success", "parrot:error", "parrot:failure"]
+task :parrot => ["parrot:green", "parrot:yellow", "parrot:red"]
 
 namespace :parrot do
-  desc "exercise the success cases of the Parrot VM"
-  CIAT::RakeTask.new(:success) do |task|
+  desc "exercise the green cases of the Parrot VM"
+  CIAT::RakeTask.new(:green) do |task|
     task.processors << parrot_executor(interpreter)
-    task.folder = 'ciat/parrot/success'
+    task.folder = 'ciat/parrot/green'
     task.feedback = feedback([:green, :green],
-      :report_filename => 'parrot-success.html')
+      :report_filename => 'parrot-green.html')
   end
 
-  desc "exercise the error cases of the Parrot VM"
-  task :error do
+  desc "exercise the yellow cases of the Parrot VM"
+  task :yellow do
     deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
       suite = CIAT::Suite.build(
         :processors => [parrot_executor(interpreter)],
-        :folder => 'ciat/parrot/error',
-        :feedback => feedback([:yellow], :report_filename => 'parrot-error.html')
+        :folder => 'ciat/parrot/yellow',
+        :feedback => feedback([:yellow], :report_filename => 'parrot-yellow.html')
         )
       suite.run
     end
   end
 
-  desc "exercise the failure cases of the Parrot VM"
-  task :failure do
+  desc "exercise the red cases of the Parrot VM"
+  task :red do
     deliberate_failure(RuntimeError, "CIAT tests unsuccessful") do
       suite = CIAT::Suite.build(
         :processors => [parrot_executor(interpreter)],
-        :folder => 'ciat/parrot/failure',
-        :feedback => feedback([:red], :report_filename => 'parrot-failure.html')  
+        :folder => 'ciat/parrot/red',
+        :feedback => feedback([:red], :report_filename => 'parrot-red.html')  
         )
       suite.run
     end

@@ -4,7 +4,7 @@ describe "parrot-error" do
   include Webrat::Matchers
   
   before(:each) do
-    @doc = webrat_document("temp/compile-fail.html")
+    @doc = Nokogiri::HTML.parse(open("temp/compile-fail.html").read)
   end
 
   it "should show the standard output" do

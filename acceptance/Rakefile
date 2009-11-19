@@ -211,7 +211,7 @@ namespace :parrot do
   CIAT::RakeTask.new(:green) do |task|
     task.processors << parrot_executor(interpreter)
     task.folder = 'ciat/parrot/green'
-    task.feedback = feedback([:green, :green],
+    task.feedback = feedback([:green, :green, :green],
       :report_filename => 'parrot-green.html')
   end
 

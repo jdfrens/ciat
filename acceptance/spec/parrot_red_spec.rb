@@ -3,17 +3,13 @@ require 'spec_helper'
 describe "parrot errors" do
   include Webrat::Matchers
   
-  before(:each) do
-    @doc = webrat_document("temp/parrot-failure.html")
-  end
+  folder "parrot", "red"
 
   describe "sad path" do
-    before(:each) do
-      @file = "ciat_parrot_failure_sad_path_ciat"
-    end
+    sad_path
     
-    it_should_have_only_the_elements ".execution_generated",
-      ".execution_error_diff"
+    it_should_have_only_the_elements "source", "execution_generated",
+      "execution_error_diff"
   
     it "should describe a sad path" do
       @doc.should indicate_sad_path

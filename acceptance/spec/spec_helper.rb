@@ -53,9 +53,9 @@ module ElementHelpers
     end
   end  
 
-  def happy_path
+  def happy_path(*modifiers)
     before(:each) do
-      @path_kind = "happy"
+      @path_kind = (["happy"] + modifiers).join("_")
     end
   end
 

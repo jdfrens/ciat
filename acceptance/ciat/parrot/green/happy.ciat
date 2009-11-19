@@ -1,0 +1,8 @@
+PIR program that prints a simple integer.
+==== source
+.sub main
+	print 8
+	print "\n"
+.end
+==== execution
+8

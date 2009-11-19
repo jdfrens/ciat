@@ -32,7 +32,7 @@ module CIAT::Processors
         :sad => {
           CIAT::TrafficLight::GREEN => [:source, :compilation_error_generated],
           CIAT::TrafficLight::YELLOW => [:source, :compilation_generated, :compilation_error_generated],
-          CIAT::TrafficLight::RED => [:source, :compilation_diff],
+          CIAT::TrafficLight::RED => [:source, :compilation_error_diff, :compilation_generated],
           CIAT::TrafficLight::UNSET => []
         }
       }

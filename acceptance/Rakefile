@@ -1,5 +1,5 @@
 $:.unshift(File.join(File.dirname(__FILE__), "fakelib")).
-  unshift(File.join(File.dirname(__FILE__), "lib"))
+  unshift(File.join(File.dirname(__FILE__), "lib", "tasks"))
 
 require 'spec/rake/spectask'
 require 'fileutils'
@@ -9,8 +9,9 @@ require 'ciat/processors/java'
 require 'ciat/processors/parrot'
 require 'ciat/feedback/composite'
 
-require 'feedback_tester'
-require 'helpers'
+Dir["lib/tasks/*.rb"].each do |file|
+  require File.basename(file, ".rb")
+end
 
 desc "Cleans the output directory, compiles the Java code, runs tests"
 task :default => :acceptance
@@ -38,7 +39,7 @@ task :view do
 end
 
 task :compile do
-  unless system("cd java ; javac *.java")
+  unless system("cd lib/java && javac *.java")
     raise "Java files failed to compile!"
   end
 end

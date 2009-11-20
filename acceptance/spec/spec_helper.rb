@@ -51,7 +51,19 @@ module ElementHelpers
         @doc.should_not have_element(element)
       end
     end
-  end  
+  end
+  
+  def it_should_indicate_a_happy_path
+    it "should indicate a happy path" do
+      @doc.should indicate_happy_path
+    end
+  end
+
+  def it_should_indicate_a_sad_path
+    it "should indicate a sad path" do
+      @doc.should indicate_sad_path
+    end
+  end
 
   def happy_path(*modifiers)
     before(:each) do

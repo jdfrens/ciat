@@ -256,6 +256,6 @@ CIAT::RakeTask.new(:exercise_java_and_parrot) do |task|
   task.processors << java_compiler("Parrot5")
   task.processors << parrot_executor(compilation_interpreter)
   task.folder = 'ciat/java-parrot'
-  task.feedback = feedback([[:green, :green]],
+  task.feedback = feedback([[:green, :green], [:green, :unneeded]],
                     :report_filename => 'java-parrot.html')
 end

@@ -27,15 +27,23 @@ describe CIAT::Test do
   
   describe "running processors" do
     before(:each) do
-      @subtests = array_of_mocks(3, "subtests")
+      @subtests = array_of_mocks(3, "subtest")
       @test.should_receive(:make_subtests).and_return(@subtests)
       @subresults = array_of_mocks(3, "subresult")
     end
     
-    it "should run just the first processor" do
+    it "should run just the first processor because of a non-green subtest" do
       expect_not_green(@subtests[0], @subresults[0])
       expect_unset(@subtests[1], @subresults[1])
       expect_unset(@subtests[2], @subresults[2])
+      
+      @test.run_subtests.should == @subresults
+    end
+    
+    it "should run just the first processor because of a sad subtest" do
+      expect_green(@subtests[0], @subresults[0])
+      expect_sad(@subtests[1], @subresults[1])
+      expect_unneeded(@subtests[2], @subresults[2])
       
       @test.run_subtests.should == @subresults
     end
@@ -57,6 +65,7 @@ describe CIAT::Test do
     end
 
     def expect_green(subtest, subresult)
+      subtest.stub!(:sad_path?).and_return(false)
       light = mock("light", :green? => true)
       subtest.should_receive(:process).with().and_return(light)
       @test.should_receive(:subresult).with(subtest, light).
@@ -64,7 +73,17 @@ describe CIAT::Test do
       subresult.should_receive(:light).and_return(light)
     end
     
+    def expect_sad(subtest, subresult)
+      light = mock("light")
+      subtest.should_receive(:process).with().and_return(light)
+      @test.should_receive(:subresult).with(subtest, light).
+        and_return(subresult)
+      subresult.stub!(:light).and_return(light)
+      subtest.should_receive(:sad_path?).and_return(true)
+    end
+    
     def expect_not_green(subtest, subresult)
+      subtest.stub!(:sad_path?).and_return(false)
       light = mock("light", :green? => false)
       subtest.should_receive(:process).with().and_return(light)
       @test.should_receive(:subresult).with(subtest, light).
@@ -73,7 +92,13 @@ describe CIAT::Test do
     end
     
     def expect_unset(subtest, subresult)
-      @test.should_receive(:subresult).with(subtest).and_return(subresult)
+      @test.should_receive(:subresult).
+        with(subtest, CIAT::TrafficLight::UNSET).and_return(subresult)
+    end
+    
+    def expect_unneeded(subtest, subresult)
+      @test.should_receive(:subresult).
+        with(subtest, CIAT::TrafficLight::UNNEEDED).and_return(subresult)
     end
   end
   

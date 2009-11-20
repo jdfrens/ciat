@@ -40,6 +40,10 @@ class CIAT::Subtest
     @ciat_file.element?(@processor.kind.happy_path_element)
   end
   
+  def sad_path?
+    not happy_path?
+  end
+  
   def path_kind
     happy_path? ? :happy : :sad
   end

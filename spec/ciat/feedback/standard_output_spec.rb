@@ -102,6 +102,14 @@ describe CIAT::Feedback::StandardOutput do
       
       @feedback.report_subresult(@subresult)
     end
+
+    it "should report an unneeded light" do      
+      @subresult.should_receive(:light).at_least(:once).
+        and_return(CIAT::TrafficLight::UNNEEDED)
+      @feedback.should_receive(:putc).with(".")
+      
+      @feedback.report_subresult(@subresult)
+    end
   end
   
 end

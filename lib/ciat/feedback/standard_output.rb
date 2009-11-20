@@ -7,7 +7,8 @@ module CIAT
         CIAT::TrafficLight::GREEN => ".", 
         CIAT::TrafficLight::RED => "F", 
         CIAT::TrafficLight::YELLOW => "E", 
-        CIAT::TrafficLight::UNSET => "-" }
+        CIAT::TrafficLight::UNSET => "-",
+        CIAT::TrafficLight::UNNEEDED => "." }
       
       def initialize(counter)
         @counter = counter

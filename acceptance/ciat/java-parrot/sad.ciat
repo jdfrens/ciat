@@ -1,0 +1,5 @@
+in-Java compiler generates an expected error, and so Parrot VM is never run.
+==== source
+error
+==== compilation error
+The error you desire!

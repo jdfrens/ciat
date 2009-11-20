@@ -8,7 +8,8 @@ module CIAT
           CIAT::TrafficLight::RED => 0,
           CIAT::TrafficLight::YELLOW => 0,
           CIAT::TrafficLight::GREEN => 0,
-          CIAT::TrafficLight::UNSET => 0
+          CIAT::TrafficLight::UNSET => 0,
+          CIAT::TrafficLight::UNNEEDED => 0
         }
       end
       

@@ -8,6 +8,7 @@ class CIAT::TrafficLight
   RED = CIAT::TrafficLight.new(:red)
   YELLOW = CIAT::TrafficLight.new(:yellow)
   UNSET = CIAT::TrafficLight.new(:unset)
+  UNNEEDED = CIAT::TrafficLight.new(:unneeded)
   
   def unset?
     @setting == :unset
@@ -25,6 +26,10 @@ class CIAT::TrafficLight
     @setting == :red
   end
     
+  def unneeded?
+    @setting == :unneeded
+  end
+  
   def color
     @setting.to_s
   end

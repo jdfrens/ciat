@@ -11,6 +11,7 @@ module CIAT::ERBHelpers
   	when light.yellow? then "ERROR"
   	when light.green? then "passed"
   	when light.unset? then "n/a"
+  	when light.unneeded? then "unneeded"
 	  else
 	    raise "cannot turn #{light} into word"
   	end

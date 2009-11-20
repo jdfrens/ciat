@@ -26,12 +26,26 @@ class CIAT::Test
     until subtests.empty?
       subtest = subtests.shift
       subresults << subresult(subtest, subtest.process)
-      break unless subresults.last.light.green?
-    end
-    until subtests.empty?
-      subresults << subresult(subtests.shift)
+      if subtest.sad_path?
+        return subresults + remaining_subtests(subtests, unneeded)
+      end
+      unless subresults.last.light.green?
+        return subresults + remaining_subtests(subtests, unset)
+      end
     end
     subresults
+  end
+
+  def remaining_subtests(subtests, light)
+    subtests.map { |subtest| subresult(subtest, light) }
+  end
+  
+  def unneeded
+    CIAT::TrafficLight::UNNEEDED
+  end
+  
+  def unset
+    CIAT::TrafficLight::UNSET
   end
   
   def make_subtests
@@ -40,7 +54,7 @@ class CIAT::Test
     end
   end
   
-  def subresult(subtest, light = CIAT::TrafficLight::UNSET)
+  def subresult(subtest, light)
     subresult = CIAT::Subresult.new(@ciat_file,
       subtest.path_kind, light, subtest)
     @feedback.report_subresult(subresult)

@@ -1,14 +1,124 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!-- Document created with No Latte 0.3alpha -->
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>CIAT</title>
+<meta name="generator" content=
+"HTML Tidy for Mac OS X (vers 1 September 2005), see www.w3.org" />
+<meta name="generator" content="No Latte 0.3alpha" />
+<title>CIAT (Compiler and Interpreter Acceptance Tester)</title>
 </head>
 <body>
-<h1>CIAT: Compile and Interpreter Acceptance Testing</h1>
+<h1>CIAT (Compiler and Interpreter Acceptance Tester)</h1>
+<p>This is a copy of the <a href=
+"http://github.com/jdfrens/ciat/blob/master/README.rdoc">README.rdoc</a>
+from the CIAT gem, despite that same document's promise that this
+site is a tutorial and reference.</p>
+<p>The tutorial and reference are coming!</p>
+<h2>DESCRIPTION</h2>
+<p>CIAT (pronounced "dog") provides a system for writing high-level
+acceptance tests for compilers and interpreters. Each acceptance
+test is entered into a single file, and that file identifies the
+elements of a test.</p>
+<h2>SYNOPSIS</h2>
+<p>Suppose you have a compiler written in Java that compiles a
+language named Hobbes. Your compiler targets the Parrot Virtual
+Machine. So you want to provide <em>source code</em> which is
+<em>compiled with a Java program</em> and that result is
+<em>interpreted by Parrot</em>.</p>
+<h3>Input File</h3>
+<p>Input files should be named with a <code>.ciat</code> extension
+and saved in a <code>ciat</code> folder.</p>
+<p>A sample input file (<code>simpleinteger5.ciat</code>) for the
+scenario described above might look like this:</p>
+<pre>
+Compiles a simple integer.
+==== source
+5
+==== compilation
+.sub main
+  print 5
+  print "\n"
+.end
+==== execution
+5
+</pre>
+<p>This file specifies <em>four</em> elements:
+<strong>description</strong>, <strong>source</strong>,
+<strong>compilation</strong>, and <strong>execution</strong>. The
+description is always the first element, always unlabeled, and used
+prominently in the HTML report. All of the other elements are
+dependent on the processors that you use.</p>
+<p>In this example, we're using a "Java compiler" (a compiler
+<em>written in</em> Java) and a "Parrot executor". CIAT's "Java
+compiler" runs your compiler over the <strong>source</strong>, and
+that output is compared to the <strong>compilation</strong>
+element. Then the "Parrot executor" is executed with the
+<em>generated</em> compilation, and that output is compared to the
+<strong>execution</strong> element.</p>
+<p>If any processor fails, either due to an error while running or
+a failure during checking the output, the remaining processors are
+not executed.</p>
+<p>Some processors will use optional elements in a test file. For
+example, the "Parrot executor" knows about command-line
+arguments:</p>
+<pre>
+Compiles a simple integer and ignores the command-line arguments.
+==== source
+5
+==== compilation
+.sub main
+  print 5
+  print "\n"
+.end
+==== command line
+89 pqp
+==== execution
+5
+</pre>
+<p>When the "Parrot executor" is run on the compilation, it'll also
+pass in <code>89 pqp</code> as command-line arguments.</p>
+<h3>The Rakefile</h3>
+<p>This sample <code>Rakefile</code> pulls everything together:</p>
+<pre>
+require 'ciat'
+require 'ciat/processors/java'
+require 'ciat/processors/parrot'
 
-<p>Documentation is pending for CIAT.  For now, check
-  out <a href="http://www.github.com/jdfrens/ciat/">CIAT on GitHub</a>
-  and the <a href="http://rdoc.info/projects/jdfrens/ciat">CIAT
-  RDocs</a>.</p>
+def compiler
+  classpath = Dir.glob('../lib/*.jar').join(':') + ":../bin"
+  CIAT::Compilers::Java.new(classpath, 'org.norecess.hobbes.drivers.PIRCompiler')
+end
 
+def executor
+  CIAT::Processors::Parrot.new
+end
+
+CIAT::RakeTask.new do |t|
+  t.processors &lt;&lt; compiler
+  t.processors &lt;&lt; executor
+end
+</pre>
+<p>This rakefile will find all of the <code>.ciat</code> files
+inside a <code>ciat</code> directory, each one representing a test.
+Each test will be executed, and the results are put into a folder
+named +temp+, including the HTML report <code>report.html</code>.
+All of these settings can be tweaked; see the documentation for
+<code>CIAT::RakeTask</code> for more information.</p>
+<h2>REQUIREMENTS</h2>
+<ul>
+<li><a href="pronunciation.html">Pronounce "CIAT" as
+"dog".</a></li>
+<li>Must have <code>diff</code> executable</li>
+<li>You have to provide your own target-code processors (e.g.,
+<code>parrot</code> for the Parrot Virtual Machine,
+<code>spim</code> for MIPS emulation, etc.)</li>
+</ul>
+<h2>INSTALL</h2>
+<ul>
+<li>Install <code>diff</code>.</li>
+<li>Install Ruby and Ruby Gems.</li>
+<li><code>sudo gem install ciat</code></li>
+</ul>
 </body>
 </html>

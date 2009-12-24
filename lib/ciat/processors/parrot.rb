@@ -40,7 +40,7 @@ module CIAT
       end
       
       def executable
-        (["parrot"] + @libraries.map { |l| "-L" + l }).join(" ")
+        (["parrot"] + @libraries.map { |library| "-L" + library }).join(" ")
       end
     end
   end

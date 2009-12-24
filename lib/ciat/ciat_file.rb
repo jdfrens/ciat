@@ -13,11 +13,11 @@ class CIAT::CiatFile #:nodoc:all
   end
   
   def element(*names)
-    elements[names.compact.join("_").to_sym]
+    elements[element_name(*names)]
   end
   
   def element?(*names)
-    elements.has_key?(names.compact.join("_").to_sym)
+    elements.has_key?(element_name(*names))
   end
 
   def filename(*modifiers)
@@ -61,6 +61,10 @@ class CIAT::CiatFile #:nodoc:all
   # Helpers
   #
   private
+  
+  def element_name(*names)
+    names.compact.join("_").to_sym
+  end
   
   def read
     File.readlines(@ciat_file)

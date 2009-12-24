@@ -12,14 +12,10 @@ module CIAT::Feedback
     end
     
     def report_subresult(subresult)
-      @failure ||= subresult_failure?(subresult, subresult.light)
+      @failure ||= subresult.light.yellow? || subresult.light.red?
     end
     
     private
-    def subresult_failure?(subresult, light)
-      light.yellow? || light.red?
-    end
-    
     def failure?
       @failure
     end

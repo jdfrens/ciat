@@ -7,6 +7,8 @@ module CIAT::Feedback
     include CIAT::ERBHelpers
     include CIAT::IO
     
+    DATA_FOLDER = File.join(File.dirname(__FILE__), "..", "..", "data")
+    
     attr_reader :report_title
     attr_reader :report_filename
     
@@ -19,8 +21,8 @@ module CIAT::Feedback
 
     def pre_tests(suite)
       FileUtils.mkdir_p(suite.output_folder)
-      FileUtils.cp(File.join(File.dirname(__FILE__), "..", "..", "data", "ciat.css"), suite.output_folder)
-      FileUtils.cp(File.join(File.dirname(__FILE__), "..", "..", "data", "prototype.js"), suite.output_folder)
+      FileUtils.cp(File.join(DATA_FOLDER, "ciat.css"), suite.output_folder)
+      FileUtils.cp(File.join(DATA_FOLDER, "prototype.js"), suite.output_folder)
     end
   
     def report_subresult(processor)
@@ -43,9 +45,9 @@ module CIAT::Feedback
     end
     
     def build_erb
-      e = ERB.new(template)
-      e.filename = "report.html.erb"
-      e
+      erb = ERB.new(template)
+      erb.filename = "report.html.erb"
+      erb
     end
 
     def template #:nodoc:
